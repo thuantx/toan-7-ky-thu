@@ -25,8 +25,8 @@ import {
   ChevronDown
 } from 'lucide-react';
 import { QuickCatalogModal } from './QuickCatalogModal';
-import pipoOwlImg from '../assets/images/math_mascot_owl_1794450740550.jpg';
-import achievementBadgeImg from '../assets/images/math_achievement_badge_1794450742214.jpg';
+import { PipoOwlMascot } from './PipoOwlMascot';
+import { MathBadgeIcon } from './MathBadgeIcon';
 
 interface PracticeViewProps {
   chapters: Chapter[];
@@ -453,14 +453,7 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
           <div className="bg-gradient-to-b from-amber-50 to-orange-50 rounded-3xl p-5 border border-amber-200 shadow-sm space-y-3">
             <div className="flex items-center gap-3">
               <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-amber-300 shadow-md shrink-0 bg-white">
-                <img
-                  src={pipoOwlImg}
-                  alt="Mascot Cú Pipo"
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src = '/images/pipo.jpg';
-                  }}
-                />
+                <PipoOwlMascot className="w-full h-full" size="sm" />
               </div>
               <div>
                 <span className="text-xs font-bold text-amber-900 block">Cú Thông Thái Pipo</span>
@@ -778,14 +771,7 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
             /* Session Completed Celebration Screen */
             <div className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200/80 shadow-md text-center space-y-6">
               <div className="w-24 h-24 mx-auto rounded-3xl overflow-hidden shadow-xl border-4 border-amber-300">
-                <img
-                  src={achievementBadgeImg}
-                  alt="Hoàn thành bài học"
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src = '/images/badge.jpg';
-                  }}
-                />
+                <MathBadgeIcon className="w-full h-full" title="Hoàn thành bài học" />
               </div>
 
               <div className="space-y-2 max-w-md mx-auto">

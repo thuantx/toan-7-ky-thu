@@ -15,8 +15,8 @@ import {
   BookOpen,
   Compass
 } from 'lucide-react';
-import pipoOwlImg from '../assets/images/math_mascot_owl_1794450740550.jpg';
-import achievementBadgeImg from '../assets/images/math_achievement_badge_1794450742214.jpg';
+import { PipoOwlMascot } from './PipoOwlMascot';
+import { MathBadgeIcon } from './MathBadgeIcon';
 
 interface DashboardViewProps {
   chapters: Chapter[];
@@ -124,14 +124,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="shrink-0 flex flex-col items-center">
             <div className="relative group">
               <div className="w-36 h-36 sm:w-44 sm:h-44 rounded-3xl overflow-hidden border-4 border-white/30 shadow-2xl bg-white/20">
-                <img
-                  src={pipoOwlImg}
-                  alt="Linh vật Cú Pipo thông thái Toán 7"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  onError={(e) => {
-                    e.currentTarget.src = '/images/pipo.jpg';
-                  }}
-                />
+                <PipoOwlMascot className="w-full h-full group-hover:scale-105 transition-transform duration-300" />
               </div>
               <div className="absolute -bottom-3 -right-2 bg-amber-400 text-amber-950 px-2.5 py-0.5 rounded-full text-xs font-bold shadow-md flex items-center gap-1">
                 <Sparkles className="w-3 h-3" />
@@ -505,14 +498,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           {/* Badge 1: Rational Master */}
           <div className="p-4 rounded-2xl bg-gradient-to-b from-amber-50 to-orange-50 border border-amber-200/80 text-center space-y-2">
             <div className="w-16 h-16 mx-auto rounded-2xl overflow-hidden shadow-md">
-              <img
-                src={achievementBadgeImg}
-                alt="Bậc Thầy Số Hữu Tỉ"
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  e.currentTarget.src = '/images/badge.jpg';
-                }}
-              />
+              <MathBadgeIcon className="w-full h-full" title="Bậc Thầy Số Hữu Tỉ" />
             </div>
             <div>
               <span className="text-xs font-bold text-slate-900 block">Bậc Thầy Số Hữu Tỉ</span>
