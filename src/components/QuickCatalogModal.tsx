@@ -207,6 +207,16 @@ export const QuickCatalogModal: React.FC<QuickCatalogModalProps> = ({
                         <div className="text-[10px] text-slate-400 font-mono pt-1">
                           {lesson.questions.length} câu hỏi · Độ chính xác: {lesson.accuracy}%
                         </div>
+
+                        {lesson.sections && lesson.sections.length > 0 && (
+                          <div className="flex items-center gap-1.5 pt-1 flex-wrap">
+                            {lesson.sections.map((s) => (
+                              <span key={s.id} className="text-[10px] font-bold text-emerald-800 bg-emerald-100/80 px-1.5 py-0.2 rounded border border-emerald-200/60">
+                                {s.code}: {s.shortTitle || s.title} ({s.examples.length} ví dụ)
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </div>
 
                       <div className="shrink-0 mt-1">

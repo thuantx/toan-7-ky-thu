@@ -1,6 +1,8 @@
 export interface Question {
   id: string;
   lessonId: string;
+  sectionId?: string; // e.g. 'c1-l1-s1', 'c1-l1-s2'
+  sectionCode?: string; // e.g. 'Phần I', 'Phần II'
   type: 'multiple_choice' | 'fill_in_blank';
   category: string; // e.g., 'Nhận biết', 'Tìm x', 'Tính hợp lý', 'Hình học'
   difficulty: 'Cơ bản' | 'Trung bình' | 'Nâng cao';
@@ -21,12 +23,28 @@ export interface Example {
   note?: string;
 }
 
+export interface LessonSection {
+  id: string; // e.g. 'c1-l1-s1', 'c1-l1-s2'
+  code: string; // 'Phần I', 'Phần II'
+  title: string; // 'Phần I: Khái niệm và biểu diễn số hữu tỉ trên trục số'
+  shortTitle: string; // 'I. Khái niệm & Trục số'
+  description?: string;
+  theory: {
+    keyPoints: string[];
+    formulaSummary: string[];
+    rules: string[];
+    commonMistakes: string[];
+  };
+  examples: Example[];
+}
+
 export interface Lesson {
   id: string;
   chapterId: string;
   number: number;
   title: string;
   description: string;
+  sections?: LessonSection[];
   theory: {
     keyPoints: string[];
     formulaSummary: string[];
@@ -69,35 +87,280 @@ export const CURRICULUM_DATA: Chapter[] = [
         chapterId: 'ch-1',
         number: 1,
         title: 'Tập hợp các số hữu tỉ',
-        description: 'Khái niệm số hữu tỉ a/b (b ≠ 0), số đối và biểu diễn trên trục số.',
+        description: 'Khái niệm số hữu tỉ a/b (b ≠ 0), số đối, biểu diễn trên trục số và thứ tự trong tập hợp số hữu tỉ.',
         status: 'MASTER',
         accuracy: 94,
-        totalAttempts: 18,
-        correctCount: 17,
-        timeSpentMinutes: 35,
+        totalAttempts: 22,
+        correctCount: 21,
+        timeSpentMinutes: 45,
+        sections: [
+          {
+            id: 'c1-l1-s1',
+            code: 'Phần I',
+            title: 'Phần I: Khái niệm và biểu diễn số hữu tỉ trên trục số',
+            shortTitle: 'I. Khái niệm & Trục số',
+            description: 'Định nghĩa số hữu tỉ, tập hợp Q, Q*, số đối và biểu diễn trên trục số.',
+            theory: {
+              keyPoints: [
+                'Số hữu tỉ là số được viết dưới dạng phân số a/b với a, b ∈ ℤ và b ≠ 0.',
+                'Tập hợp các số hữu tỉ kí hiệu là ℚ. Tập hợp các số hữu tỉ khác 0 kí hiệu là ℚ*.',
+                'Mỗi số hữu tỉ đều có 1 số đối. Số đối của số hữu tỉ a/b là -a/b. Hai số đối nhau có tổng bằng 0.',
+                'Các số nguyên, hỗn số hay số thập phân đều là số hữu tỉ vì đều viết được thành phân số.',
+                'Mọi số hữu tỉ đều có thể biểu diễn trên trục số.'
+              ],
+              formulaSummary: [
+                'ℚ = { x | x = a/b, a, b ∈ ℤ, b ≠ 0 }',
+                'Số đối của a/b là -a/b; a/b + (-a/b) = 0',
+                '-a/b = a/(-b) = -(a/b)'
+              ],
+              rules: [
+                'Khi viết số hữu tỉ dạng phân số, luôn đưa mẫu số về số nguyên dương.',
+                'Để biểu diễn số hữu tỉ a/b trên trục số: chia đoạn thẳng đơn vị thành |b| phần bằng nhau, lấy |a| phần.'
+              ],
+              commonMistakes: [
+                'Nghĩ rằng số 0 không phải là số hữu tỉ (Thực tế: 0 = 0/1 ∈ ℚ).',
+                'Quên đổi dấu khi tìm số đối của phân số có mẫu âm (ví dụ: số đối của 4/(-9) là 4/9).'
+              ]
+            },
+            examples: [
+              {
+                title: 'Ví dụ 1: Nhận biết số hữu tỉ',
+                problem: 'Các số 3,1 = 31/10 hoặc -2 1/6 = -13/6 có phải là số hữu tỉ không?',
+                steps: [
+                  { stepNumber: 1, instruction: 'Viết số thập phân dưới dạng phân số', formula: '3,1 = 31/10 (31, 10 ∈ ℤ, 10 ≠ 0)' },
+                  { stepNumber: 2, instruction: 'Chuyển hỗn số sang phân số', formula: '-2 1/6 = -13/6 (-13, 6 ∈ ℤ, 6 ≠ 0)' },
+                  { stepNumber: 3, instruction: 'Kết luận', formula: 'Các số 31/10 hay -13/6 gọi là các số hữu tỉ.' }
+                ]
+              },
+              {
+                title: 'Ví dụ 2: Các số nguyên, số thập phân, hỗn số đều là số hữu tỉ',
+                problem: 'Chứng minh các số -3; 0,45; 2 3/7; 0 đều là số hữu tỉ.',
+                steps: [
+                  { stepNumber: 1, instruction: 'Số nguyên -3', formula: '-3 = -3/1 ∈ ℚ' },
+                  { stepNumber: 2, instruction: 'Số thập phân 0,45', formula: '0,45 = 45/100 = 9/20 ∈ ℚ' },
+                  { stepNumber: 3, instruction: 'Hỗn số 2 3/7', formula: '2 3/7 = 17/7 ∈ ℚ' },
+                  { stepNumber: 4, instruction: 'Số 0', formula: '0 = 0/1 ∈ ℚ' }
+                ]
+              },
+              {
+                title: 'Ví dụ 3: Tìm số đối của các số hữu tỉ',
+                problem: 'Tìm số đối của các số hữu tỉ sau: 2,4; 4/(-9); -11/3; (-5)/(-8).',
+                steps: [
+                  { stepNumber: 1, instruction: 'Số đối của 2,4 là', formula: '-2,4' },
+                  { stepNumber: 2, instruction: 'Số đối của 4/(-9) = -4/9 là', formula: '4/9' },
+                  { stepNumber: 3, instruction: 'Số đối của -11/3 là', formula: '11/3' },
+                  { stepNumber: 4, instruction: 'Ta có (-5)/(-8) = 5/8, số đối là', formula: '-5/8' }
+                ]
+              },
+              {
+                title: 'Ví dụ 4: Tìm số đối mở rộng',
+                problem: 'Tìm số đối của: 7/31; -6/49; -6/35; -99/100; -0,25; 1,49.',
+                steps: [
+                  { stepNumber: 1, instruction: 'Số đối của 7/31 và -6/49 là', formula: '-7/31 và 6/49' },
+                  { stepNumber: 2, instruction: 'Số đối của -6/35 và -99/100 là', formula: '6/35 và 99/100' },
+                  { stepNumber: 3, instruction: 'Số đối của -0,25 và 1,49 là', formula: '0,25 và -1,49' }
+                ]
+              },
+              {
+                title: 'Ví dụ 5: Biểu diễn số hữu tỉ 1/3 trên trục số',
+                problem: 'Biểu diễn số hữu tỉ 1/3 trên trục số.',
+                steps: [
+                  { stepNumber: 1, instruction: 'Nhận xét', formula: '0 < 1/3 < 1' },
+                  { stepNumber: 2, instruction: 'Chia đoạn đơn vị', formula: 'Lấy đoạn từ 0 đến 1 chia làm 3 phần bằng nhau' },
+                  { stepNumber: 3, instruction: 'Biểu diễn', formula: 'Điểm 1/3 nằm ở vạch chia thứ nhất bên phải điểm 0' }
+                ]
+              },
+              {
+                title: 'Ví dụ 6: Biểu diễn số hữu tỉ -7/3 trên trục số',
+                problem: 'Biểu diễn số hữu tỉ -7/3 trên trục số.',
+                steps: [
+                  { stepNumber: 1, instruction: 'Tách hỗn số', formula: '-7/3 = -2 - 1/3' },
+                  { stepNumber: 2, instruction: 'Xác định khoảng', formula: 'Điểm -7/3 nằm giữa -2 và -3' },
+                  { stepNumber: 3, instruction: 'Biểu diễn', formula: 'Từ điểm -2 lùi thêm 1/3 về phía bên trái của số 0 (về phía âm)' }
+                ]
+              },
+              {
+                title: 'Ví dụ 7: Biểu diễn số hữu tỉ -1/4 trên trục số',
+                problem: 'Vẽ trục số và biểu diễn số hữu tỉ -1/4 trên trục số đó.',
+                steps: [
+                  { stepNumber: 1, instruction: 'Nhận xét khoảng', formula: '-1 < -1/4 < 0' },
+                  { stepNumber: 2, instruction: 'Chia đoạn đơn vị', formula: 'Chia đoạn từ 0 đến -1 thành 4 phần bằng nhau' },
+                  { stepNumber: 3, instruction: 'Biểu diễn', formula: 'Lấy 1 phần về phía âm (bên trái số 0), ta được điểm -1/4' }
+                ]
+              },
+              {
+                title: 'Ví dụ 8: Biểu diễn số hữu tỉ 5/3 trên trục số',
+                problem: 'Vẽ trục số và biểu diễn số hữu tỉ 5/3 trên trục số đó.',
+                steps: [
+                  { stepNumber: 1, instruction: 'Tách hỗn số', formula: '5/3 = 1 + 2/3' },
+                  { stepNumber: 2, instruction: 'Xác định điểm', formula: 'Bắt đầu từ điểm 1, chia đoạn từ 1 đến 2 thành 3 phần bằng nhau' },
+                  { stepNumber: 3, instruction: 'Biểu diễn', formula: 'Lấy thêm 2 phần về phía bên phải, ta được điểm 5/3' }
+                ]
+              }
+            ]
+          },
+          {
+            id: 'c1-l1-s2',
+            code: 'Phần II',
+            title: 'Phần II: Thứ tự trong tập hợp số hữu tỉ',
+            shortTitle: 'II. Thứ tự & So sánh',
+            description: 'Quy tắc so sánh số hữu tỉ, biểu diễn trên trục số, tính chất bắc cầu, phần bù và phần hơn.',
+            theory: {
+              keyPoints: [
+                'Ta có thể so sánh hai số hữu tỉ bất kì bằng cách viết chúng dưới dạng phân số rồi so sánh hai phân số đó.',
+                'Với hai số hữu tỉ a và b bất kì, ta luôn có a > b hoặc a < b hoặc a = b.',
+                'Trên trục số, nếu a < b thì điểm a nằm bên trái điểm b.',
+                'Với ba số hữu tỉ a, b, c mà a < b và b < c thì a < c (tính chất bắc cầu).',
+                'Số hữu tỉ dương luôn lớn hơn 0; số hữu tỉ âm luôn nhỏ hơn 0; số dương luôn lớn hơn số âm.'
+              ],
+              formulaSummary: [
+                'Nếu a/m < b/m (với m > 0) thì a < b',
+                'a < b và b < c ⟹ a < c (Tính chất bắc cầu)',
+                'Số hữu tỉ âm < 0 < Số hữu tỉ dương'
+              ],
+              rules: [
+                'Khi quy đồng so sánh hai phân số, luôn đưa mẫu số về số nguyên dương trước.',
+                'So sánh qua số trung gian (0, 1 hoặc -1) giúp giải nhanh mà không cần quy đồng số lớn.'
+              ],
+              commonMistakes: [
+                'So sánh hai phân số có mẫu âm mà quên đổi dấu lên tử số dẫn đến kết quả bị đảo chiều.',
+                'So sánh hai phân số cùng tử âm: với tử âm -a, mẫu càng lớn thì giá trị lại càng lớn (vì gần 0 hơn).'
+              ]
+            },
+            examples: [
+              {
+                title: 'Ví dụ 1: So sánh hai số hữu tỉ qua số 0',
+                problem: 'So sánh -4/3 và 1/2.',
+                steps: [
+                  { stepNumber: 1, instruction: 'Nhận xét số thứ nhất', formula: '-4/3 < 0' },
+                  { stepNumber: 2, instruction: 'Nhận xét số thứ hai', formula: '1/2 > 0' },
+                  { stepNumber: 3, instruction: 'Kết luận', formula: 'Do đó -4/3 < 1/2' }
+                ]
+              },
+              {
+                title: 'Ví dụ 2: So sánh hai số hữu tỉ bằng quy đồng mẫu',
+                problem: 'So sánh -3/7 và -4/5.',
+                steps: [
+                  { stepNumber: 1, instruction: 'Quy đồng mẫu chung 35', formula: '-3/7 = -15/35' },
+                  { stepNumber: 2, instruction: 'Quy đồng số thứ hai', formula: '-4/5 = -28/35' },
+                  { stepNumber: 3, instruction: 'So sánh tử số và kết luận', formula: 'Vì -15 > -28 nên -15/35 > -28/35 ⟹ -3/7 > -4/5' }
+                ]
+              }
+            ]
+          }
+        ],
         theory: {
           keyPoints: [
-            'Số hữu tỉ là số viết được dưới dạng phân số a/b với a, b ∈ ℤ và b ≠ 0.',
-            'Tập hợp các số hữu tỉ kí hiệu là ℚ. Tập hợp các số hữu tỉ khác 0 kí hiệu là ℚ*.',
-            'Mỗi số hữu tỉ a/b đều có một số đối là -a/b. Hai số đối nhau có tổng bằng 0.',
-            'Mọi số nguyên, hỗn số, số thập phân đều là số hữu tỉ.'
+            'Số hữu tỉ là số viết được dưới dạng phân số a/b với a, b ∈ ℤ và b ≠ 0. Kí hiệu là ℚ.',
+            'Mỗi số hữu tỉ đều có một số đối là -a/b. Hai số đối nhau có tổng bằng 0.',
+            'Mọi số nguyên, hỗn số, số thập phân đều là số hữu tỉ vì đều viết được thành phân số.',
+            'Trên trục số, nếu a < b thì điểm a nằm bên trái điểm b. Ta có tính chất bắc cầu: a < b và b < c ⟹ a < c.'
           ],
           formulaSummary: [
             'ℚ = { x | x = a/b, a, b ∈ ℤ, b ≠ 0 }',
-            'Số đối của a/b là -a/b; a/b + (-a/b) = 0'
+            'Số đối của a/b là -a/b; a/b + (-a/b) = 0',
+            'Nếu a/m < b/m (m > 0) thì a < b'
           ],
-          rules: ['Khi viết số hữu tỉ dạng phân số, luôn đưa mẫu số về số dương.'],
-          commonMistakes: ['Nghĩ rằng số 0 không phải là số hữu tỉ (Thực tế: 0 = 0/1 ∈ ℚ).']
+          rules: [
+            'Khi viết số hữu tỉ dạng phân số, luôn đưa mẫu số về số nguyên dương.',
+            'So sánh qua số 0: số âm < 0 < số dương.'
+          ],
+          commonMistakes: [
+            'Nghĩ rằng số 0 không phải là số hữu tỉ (Thực tế: 0 = 0/1 ∈ ℚ).',
+            'Quên đổi dấu lên tử số khi mẫu là số nguyên âm.'
+          ]
         },
         examples: [
           {
-            title: 'Ví dụ 1: Tìm số đối của số hữu tỉ',
-            problem: 'Tìm số đối của các số: 2,4; 4/(-9); -11/3; (-5)/(-8)',
+            title: 'Ví dụ 1: Nhận biết số hữu tỉ',
+            problem: 'Các số 3,1 = 31/10 hoặc -2 1/6 = -13/6 có phải là số hữu tỉ không?',
+            steps: [
+              { stepNumber: 1, instruction: 'Viết số thập phân dưới dạng phân số', formula: '3,1 = 31/10' },
+              { stepNumber: 2, instruction: 'Đổi hỗn số sang phân số', formula: '-2 1/6 = -13/6' },
+              { stepNumber: 3, instruction: 'Kết luận', formula: 'Các số 31/10 hay -13/6 là các số hữu tỉ.' }
+            ]
+          },
+          {
+            title: 'Ví dụ 2: Các dạng số đều là số hữu tỉ',
+            problem: 'Chứng minh các số: -3; 0,45; 2 3/7; 0 đều là số hữu tỉ.',
+            steps: [
+              { stepNumber: 1, instruction: 'Số nguyên -3', formula: '-3 = -3/1 ∈ ℚ' },
+              { stepNumber: 2, instruction: 'Số thập phân 0,45', formula: '0,45 = 45/100 = 9/20 ∈ ℚ' },
+              { stepNumber: 3, instruction: 'Hỗn số 2 3/7', formula: '2 3/7 = 17/7 ∈ ℚ' },
+              { stepNumber: 4, instruction: 'Số 0', formula: '0 = 0/1 ∈ ℚ' }
+            ]
+          },
+          {
+            title: 'Ví dụ 3: Tìm số đối của các số hữu tỉ',
+            problem: 'Tìm số đối của: 2,4; 4/(-9); -11/3; (-5)/(-8).',
             steps: [
               { stepNumber: 1, instruction: 'Số đối của 2,4', formula: '-2,4' },
-              { stepNumber: 2, instruction: 'Chuyển dấu âm lên tử 4/(-9) = -4/9, số đối là', formula: '4/9' },
-              { stepNumber: 3, instruction: 'Số đối của -11/3 là', formula: '11/3' },
-              { stepNumber: 4, instruction: 'Ta có (-5)/(-8) = 5/8, số đối là', formula: '-5/8' }
+              { stepNumber: 2, instruction: 'Số đối của 4/(-9) = -4/9', formula: '4/9' },
+              { stepNumber: 3, instruction: 'Số đối của -11/3', formula: '11/3' },
+              { stepNumber: 4, instruction: 'Số đối của (-5)/(-8) = 5/8', formula: '-5/8' }
+            ]
+          },
+          {
+            title: 'Ví dụ 4: Tìm số đối mở rộng',
+            problem: 'Tìm số đối của: 7/31; -6/49; -6/35; -99/100; -0,25; 1,49.',
+            steps: [
+              { stepNumber: 1, instruction: 'Số đối của 7/31 và -6/49', formula: '-7/31 và 6/49' },
+              { stepNumber: 2, instruction: 'Số đối của -6/35 và -99/100', formula: '6/35 và 99/100' },
+              { stepNumber: 3, instruction: 'Số đối của -0,25 và 1,49', formula: '0,25 và -1,49' }
+            ]
+          },
+          {
+            title: 'Ví dụ 5: Biểu diễn số hữu tỉ 1/3 trên trục số',
+            problem: 'Biểu diễn số hữu tỉ 1/3 trên trục số.',
+            steps: [
+              { stepNumber: 1, instruction: 'Xác định khoảng', formula: '0 < 1/3 < 1' },
+              { stepNumber: 2, instruction: 'Chia đoạn đơn vị', formula: 'Chia đoạn từ 0 đến 1 thành 3 phần bằng nhau' },
+              { stepNumber: 3, instruction: 'Biểu diễn', formula: 'Lấy 1 phần về phía bên phải điểm 0' }
+            ]
+          },
+          {
+            title: 'Ví dụ 6: Biểu diễn số hữu tỉ -7/3 trên trục số',
+            problem: 'Biểu diễn số hữu tỉ -7/3 trên trục số.',
+            steps: [
+              { stepNumber: 1, instruction: 'Tách hỗn số', formula: '-7/3 = -2 - 1/3' },
+              { stepNumber: 2, instruction: 'Xác định điểm', formula: 'Lấy điểm -2 bên trái số 0, chia đoạn từ -2 đến -3 làm 3 phần' },
+              { stepNumber: 3, instruction: 'Biểu diễn', formula: 'Lùi thêm 1/3 về phía âm (bên trái)' }
+            ]
+          },
+          {
+            title: 'Ví dụ 7: Biểu diễn số hữu tỉ -1/4 trên trục số',
+            problem: 'Vẽ trục số và biểu diễn số hữu tỉ -1/4 trên trục số đó.',
+            steps: [
+              { stepNumber: 1, instruction: 'Nhận xét', formula: '-1 < -1/4 < 0' },
+              { stepNumber: 2, instruction: 'Chia đoạn đơn vị', formula: 'Chia đoạn từ 0 đến -1 thành 4 phần bằng nhau' },
+              { stepNumber: 3, instruction: 'Biểu diễn', formula: 'Lấy 1 phần về bên trái điểm 0' }
+            ]
+          },
+          {
+            title: 'Ví dụ 8: Biểu diễn số hữu tỉ 5/3 trên trục số',
+            problem: 'Vẽ trục số và biểu diễn số hữu tỉ 5/3 trên trục số đó.',
+            steps: [
+              { stepNumber: 1, instruction: 'Tách hỗn số', formula: '5/3 = 1 + 2/3' },
+              { stepNumber: 2, instruction: 'Xác định khoảng', formula: 'Từ điểm 1, chia đoạn từ 1 đến 2 làm 3 phần bằng nhau' },
+              { stepNumber: 3, instruction: 'Biểu diễn', formula: 'Tiến thêm 2 phần sang phải' }
+            ]
+          },
+          {
+            title: 'Ví dụ 9: So sánh hai số hữu tỉ qua số 0',
+            problem: 'So sánh -4/3 và 1/2.',
+            steps: [
+              { stepNumber: 1, instruction: 'Xét số thứ nhất', formula: '-4/3 < 0' },
+              { stepNumber: 2, instruction: 'Xét số thứ hai', formula: '1/2 > 0' },
+              { stepNumber: 3, instruction: 'Kết luận', formula: 'Do đó -4/3 < 1/2' }
+            ]
+          },
+          {
+            title: 'Ví dụ 10: So sánh hai số hữu tỉ bằng quy đồng mẫu',
+            problem: 'So sánh -3/7 và -4/5.',
+            steps: [
+              { stepNumber: 1, instruction: 'Quy đồng -3/7', formula: '-3/7 = -15/35' },
+              { stepNumber: 2, instruction: 'Quy đồng -4/5', formula: '-4/5 = -28/35' },
+              { stepNumber: 3, instruction: 'So sánh tử số', formula: 'Vì -15 > -28 nên -15/35 > -28/35 ⟹ -3/7 > -4/5' }
             ]
           }
         ],
@@ -105,89 +368,351 @@ export const CURRICULUM_DATA: Chapter[] = [
           {
             id: 'q1-1',
             lessonId: 'c1-l1',
+            sectionId: 'c1-l1-s1',
+            sectionCode: 'Phần I',
             type: 'multiple_choice',
-            category: 'Nhận biết',
+            category: 'Phần I: Khái niệm & Trục số',
             difficulty: 'Cơ bản',
-            prompt: 'Khẳng định nào sau đây là ĐÚNG về tập hợp các số hữu tỉ?',
-            options: [
-              '-3 không thuộc tập hợp ℚ',
-              'Tất cả các số thập phân hữu hạn đều là số hữu tỉ',
-              'Số 0 không phải là số hữu tỉ vì không có mẫu số',
-              'Mẫu số b của số hữu tỉ a/b có thể bằng 0'
-            ],
-            correctAnswer: 'Tất cả các số thập phân hữu hạn đều là số hữu tỉ',
-            adminHint: 'Định nghĩa số hữu tỉ là số viết được dưới dạng phân số a/b với a, b ∈ ℤ và b ≠ 0.',
-            stepByStepSolution: 'Bước 1: Nhớ lại định nghĩa số hữu tỉ a/b với a, b nguyên, b khác 0.\nBước 2: Mọi số thập phân hữu hạn (như 0,45 = 45/100) đều chuyển được thành phân số thập phân.\nBước 3: Do đó tất cả các số thập phân hữu hạn đều thuộc tập hợp ℚ.',
-            explanation: 'Mọi số thập phân hữu hạn đều viết được dưới dạng phân số thập phân nên thuộc tập hợp số hữu tỉ ℚ.',
+            prompt: "[Phần I - Bài 1] Điền kí hiệu thích hợp (∈, ∉) vào các chỗ chấm sau:\na) -3 ... ℚ\nb) 3/1 ... ℤ\nc) -4 ... ℕ",
+            options: ["a) ∈ ; b) ∈ ; c) ∉","a) ∉ ; b) ∈ ; c) ∈","a) ∈ ; b) ∉ ; c) ∉","a) ∈ ; b) ∈ ; c) ∈"],
+            correctAnswer: "a) ∈ ; b) ∈ ; c) ∉",
+            adminHint: "-3 = -3/1 là số hữu tỉ (thuộc Q); 3/1 = 3 là số nguyên (thuộc Z); -4 là số nguyên âm, không thuộc tập số tự nhiên N.",
+            stepByStepSolution: "Bước 1: Xét câu a: -3 viết được thành phân số -3/1 với -3, 1 ∈ ℤ và 1 ≠ 0, do đó -3 ∈ ℚ.\nBước 2: Xét câu b: 3/1 = 3 là một số nguyên, do đó 3/1 ∈ ℤ.\nBước 3: Xét câu c: -4 là số nguyên âm, trong khi ℕ = {0, 1, 2, ...} chỉ gồm các số tự nhiên không âm, do đó -4 ∉ ℕ.\nKết luận: Thứ tự đúng là a) ∈ ; b) ∈ ; c) ∉.",
+            explanation: "-3 ∈ ℚ vì viết được thành -3/1; 3/1 = 3 ∈ ℤ; -4 ∉ ℕ vì -4 là số âm.",
             pointsXP: 20
           },
           {
             id: 'q1-2',
             lessonId: 'c1-l1',
-            type: 'fill_in_blank',
-            category: 'Số đối',
+            sectionId: 'c1-l1-s1',
+            sectionCode: 'Phần I',
+            type: 'multiple_choice',
+            category: 'Phần I: Khái niệm & Trục số',
             difficulty: 'Cơ bản',
-            prompt: 'Viết số đối của phân số (-13)/6 dưới dạng phân số tối giản a/b:',
-            correctAnswer: '13/6',
-            adminHint: 'Số đối của -x là +x. Hãy bỏ dấu âm ở tử số.',
-            stepByStepSolution: 'Bước 1: Phân số đã cho là (-13)/6 = -13/6.\nBước 2: Số đối của -13/6 là -(-13/6) = 13/6.\nBước 3: 13/6 đã là phân số tối giản.',
-            explanation: 'Số đối của (-13)/6 là 13/6.',
-            pointsXP: 25
+            prompt: "[Phần I - Bài 2] Sử dụng kí hiệu ∈, ∉ điền vào chỗ chấm:\na) 1/2 ... ℚ\nb) 6/2 ... ℤ\nc) 5/(-0,12) ... ℚ",
+            options: ["a) ∈ ; b) ∈ ; c) ∈","a) ∈ ; b) ∉ ; c) ∈","a) ∈ ; b) ∈ ; c) ∉","a) ∉ ; b) ∈ ; c) ∈"],
+            correctAnswer: "a) ∈ ; b) ∈ ; c) ∈",
+            adminHint: "1/2 thuộc Q; 6/2 = 3 là số nguyên thuộc Z; 5/(-0,12) = -500/12 = -125/3 là phân số nên thuộc Q.",
+            stepByStepSolution: "Bước 1: 1/2 là phân số có tử 1, mẫu 2 nguyên khác 0, nên 1/2 ∈ ℚ.\nBước 2: 6/2 = 3 là số nguyên, do đó 6/2 ∈ ℤ.\nBước 3: 5/(-0,12) = 500/(-12) = -125/3 viết được dưới dạng phân số a/b với a, b ∈ ℤ, b ≠ 0, nên 5/(-0,12) ∈ ℚ.\nKết luận: Cả 3 khẳng định đều mang kí hiệu ∈.",
+            explanation: "1/2 ∈ ℚ; 6/2 = 3 ∈ ℤ; 5/(-0,12) = -125/3 ∈ ℚ.",
+            pointsXP: 20
           },
           {
             id: 'q1-3',
             lessonId: 'c1-l1',
+            sectionId: 'c1-l1-s1',
+            sectionCode: 'Phần I',
             type: 'multiple_choice',
-            category: 'So sánh',
-            difficulty: 'Trung bình',
-            prompt: 'So sánh hai số hữu tỉ: x = -3/5 và y = -2/5. Khẳng định nào đúng?',
-            options: [
-              'x > y',
-              'x < y',
-              'x = y',
-              'Không so sánh được'
-            ],
-            correctAnswer: 'x < y',
-            adminHint: 'Hai phân số cùng mẫu dương 5, so sánh tử số: -3 < -2.',
-            stepByStepSolution: 'Bước 1: Hai phân số có cùng mẫu số dương là 5.\nBước 2: So sánh tử số: vì -3 < -2 nên -3/5 < -2/5.\nBước 3: Vậy x < y.',
-            explanation: 'Vì -3 < -2 nên -3/5 < -2/5 hay x < y.',
+            category: 'Phần I: Khái niệm & Trục số',
+            difficulty: 'Cơ bản',
+            prompt: "[Phần I - Bài 3] Sử dụng kí hiệu ∈, ∉ điền vào chỗ chấm:\na) -3/2 ... ℚ\nb) -5,2 ... ℤ\nc) 0,4 ... ℚ",
+            options: ["a) ∈ ; b) ∉ ; c) ∈","a) ∉ ; b) ∉ ; c) ∈","a) ∈ ; b) ∈ ; c) ∈","a) ∈ ; b) ∉ ; c) ∉"],
+            correctAnswer: "a) ∈ ; b) ∉ ; c) ∈",
+            adminHint: "-3/2 là phân số thuộc Q; -5,2 là số thập phân không phải số nguyên nên không thuộc Z; 0,4 = 2/5 thuộc Q.",
+            stepByStepSolution: "Bước 1: -3/2 là phân số số hữu tỉ nên -3/2 ∈ ℚ.\nBước 2: -5,2 có phần thập phân khác 0, không phải số nguyên nên -5,2 ∉ ℤ.\nBước 3: 0,4 = 4/10 = 2/5 ∈ ℚ.\nKết luận: a) ∈ ; b) ∉ ; c) ∈.",
+            explanation: "-3/2 ∈ ℚ; -5,2 ∉ ℤ; 0,4 = 2/5 ∈ ℚ.",
             pointsXP: 20
           },
           {
             id: 'q1-4',
             lessonId: 'c1-l1',
-            type: 'fill_in_blank',
-            category: 'Biểu diễn phân số',
-            difficulty: 'Cơ bản',
-            prompt: 'Viết số thập phân -0,75 dưới dạng phân số tối giản a/b (với mẫu số dương):',
-            correctAnswer: '-3/4',
-            adminHint: '-0,75 = -75/100, chia cả tử và mẫu cho 25.',
-            stepByStepSolution: 'Bước 1: Đổi -0,75 = -75/100.\nBước 2: Rút gọn cho ƯCLN(75, 100) = 25: -75:25 / 100:25 = -3/4.\nBước 3: Kết quả phân số tối giản là -3/4.',
-            explanation: '-0,75 = -75/100 = -3/4.',
+            sectionId: 'c1-l1-s1',
+            sectionCode: 'Phần I',
+            type: 'multiple_choice',
+            category: 'Phần I: Khái niệm & Trục số',
+            difficulty: 'Trung bình',
+            prompt: "[Phần I - Bài 4] Sử dụng kí hiệu ∈, ∉ điền vào chỗ chấm:\na) -2/3 ... ℚ\nb) 0 ... ℚ*\nc) -3/(2 - 1) ... ℤ",
+            options: ["a) ∈ ; b) ∉ ; c) ∈","a) ∈ ; b) ∈ ; c) ∈","a) ∉ ; b) ∉ ; c) ∈","a) ∈ ; b) ∉ ; c) ∉"],
+            correctAnswer: "a) ∈ ; b) ∉ ; c) ∈",
+            adminHint: "Chú ý tập Q* là tập hợp các số hữu tỉ khác 0, do đó 0 không thuộc Q*. Biểu thức -3/(2-1) = -3/1 = -3 thuộc Z.",
+            stepByStepSolution: "Bước 1: -2/3 là phân số nên -2/3 ∈ ℚ.\nBước 2: Tập ℚ* gồm các số hữu tỉ khác 0, vì vậy 0 ∉ ℚ*.\nBước 3: Biểu thức -3/(2 - 1) = -3/1 = -3 là một số nguyên âm, do đó thuộc ℤ.\nKết luận: a) ∈ ; b) ∉ ; c) ∈.",
+            explanation: "-2/3 ∈ ℚ; 0 ∉ ℚ* vì ℚ* không chứa số 0; -3/(2-1) = -3 ∈ ℤ.",
             pointsXP: 25
           },
           {
             id: 'q1-5',
             lessonId: 'c1-l1',
+            sectionId: 'c1-l1-s1',
+            sectionCode: 'Phần I',
             type: 'multiple_choice',
-            category: 'Nhận biết',
+            category: 'Phần I: Khái niệm & Trục số',
+            difficulty: 'Trung bình',
+            prompt: "[Phần I - Bài 5] Điền kí hiệu tập hợp thích hợp (ℕ, ℤ, ℚ) vào chỗ chấm:\na) -2/(-5) ∈ ...\nb) -3,2 ∈ ...\nc) -1 3/4 ∉ ...",
+            options: ["a) ℚ ; b) ℚ ; c) ℤ","a) ℤ ; b) ℚ ; c) ℚ","a) ℕ ; b) ℤ ; c) ℤ","a) ℚ ; b) ℤ ; c) ℕ"],
+            correctAnswer: "a) ℚ ; b) ℚ ; c) ℤ",
+            adminHint: "-2/(-5) = 2/5 thuộc Q; -3,2 = -16/5 thuộc Q; hỗn số âm -1 3/4 = -7/4 không phải số nguyên nên không thuộc Z.",
+            stepByStepSolution: "Bước 1: Ta có -2/(-5) = 2/5 là phân số không phải số nguyên, nên thuộc tập ℚ.\nBước 2: -3,2 = -32/10 = -16/5 là số hữu tỉ, thuộc tập ℚ.\nBước 3: -1 3/4 = -7/4 không chia hết nên không thuộc tập số nguyên ℤ (hoặc ℕ).\nKết luận: a) ℚ ; b) ℚ ; c) ℤ.",
+            explanation: "-2/(-5) = 2/5 ∈ ℚ; -3,2 ∈ ℚ; -1 3/4 = -7/4 ∉ ℤ.",
+            pointsXP: 25
+          },
+          {
+            id: 'q1-6',
+            lessonId: 'c1-l1',
+            sectionId: 'c1-l1-s1',
+            sectionCode: 'Phần I',
+            type: 'fill_in_blank',
+            category: 'Phần I: Khái niệm & Trục số',
             difficulty: 'Cơ bản',
-            prompt: 'Trong các số sau, số nào KHÔNG PHẢI là số hữu tỉ?',
-            options: [
-              '0',
-              '-2,5',
-              '3/0',
-              '-11/7'
-            ],
-            correctAnswer: '3/0',
-            adminHint: 'Mẫu số của phân số phải khác 0 (b ≠ 0). Phép chia cho 0 không có nghĩa.',
-            stepByStepSolution: 'Bước 1: Kiểm tra định nghĩa a/b với b ≠ 0.\nBước 2: Số 3/0 có mẫu số bằng 0 nên biểu thức này vô nghĩa, không phải là số hữu tỉ.',
-            explanation: 'Mẫu số phải khác 0 nên 3/0 không phải là số hữu tỉ.',
+            prompt: "[Phần I - Bài 6] Viết hỗn số sau dưới dạng phân số số hữu tỉ tối giản a/b:\n-1 4/6 = ? (Nhập phân số dạng a/b)",
+            correctAnswer: "-5/3",
+            adminHint: "-1 4/6 = -(1 + 4/6) = -(1 + 2/3) = -5/3.",
+            stepByStepSolution: "Bước 1: Rút gọn phần phân số: 4/6 = 2/3.\nBước 2: Đổi hỗn số ra phân số: 1 2/3 = (1 · 3 + 2)/3 = 5/3.\nBước 3: Đặt dấu âm phía trước: -1 4/6 = -5/3.",
+            explanation: "-1 4/6 = -(1 · 6 + 4)/6 = -10/6 = -5/3.",
             pointsXP: 20
+          },
+          {
+            id: 'q1-7',
+            lessonId: 'c1-l1',
+            sectionId: 'c1-l1-s1',
+            sectionCode: 'Phần I',
+            type: 'fill_in_blank',
+            category: 'Phần I: Khái niệm & Trục số',
+            difficulty: 'Cơ bản',
+            prompt: "[Phần I - Bài 7] Viết hỗn số 1 1/10 dưới dạng phân số số hữu tỉ a/b:",
+            correctAnswer: "11/10",
+            adminHint: "1 1/10 = (1 · 10 + 1)/10 = 11/10.",
+            stepByStepSolution: "Bước 1: Áp dụng quy tắc đổi hỗn số sang phân số: a b/c = (a · c + b)/c.\nBước 2: 1 1/10 = (1 · 10 + 1)/10 = 11/10.\nBước 3: 11/10 là phân số tối giản.",
+            explanation: "1 1/10 = 11/10.",
+            pointsXP: 20
+          },
+          {
+            id: 'q1-8',
+            lessonId: 'c1-l1',
+            sectionId: 'c1-l1-s1',
+            sectionCode: 'Phần I',
+            type: 'fill_in_blank',
+            category: 'Phần I: Khái niệm & Trục số',
+            difficulty: 'Cơ bản',
+            prompt: "[Phần I - Bài 8] Viết hỗn số sau dưới dạng phân số số hữu tỉ tối giản a/b:\n-1 3/4 = ?",
+            correctAnswer: "-7/4",
+            adminHint: "-1 3/4 = -(1 · 4 + 3)/4 = -7/4.",
+            stepByStepSolution: "Bước 1: Chuyển phần hỗn số 1 3/4 = (1 · 4 + 3)/4 = 7/4.\nBước 2: Gắn dấu trừ: -1 3/4 = -7/4.",
+            explanation: "-1 3/4 = -7/4.",
+            pointsXP: 20
+          },
+          {
+            id: 'q1-9',
+            lessonId: 'c1-l1',
+            sectionId: 'c1-l1-s1',
+            sectionCode: 'Phần I',
+            type: 'fill_in_blank',
+            category: 'Phần I: Khái niệm & Trục số',
+            difficulty: 'Cơ bản',
+            prompt: "[Phần I - Bài 9] Viết số thập phân -0,12 dưới dạng phân số tối giản a/b:",
+            correctAnswer: "-3/25",
+            adminHint: "-0,12 = -12/100, chia cả tử và mẫu cho 4.",
+            stepByStepSolution: "Bước 1: Viết -0,12 thành phân số thập phân: -12/100.\nBước 2: Tìm ƯCLN(12, 100) = 4.\nBước 3: Rút gọn: -12/100 = (-12 : 4) / (100 : 4) = -3/25.",
+            explanation: "-0,12 = -12/100 = -3/25.",
+            pointsXP: 20
+          },
+          {
+            id: 'q1-10',
+            lessonId: 'c1-l1',
+            sectionId: 'c1-l1-s1',
+            sectionCode: 'Phần I',
+            type: 'fill_in_blank',
+            category: 'Phần I: Khái niệm & Trục số',
+            difficulty: 'Cơ bản',
+            prompt: "[Phần I - Bài 10] Viết số thập phân 3,25 dưới dạng phân số tối giản a/b:",
+            correctAnswer: "13/4",
+            adminHint: "3,25 = 325/100. Chia cả tử và mẫu cho 25.",
+            stepByStepSolution: "Bước 1: Viết thành phân số: 3,25 = 325/100.\nBước 2: Rút gọn cho 25: 325 : 25 = 13; 100 : 25 = 4.\nBước 3: Kết quả phân số tối giản là 13/4.",
+            explanation: "3,25 = 325/100 = 13/4.",
+            pointsXP: 20
+          },
+          {
+            id: 'q1-11',
+            lessonId: 'c1-l1',
+            sectionId: 'c1-l1-s1',
+            sectionCode: 'Phần I',
+            type: 'fill_in_blank',
+            category: 'Phần I: Khái niệm & Trục số',
+            difficulty: 'Cơ bản',
+            prompt: "[Phần I - Bài 11] Viết số thập phân 0,32 dưới dạng phân số tối giản a/b:",
+            correctAnswer: "8/25",
+            adminHint: "0,32 = 32/100 = 8/25 (chia cả tử và mẫu cho 4).",
+            stepByStepSolution: "Bước 1: 0,32 = 32/100.\nBước 2: Rút gọn cho 4: 32 : 4 = 8; 100 : 4 = 25.\nBước 3: Kết quả là 8/25.",
+            explanation: "0,32 = 32/100 = 8/25.",
+            pointsXP: 20
+          },
+          {
+            id: 'q1-12',
+            lessonId: 'c1-l1',
+            sectionId: 'c1-l1-s1',
+            sectionCode: 'Phần I',
+            type: 'multiple_choice',
+            category: 'Phần I: Khái niệm & Trục số',
+            difficulty: 'Cơ bản',
+            prompt: "[Phần I - Bài 12] Cặp phân số nào sau đây cùng biểu diễn số nguyên -11?",
+            options: ["-11/1 và -22/2","-11/1 và 22/2","-11/2 và -22/4","11/(-1) và 11/1"],
+            correctAnswer: "-11/1 và -22/2",
+            adminHint: "Mỗi số nguyên a đều có thể viết dưới dạng phân số a/1, 2a/2, 3a/3...",
+            stepByStepSolution: "Bước 1: Số nguyên -11 có thể biểu diễn thành phân số mẫu 1: -11/1.\nBước 2: Nhân cả tử và mẫu với 2: (-11 · 2) / (1 · 2) = -22/2.\nBước 3: Do đó hai phân số -11/1 và -22/2 cùng biểu diễn số nguyên -11.",
+            explanation: "-11 = -11/1 = -22/2.",
+            pointsXP: 20
+          },
+          {
+            id: 'q1-13',
+            lessonId: 'c1-l1',
+            sectionId: 'c1-l1-s1',
+            sectionCode: 'Phần I',
+            type: 'multiple_choice',
+            category: 'Phần I: Khái niệm & Trục số',
+            difficulty: 'Cơ bản',
+            prompt: "[Phần I - Bài 13] Khẳng định nào sau đây biểu diễn ĐÚNG số 0 dưới dạng hai số hữu tỉ?",
+            options: ["0 = 0/1 = 0/5 (mẫu số khác 0)","0 = 1/0 = 5/0","0 = 0/0 = 1/1","Số 0 không viết được dưới dạng phân số"],
+            correctAnswer: "0 = 0/1 = 0/5 (mẫu số khác 0)",
+            adminHint: "Số 0 viết được thành 0/b với b là bất kì số nguyên khác 0.",
+            stepByStepSolution: "Bước 1: Theo định nghĩa số hữu tỉ a/b, mẫu số b phải khác 0.\nBước 2: Số 0 chia cho mọi số khác 0 đều bằng 0, do đó 0 = 0/1 = 0/5 = 0/(-7).\nBước 3: Vì vậy 0 là số hữu tỉ và viết được dưới dạng 0/1 = 0/5.",
+            explanation: "0 = 0/1 = 0/5 ∈ ℚ (với mẫu số b ≠ 0).",
+            pointsXP: 20
+          },
+          {
+            id: 'q1-14',
+            lessonId: 'c1-l1',
+            sectionId: 'c1-l1-s1',
+            sectionCode: 'Phần I',
+            type: 'fill_in_blank',
+            category: 'Phần I: Khái niệm & Trục số',
+            difficulty: 'Trung bình',
+            prompt: "[Phần I - Bài 14] Viết số sau dưới dạng phân số tối giản a/b:\n0,23 / 0,46 = ?",
+            correctAnswer: "1/2",
+            adminHint: "Nhân cả tử và mẫu với 100: 23/46, sau đó chia cả tử và mẫu cho 23.",
+            stepByStepSolution: "Bước 1: Nhân cả tử và mẫu với 100 để khử dấu phẩy: 0,23 / 0,46 = 23/46.\nBước 2: Ta thấy 46 = 23 · 2, chia cả tử và mẫu cho 23: 23/46 = 1/2.\nBước 3: 1/2 là phân số tối giản.",
+            explanation: "0,23 / 0,46 = 23/46 = 1/2.",
+            pointsXP: 25
+          },
+          {
+            id: 'q1-15',
+            lessonId: 'c1-l1',
+            sectionId: 'c1-l1-s2',
+            sectionCode: 'Phần II',
+            type: 'multiple_choice',
+            category: 'Phần II: Thứ tự & So sánh',
+            difficulty: 'Cơ bản',
+            prompt: "[Phần II - Bài 1] So sánh hai phân số cùng mẫu: a = -7/13 và b = -8/13. Khẳng định nào ĐÚNG?",
+            options: ["a > b (vì -7 > -8)","a < b (vì 7 < 8)","a = b","Không so sánh được vì là số âm"],
+            correctAnswer: "a > b (vì -7 > -8)",
+            adminHint: "Hai phân số cùng mẫu dương 13, so sánh hai tử số: -7 > -8 nên -7/13 > -8/13.",
+            stepByStepSolution: "Bước 1: Hai phân số đã có cùng mẫu số dương là 13.\nBước 2: So sánh tử số: ta có -7 > -8.\nBước 3: Vì mẫu số dương nên -7/13 > -8/13, tức là a > b.",
+            explanation: "Vì -7 > -8 nên -7/13 > -8/13 hay a > b.",
+            pointsXP: 20
+          },
+          {
+            id: 'q1-16',
+            lessonId: 'c1-l1',
+            sectionId: 'c1-l1-s2',
+            sectionCode: 'Phần II',
+            type: 'multiple_choice',
+            category: 'Phần II: Thứ tự & So sánh',
+            difficulty: 'Trung bình',
+            prompt: "[Phần II - Bài 2] So sánh hai số hữu tỉ: x = 1111/3131 và y = 11/31. Khẳng định nào ĐÚNG?",
+            options: ["x = y (hai phân số bằng nhau)","x > y","x < y","Không xác định"],
+            correctAnswer: "x = y (hai phân số bằng nhau)",
+            adminHint: "Rút gọn 1111/3131 bằng cách chia cả tử và mẫu cho 101.",
+            stepByStepSolution: "Bước 1: Nhận thấy 1111 = 11 · 101 và 3131 = 31 · 101.\nBước 2: Rút gọn x: 1111/3131 = (11 · 101)/(31 · 101) = 11/31.\nBước 3: So sánh: x = 11/31 = y. Vậy x = y.",
+            explanation: "1111/3131 = 11/31 nên x = y.",
+            pointsXP: 25
+          },
+          {
+            id: 'q1-17',
+            lessonId: 'c1-l1',
+            sectionId: 'c1-l1-s2',
+            sectionCode: 'Phần II',
+            type: 'multiple_choice',
+            category: 'Phần II: Thứ tự & So sánh',
+            difficulty: 'Trung bình',
+            prompt: "[Phần II - Bài 3] Quy đồng mẫu để so sánh: u = -5/6 và v = -6/7. Khẳng định nào ĐÚNG?",
+            options: ["u > v (vì -35/42 > -36/42)","u < v (vì 5/6 < 6/7)","u = v","u < -1 và v > -1"],
+            correctAnswer: "u > v (vì -35/42 > -36/42)",
+            adminHint: "Mẫu chung là 42. Quy đồng: -5/6 = -35/42; -6/7 = -36/42.",
+            stepByStepSolution: "Bước 1: Mẫu số chung của 6 và 7 là 42.\nBước 2: Quy đồng u: -5/6 = (-5 · 7)/(6 · 7) = -35/42.\nBước 3: Quy đồng v: -6/7 = (-6 · 6)/(7 · 6) = -36/42.\nBước 4: So sánh hai tử số: vì -35 > -36 nên -35/42 > -36/42 ⟹ u > v.",
+            explanation: "-5/6 = -35/42 > -36/42 = -6/7 nên u > v.",
+            pointsXP: 25
+          },
+          {
+            id: 'q1-18',
+            lessonId: 'c1-l1',
+            sectionId: 'c1-l1-s2',
+            sectionCode: 'Phần II',
+            type: 'multiple_choice',
+            category: 'Phần II: Thứ tự & So sánh',
+            difficulty: 'Trung bình',
+            prompt: "[Phần II - Bài 4] So sánh hai số hữu tỉ: p = -2/7 và q = -3/11. Khẳng định nào ĐÚNG?",
+            options: ["p < q (vì -22/77 < -21/77)","p > q (vì -2/7 > -3/11)","p = q","Không so sánh được"],
+            correctAnswer: "p < q (vì -22/77 < -21/77)",
+            adminHint: "Quy đồng mẫu 77: -2/7 = -22/77; -3/11 = -21/77. Vì -22 < -21 nên p < q.",
+            stepByStepSolution: "Bước 1: Mẫu chung là 7 · 11 = 77.\nBước 2: Quy đồng p: -2/7 = -22/77.\nBước 3: Quy đồng q: -3/11 = -21/77.\nBước 4: Vì -22 < -21 nên -22/77 < -21/77 ⟹ p < q.",
+            explanation: "-2/7 = -22/77 < -21/77 = -3/11 nên p < q.",
+            pointsXP: 25
+          },
+          {
+            id: 'q1-19',
+            lessonId: 'c1-l1',
+            sectionId: 'c1-l1-s2',
+            sectionCode: 'Phần II',
+            type: 'multiple_choice',
+            category: 'Phần II: Thứ tự & So sánh',
+            difficulty: 'Cơ bản',
+            prompt: "[Phần II - Bài 5] So sánh hai phân số cùng tử dương: 99/123 và 99/132. Dấu thích hợp là:",
+            options: ["99/123 > 99/132 (mẫu bé hơn thì phân số lớn hơn)","99/123 < 99/132","99/123 = 99/132","Không so sánh được"],
+            correctAnswer: "99/123 > 99/132 (mẫu bé hơn thì phân số lớn hơn)",
+            adminHint: "Hai phân số dương có cùng tử dương, phân số nào có mẫu bé hơn thì lớn hơn.",
+            stepByStepSolution: "Bước 1: Hai phân số đều dương và có cùng tử số là 99 > 0.\nBước 2: So sánh hai mẫu số: ta có 123 < 132.\nBước 3: Với hai phân số dương cùng tử, mẫu càng bé thì giá trị càng lớn. Do đó 99/123 > 99/132.",
+            explanation: "Vì cùng tử dương 99 và mẫu 123 < 132 nên 99/123 > 99/132.",
+            pointsXP: 20
+          },
+          {
+            id: 'q1-20',
+            lessonId: 'c1-l1',
+            sectionId: 'c1-l1-s2',
+            sectionCode: 'Phần II',
+            type: 'multiple_choice',
+            category: 'Phần II: Thứ tự & So sánh',
+            difficulty: 'Trung bình',
+            prompt: "[Phần II - Bài 6] So sánh hai phân số có tử số âm: m = -17/35 và n = -17/34. Khẳng định nào ĐÚNG?",
+            options: ["m > n (vì 17/35 < 17/34 nên khi lấy dấu âm sẽ đảo chiều)","m < n","m = n","m = -1/2 và n = -1"],
+            correctAnswer: "m > n (vì 17/35 < 17/34 nên khi lấy dấu âm sẽ đảo chiều)",
+            adminHint: "So sánh số dương trước: 17/35 < 17/34. Khi nhân cả hai vế với -1 thì đổi chiều bất đẳng thức: -17/35 > -17/34.",
+            stepByStepSolution: "Bước 1: Xét phần số dương: 17/35 và 17/34 có cùng tử dương 17.\nBước 2: Vì 35 > 34 nên 17/35 < 17/34.\nBước 3: Lấy số đối (hoặc nhân -1) thì bất đẳng thức đổi chiều: -17/35 > -17/34 ⟹ m > n.",
+            explanation: "Vì 17/35 < 17/34 nên -17/35 > -17/34 tức là m > n.",
+            pointsXP: 25
+          },
+          {
+            id: 'q1-21',
+            lessonId: 'c1-l1',
+            sectionId: 'c1-l1-s2',
+            sectionCode: 'Phần II',
+            type: 'multiple_choice',
+            category: 'Phần II: Thứ tự & So sánh',
+            difficulty: 'Nâng cao',
+            prompt: "[Phần II - Bài 7] So sánh bằng phương pháp phần bù tới 1:\nA = 2019/2020 và B = 2020/2021. Khẳng định nào ĐÚNG?",
+            options: ["A < B (vì phần bù 1/2020 > 1/2021)","A > B","A = B","A + B = 1"],
+            correctAnswer: "A < B (vì phần bù 1/2020 > 1/2021)",
+            adminHint: "1 - A = 1/2020 và 1 - B = 1/2021. Phần bù càng lớn thì phân số ban đầu càng nhỏ.",
+            stepByStepSolution: "Bước 1: Tính phần bù tới 1 của A: 1 - 2019/2020 = 1/2020.\nBước 2: Tính phần bù tới 1 của B: 1 - 2020/2021 = 1/2021.\nBước 3: So sánh phần bù: vì 2020 < 2021 nên 1/2020 > 1/2021.\nBước 4: Phân số nào có phần bù tới 1 lớn hơn thì phân số đó bé hơn. Vậy A < B.",
+            explanation: "1 - A = 1/2020 > 1/2021 = 1 - B nên A < B.",
+            pointsXP: 30
+          },
+          {
+            id: 'q1-22',
+            lessonId: 'c1-l1',
+            sectionId: 'c1-l1-s2',
+            sectionCode: 'Phần II',
+            type: 'multiple_choice',
+            category: 'Phần II: Thứ tự & So sánh',
+            difficulty: 'Nâng cao',
+            prompt: "[Phần II - Bài 8] So sánh hai phân số bằng phương pháp phần bù:\nX = 1234/1235 và Y = 4319/4320. Khẳng định nào ĐÚNG?",
+            options: ["X < Y (vì 1 - X = 1/1235 > 1/4320 = 1 - Y)","X > Y","X = Y","Cả hai đều lớn hơn 1"],
+            correctAnswer: "X < Y (vì 1 - X = 1/1235 > 1/4320 = 1 - Y)",
+            adminHint: "Phần bù tới 1 của X là 1/1235, của Y là 1/4320. Vì 1/1235 > 1/4320 nên X < Y.",
+            stepByStepSolution: "Bước 1: Tính phần bù: 1 - 1234/1235 = 1/1235.\nBước 2: Tính phần bù: 1 - 4319/4320 = 1/4320.\nBước 3: Vì 1235 < 4320 nên 1/1235 > 1/4320.\nBước 4: Phần bù lớn hơn thì giá trị ban đầu nhỏ hơn: 1234/1235 < 4319/4320 ⟹ X < Y.",
+            explanation: "1 - X = 1/1235 > 1/4320 = 1 - Y ⟹ X < Y.",
+            pointsXP: 30
           }
         ]
       },
-      {
+{
         id: 'c1-l2',
         chapterId: 'ch-1',
         number: 2,

@@ -103,6 +103,44 @@ export function saveStudentProgress(user: UserProfile, chapters: Chapter[], goal
   }
 }
 
+// Merge saved progress (status, accuracy, stats) into latest CURRICULUM_DATA
+export function mergeWithCurriculum(savedChapters?: Chapter[]): Chapter[] {
+  if (!savedChapters || savedChapters.length === 0) {
+    return CURRICULUM_DATA;
+  }
+
+  const progressMap = new Map<string, { status: string; accuracy: number; totalAttempts: number; correctCount: number; timeSpentMinutes: number }>();
+  savedChapters.forEach((ch) => {
+    ch.lessons?.forEach((l) => {
+      progressMap.set(l.id, {
+        status: l.status,
+        accuracy: l.accuracy,
+        totalAttempts: l.totalAttempts,
+        correctCount: l.correctCount,
+        timeSpentMinutes: l.timeSpentMinutes,
+      });
+    });
+  });
+
+  return CURRICULUM_DATA.map((ch) => ({
+    ...ch,
+    lessons: ch.lessons.map((l) => {
+      const saved = progressMap.get(l.id);
+      if (saved) {
+        return {
+          ...l,
+          status: saved.status as any,
+          accuracy: saved.accuracy,
+          totalAttempts: saved.totalAttempts,
+          correctCount: saved.correctCount,
+          timeSpentMinutes: saved.timeSpentMinutes,
+        };
+      }
+      return l;
+    }),
+  }));
+}
+
 // Load current active account progress
 export function loadActiveStudentProgress(): SavedAccountData | null {
   try {
@@ -114,6 +152,8 @@ export function loadActiveStudentProgress(): SavedAccountData | null {
       const parsed: SavedAccountData = JSON.parse(rawData);
       // Guarantee role consistency based on email
       parsed.user.role = isTeacherEmail(parsed.user.email) ? 'admin' : 'student';
+      // Always merge with latest curriculum data so new sections, examples & questions are never lost
+      parsed.chapters = mergeWithCurriculum(parsed.chapters);
       return parsed;
     }
   } catch (err) {
@@ -130,6 +170,7 @@ export function loadStudentByEmail(email: string): SavedAccountData | null {
     if (rawData) {
       const parsed: SavedAccountData = JSON.parse(rawData);
       parsed.user.role = isTeacherEmail(cleanEmail) ? 'admin' : 'student';
+      parsed.chapters = mergeWithCurriculum(parsed.chapters);
       return parsed;
     }
   } catch (err) {

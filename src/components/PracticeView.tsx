@@ -22,11 +22,15 @@ import {
   BookOpen,
   Info,
   Layers,
-  ChevronDown
+  ChevronDown,
+  AlertTriangle,
+  Volume2,
+  VolumeX
 } from 'lucide-react';
 import { QuickCatalogModal } from './QuickCatalogModal';
 import { PipoOwlMascot } from './PipoOwlMascot';
 import { MathBadgeIcon } from './MathBadgeIcon';
+import { soundManager, triggerMiniFireworks } from '../utils/soundEffects';
 
 interface PracticeViewProps {
   chapters: Chapter[];
@@ -60,20 +64,22 @@ export function checkIsAnswerCorrect(userAns: string, correctAns: string, option
   const cCompact = c.replace(/\s+/g, '').replace(/[()]/g, '');
   if (uCompact === cCompact) return true;
 
-  // 3. Option letter match (A, B, C, D)
+  // 3. Option letter match (A, B, C, D) ONLY if either input is explicitly a single choice letter (e.g., "A", "B.", "C)")
   if (options && options.length > 0) {
-    const userOptIndex = options.findIndex((opt) => normalize(opt) === u);
-    if (userOptIndex !== -1) {
-      const userLetter = String.fromCharCode(65 + userOptIndex).toLowerCase(); // 'a', 'b', 'c', 'd'
-      if (c === userLetter || c.startsWith(`${userLetter}.`) || c.startsWith(`${userLetter})`)) {
+    const isSingleLetterChoice = (s: string) => /^[a-d][.)]?$/i.test(s.trim());
+
+    if (isSingleLetterChoice(c)) {
+      const targetLetter = c.trim()[0].toLowerCase();
+      const targetIndex = targetLetter.charCodeAt(0) - 97;
+      if (options[targetIndex] && normalize(options[targetIndex]) === u) {
         return true;
       }
     }
 
-    const correctOptIndex = options.findIndex((opt) => normalize(opt) === c);
-    if (correctOptIndex !== -1) {
-      const correctLetter = String.fromCharCode(65 + correctOptIndex).toLowerCase();
-      if (u === correctLetter || u.startsWith(`${correctLetter}.`) || u.startsWith(`${correctLetter})`)) {
+    if (isSingleLetterChoice(u)) {
+      const userLetter = u.trim()[0].toLowerCase();
+      const userIndex = userLetter.charCodeAt(0) - 97;
+      if (options[userIndex] && normalize(options[userIndex]) === c) {
         return true;
       }
     }
@@ -105,12 +111,32 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
     setActiveChapterTabId(currentChapter.id);
   }, [currentChapter.id]);
 
+  // Synchronize when initialLessonId or initialCategoryFilter prop changes
+  useEffect(() => {
+    if (initialLessonId) {
+      setCurrentLessonId(initialLessonId);
+    }
+  }, [initialLessonId]);
+
+  useEffect(() => {
+    if (initialCategoryFilter !== undefined) {
+      setSelectedCategoryFilter(initialCategoryFilter);
+      setCurrentIndex(0);
+    }
+  }, [initialCategoryFilter]);
+
+  // Mistake bank for review later
+  const [mistakeQuestions, setMistakeQuestions] = useState<Question[]>([]);
+
   // Filters
   const [selectedTypeFilter, setSelectedTypeFilter] = useState<'all' | 'multiple_choice' | 'fill_in_blank'>('all');
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string>(initialCategoryFilter || 'all');
 
   // Filtered Questions
   const filteredQuestions = currentLesson.questions.filter((q) => {
+    if (selectedCategoryFilter === 'review_mistakes') {
+      return mistakeQuestions.some((mq) => mq.id === q.id);
+    }
     if (selectedTypeFilter !== 'all' && q.type !== selectedTypeFilter) return false;
     if (selectedCategoryFilter !== 'all' && q.category !== selectedCategoryFilter) return false;
     return true;
@@ -140,6 +166,9 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
   const [isOfflineSimulated, setIsOfflineSimulated] = useState<boolean>(false);
   const [checkpointNotice, setCheckpointNotice] = useState<string | null>(null);
   const [showRefillModal, setShowRefillModal] = useState<boolean>(false);
+
+  // Sound effect state
+  const [soundEnabled, setSoundEnabled] = useState<boolean>(soundManager.isEnabled());
 
   // Mascot dynamic reaction
   const [mascotMessage, setMascotMessage] = useState<string>(
@@ -185,6 +214,12 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
     setIsCorrect(isAnswerRight);
 
     if (isAnswerRight) {
+      // 1. Play cheerful success chime
+      soundManager.playCorrect();
+
+      // 2. Trigger colorful mini fireworks bloom
+      triggerMiniFireworks(0.5, 0.45);
+
       // Award XP & Coins
       const xpGained = wrongAttempts === 0 ? currentQuestion.pointsXP : Math.max(5, currentQuestion.pointsXP - 10);
       const coinsGained = 5;
@@ -195,11 +230,20 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
       });
 
       setSessionCorrectCount((prev) => prev + 1);
-      setMascotMessage(`Xuất sắc quá! Em đã giải chính xác! +${xpGained} XP và +${coinsGained} Xu vàng! Hãy xem cách giải chi tiết bên dưới nhé! 🎉`);
+      setMascotMessage(`Xuất sắc quá! Em đã giải chính xác! +${xpGained} XP và +${coinsGained} Xu vàng! Hãy đọc lời giải chi tiết rồi bấm "Câu tiếp theo" nhé! 🎉`);
     } else {
+      // Play gentle tone for incorrect answer
+      soundManager.playIncorrect();
+
       // Penalty: Lose 1 Heart
       const newHearts = Math.max(0, user.hearts - 1);
       onUpdateUser({ hearts: newHearts });
+
+      // Save question into mistake review bank
+      setMistakeQuestions((prev) => {
+        if (prev.some((mq) => mq.id === currentQuestion.id)) return prev;
+        return [...prev, currentQuestion];
+      });
 
       const newAttempts = wrongAttempts + 1;
       setWrongAttempts(newAttempts);
@@ -208,7 +252,7 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
         setShowRefillModal(true);
         setMascotMessage('Ối, em đã tạm hết tim rồi! Đừng lo, hãy làm câu đố tư duy nhanh hoặc đổi xu để hồi máu nhé!');
       } else {
-        setMascotMessage(`Chưa chính xác rồi em ơi (-1 tim)! Đừng buồn, Pipo đã mở Lời giải & Cách giải chi tiết từng bước ngay bên dưới để em xem nè! 👇`);
+        setMascotMessage(`Chưa chính xác (-1 tim)! Câu hỏi này đã được chuyển vào mục "Kiểm tra lại sau". Hãy xem lời giải chi tiết bên dưới rồi bấm "Câu tiếp theo" nhé! 👇`);
       }
     }
   };
@@ -220,10 +264,14 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
     } else {
       // Completed current session
       setIsSessionCompleted(true);
-      const finalAccuracy = Math.round(((sessionCorrectCount + (isCorrect ? 1 : 0)) / activeQuestions.length) * 100);
-      const newStatus = finalAccuracy >= 90 ? 'MASTER' : 'COMPLETED';
+      const finalAccuracy = Math.min(100, Math.round((sessionCorrectCount / activeQuestions.length) * 100));
+      const newStatus = finalAccuracy >= 80 ? 'MASTER' : 'COMPLETED';
       onLessonStatusChange(currentLesson.id, newStatus, finalAccuracy);
       setMascotMessage(`Chúc mừng em đã hoàn thành bài học với độ chính xác ${finalAccuracy}%! Pipo rất tự hào về em! 🏆`);
+      if (finalAccuracy >= 60) {
+        soundManager.playCorrect();
+        triggerMiniFireworks(0.5, 0.35);
+      }
     }
   };
 
@@ -392,33 +440,119 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
         {/* Filter controls row */}
         <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-slate-100">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold text-slate-500 flex items-center gap-1">
-              <Filter className="w-3.5 h-3.5" />
-              <span>Dạng bài:</span>
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1">
+              <Filter className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Phần bài tập:</span>
             </span>
-            <button
-              onClick={() => setSelectedCategoryFilter('all')}
-              className={`px-2.5 py-1 text-xs font-medium rounded-lg transition-colors ${
-                selectedCategoryFilter === 'all'
-                  ? 'bg-slate-900 text-white'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-              }`}
-            >
-              Tất cả ({currentLesson.questions.length})
-            </button>
-            {availableCategories.map((cat) => (
+
+            {currentLesson.sections && currentLesson.sections.length > 0 ? (
+              <>
+                <button
+                  onClick={() => {
+                    setSelectedCategoryFilter('all');
+                    setCurrentIndex(0);
+                  }}
+                  className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all ${
+                    selectedCategoryFilter === 'all'
+                      ? 'bg-slate-900 text-white shadow-xs'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  Tất cả ({currentLesson.questions.length} bài)
+                </button>
+                {currentLesson.sections.map((sec) => {
+                  const matchingCat = availableCategories.find(c => c.includes(sec.code)) || (sec.code === 'Phần I' ? 'Phần I: Khái niệm & Trục số' : 'Phần II: Thứ tự & So sánh');
+                  const count = currentLesson.questions.filter((q) => q.sectionId === sec.id || q.category.includes(sec.code)).length;
+                  const isSelected = selectedCategoryFilter === matchingCat;
+                  return (
+                    <button
+                      key={sec.id}
+                      onClick={() => {
+                        setSelectedCategoryFilter(matchingCat);
+                        setCurrentIndex(0);
+                      }}
+                      className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all flex items-center gap-2 ${
+                        isSelected
+                          ? 'bg-emerald-600 text-white shadow-xs ring-2 ring-emerald-500/20'
+                          : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200'
+                      }`}
+                    >
+                      <span className="font-extrabold">{sec.code}:</span>
+                      <span>{sec.shortTitle || sec.title}</span>
+                      <span className={`text-[10px] px-1.5 py-0.2 rounded-md font-mono ${
+                        isSelected ? 'bg-white/25 text-white' : 'bg-emerald-200/80 text-emerald-900'
+                      }`}>
+                        {count} bài
+                      </span>
+                    </button>
+                  );
+                })}
+              </>
+            ) : (
+              <>
+                <button
+                  onClick={() => {
+                    setSelectedCategoryFilter('all');
+                    setCurrentIndex(0);
+                  }}
+                  className={`px-2.5 py-1 text-xs font-medium rounded-lg transition-colors ${
+                    selectedCategoryFilter === 'all'
+                      ? 'bg-slate-900 text-white'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  Tất cả ({currentLesson.questions.length})
+                </button>
+                {availableCategories.map((cat) => {
+                  const count = currentLesson.questions.filter((q) => q.category === cat).length;
+                  return (
+                    <button
+                      key={cat}
+                      onClick={() => {
+                        setSelectedCategoryFilter(cat);
+                        setCurrentIndex(0);
+                      }}
+                      className={`px-2.5 py-1 text-xs font-medium rounded-lg transition-colors flex items-center gap-1.5 ${
+                        selectedCategoryFilter === cat
+                          ? 'bg-emerald-600 text-white shadow-xs'
+                          : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      }`}
+                    >
+                      <span>{cat}</span>
+                      <span className={`text-[10px] px-1.5 py-0.2 rounded font-mono ${
+                        selectedCategoryFilter === cat ? 'bg-white/25 text-white' : 'bg-slate-200 text-slate-700'
+                      }`}>
+                        {count}
+                      </span>
+                    </button>
+                  );
+                })}
+              </>
+            )}
+
+            {/* Mục kiểm tra lại sau (Sổ tay câu sai) */}
+            {mistakeQuestions.length > 0 && (
               <button
-                key={cat}
-                onClick={() => setSelectedCategoryFilter(cat)}
-                className={`px-2.5 py-1 text-xs font-medium rounded-lg transition-colors ${
-                  selectedCategoryFilter === cat
-                    ? 'bg-emerald-600 text-white'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                onClick={() => {
+                  setSelectedCategoryFilter('review_mistakes');
+                  setCurrentIndex(0);
+                }}
+                className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all flex items-center gap-1.5 shrink-0 ${
+                  selectedCategoryFilter === 'review_mistakes'
+                    ? 'bg-rose-600 text-white shadow-xs ring-2 ring-rose-500/20'
+                    : 'bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200'
                 }`}
+                title="Luyện tập lại các câu đã trả lời sai"
               >
-                {cat}
+                <AlertTriangle className="w-3.5 h-3.5" />
+                <span>Kiểm tra lại sau</span>
+                <span className={`text-[10px] px-1.5 py-0.2 rounded font-mono ${
+                  selectedCategoryFilter === 'review_mistakes' ? 'bg-white/25 text-white' : 'bg-rose-200 text-rose-900 font-bold'
+                }`}>
+                  {mistakeQuestions.length} câu
+                </span>
               </button>
-            ))}
+            )}
           </div>
 
           {/* Question Type Filter */}
@@ -547,9 +681,34 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
                     <span>Độ khó: {currentQuestion.difficulty}</span>
                   </div>
 
-                  <span className="text-indigo-600 font-bold font-mono">
-                    +{currentQuestion.pointsXP} XP
-                  </span>
+                  <div className="flex items-center gap-2.5">
+                    <button
+                      type="button"
+                      onClick={() => setSoundEnabled(soundManager.toggle())}
+                      className={`px-2.5 py-1 rounded-lg border text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer ${
+                        soundEnabled 
+                          ? 'bg-emerald-50 border-emerald-200 text-emerald-800 hover:bg-emerald-100 shadow-2xs' 
+                          : 'bg-slate-100 border-slate-200 text-slate-500 hover:bg-slate-200'
+                      }`}
+                      title={soundEnabled ? 'Âm thanh: Đang BẬT (Bấm để tắt)' : 'Âm thanh: Đang TẮT (Bấm để bật)'}
+                    >
+                      {soundEnabled ? (
+                        <>
+                          <Volume2 className="w-3.5 h-3.5 text-emerald-600" />
+                          <span className="text-[11px]">Âm thanh</span>
+                        </>
+                      ) : (
+                        <>
+                          <VolumeX className="w-3.5 h-3.5 text-slate-400" />
+                          <span className="text-[11px]">Tắt âm</span>
+                        </>
+                      )}
+                    </button>
+
+                    <span className="text-indigo-600 font-bold font-mono">
+                      +{currentQuestion.pointsXP} XP
+                    </span>
+                  </div>
                 </div>
 
                 {/* Progress bar */}
@@ -595,9 +754,11 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
                     return (
                       <button
                         key={idx}
-                        disabled={isAnswerSubmitted && isCorrect === true}
-                        onClick={() => setSelectedOption(opt)}
-                        className={`p-4 rounded-2xl border-2 text-left text-sm transition-all flex items-start gap-3 ${btnStyle}`}
+                        disabled={isAnswerSubmitted}
+                        onClick={() => !isAnswerSubmitted && setSelectedOption(opt)}
+                        className={`p-4 rounded-2xl border-2 text-left text-sm transition-all flex items-start gap-3 ${
+                          isAnswerSubmitted ? 'cursor-default' : 'cursor-pointer'
+                        } ${btnStyle}`}
                       >
                         <span className="w-6 h-6 rounded-lg bg-slate-100 flex items-center justify-center text-xs font-bold font-mono shrink-0">
                           {String.fromCharCode(65 + idx)}
@@ -613,11 +774,11 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
                   <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                     <input
                       type="text"
-                      disabled={isAnswerSubmitted && isCorrect === true}
+                      disabled={isAnswerSubmitted}
                       value={textAnswer}
                       onChange={(e) => setTextAnswer(e.target.value)}
                       placeholder="Nhập kết quả (Ví dụ: 13/6 hoặc -3/2 hoặc 45°)..."
-                      className="flex-1 px-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-emerald-500 focus:outline-none text-base font-mono font-semibold"
+                      className="flex-1 px-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-emerald-500 focus:outline-none text-base font-mono font-semibold disabled:bg-slate-50 disabled:text-slate-600"
                     />
 
                     {/* Virtual keypad quick inserts for math symbols */}
@@ -626,8 +787,9 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
                         <button
                           key={sym}
                           type="button"
-                          onClick={() => setTextAnswer((prev) => prev + sym)}
-                          className="px-2.5 py-1.5 bg-white hover:bg-slate-200 text-xs font-bold font-mono rounded-lg transition-colors"
+                          disabled={isAnswerSubmitted}
+                          onClick={() => !isAnswerSubmitted && setTextAnswer((prev) => prev + sym)}
+                          className="px-2.5 py-1.5 bg-white hover:bg-slate-200 text-xs font-bold font-mono rounded-lg transition-colors disabled:opacity-50"
                         >
                           {sym}
                         </button>
@@ -645,7 +807,7 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
                     /* Admin/Teacher: CAN view hint before submission */
                     <button
                       onClick={() => setShowAdminInspection(!showAdminInspection)}
-                      className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-purple-900 bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-xl transition-colors"
+                      className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-purple-900 bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-xl transition-colors cursor-pointer"
                     >
                       <ShieldCheck className="w-4 h-4 text-purple-700" />
                       <span>{showAdminInspection ? 'Đóng gợi ý Giáo viên' : 'Admin: Xem trước Gợi ý & Đáp án'}</span>
@@ -662,10 +824,15 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
 
                 {/* Right side: Submit Answer or Next Question */}
                 <div className="flex items-center gap-3">
-                  {!isAnswerSubmitted || isCorrect === false ? (
+                  {!isAnswerSubmitted ? (
                     <button
                       onClick={handleSubmitAnswer}
-                      className="px-6 py-2.5 text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 rounded-xl transition-colors shadow-sm flex items-center gap-2"
+                      disabled={currentQuestion.type === 'multiple_choice' ? !selectedOption : !textAnswer.trim()}
+                      className={`px-6 py-2.5 text-sm font-bold text-white rounded-xl transition-all shadow-sm flex items-center gap-2 ${
+                        (currentQuestion.type === 'multiple_choice' ? !selectedOption : !textAnswer.trim())
+                          ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                          : 'bg-emerald-600 hover:bg-emerald-700 cursor-pointer active:scale-95'
+                      }`}
                     >
                       <span>Kiểm tra đáp án</span>
                       <Check className="w-4 h-4" />
@@ -673,9 +840,9 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
                   ) : (
                     <button
                       onClick={handleNextQuestion}
-                      className="px-6 py-2.5 text-sm font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-xl transition-colors shadow-sm flex items-center gap-2"
+                      className="px-6 py-2.5 text-sm font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-xl transition-all shadow-sm flex items-center gap-2 cursor-pointer active:scale-95"
                     >
-                      <span>Câu tiếp theo</span>
+                      <span>{currentIndex + 1 < activeQuestions.length ? 'Câu tiếp theo' : 'Xem kết quả bài học'}</span>
                       <ArrowRight className="w-4 h-4" />
                     </button>
                   )}
@@ -716,22 +883,27 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
                         : 'bg-rose-50/90 border-rose-300 text-rose-950'
                     }`}
                   >
-                    <div className="flex items-center gap-2 font-bold text-sm">
+                    <div className="font-bold text-sm">
                       {isCorrect ? (
-                        <>
+                        <div className="flex items-center gap-2">
                           <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
                           <span>Chính xác tuyệt đối! Em làm bài rất tốt!</span>
-                        </>
+                        </div>
                       ) : (
-                        <>
-                          <XCircle className="w-5 h-5 text-rose-600 shrink-0" />
-                          <span>Chưa chính xác (Lần sai thứ {wrongAttempts}) — Đã trừ 1 tim!</span>
-                        </>
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <XCircle className="w-5 h-5 text-rose-600 shrink-0" />
+                            <span>Chưa chính xác — Đã trừ 1 tim!</span>
+                          </div>
+                          <p className="text-xs font-normal text-rose-900 pl-7">
+                            Câu hỏi này đã được chuyển vào mục <strong>"Kiểm tra lại sau"</strong> để em ôn tập. Em hãy xem lời giải chi tiết bên dưới rồi bấm <strong>"Câu tiếp theo"</strong> để tiếp tục nhé!
+                          </p>
+                        </div>
                       )}
                     </div>
                     
                     {!isCorrect && (
-                      <span className="text-xs font-mono font-semibold bg-white/70 px-2.5 py-1 rounded-lg">
+                      <span className="text-xs font-mono font-semibold bg-white/80 px-2.5 py-1 rounded-lg shrink-0 border border-rose-200">
                         Đáp án chuẩn: <strong className="text-emerald-700">{currentQuestion.correctAnswer}</strong>
                       </span>
                     )}
@@ -807,13 +979,28 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
 
               {/* Action Buttons */}
               <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+                {mistakeQuestions.length > 0 && (
+                  <button
+                    onClick={() => {
+                      setSelectedCategoryFilter('review_mistakes');
+                      setIsSessionCompleted(false);
+                      setCurrentIndex(0);
+                      setSessionCorrectCount(0);
+                    }}
+                    className="py-2.5 px-5 text-xs font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-xl transition-colors flex items-center gap-2 cursor-pointer shadow-xs"
+                  >
+                    <AlertTriangle className="w-4 h-4 text-rose-600" />
+                    <span>Luyện lại {mistakeQuestions.length} câu đã làm sai</span>
+                  </button>
+                )}
+
                 <button
                   onClick={() => {
                     setIsSessionCompleted(false);
                     setCurrentIndex(0);
                     setSessionCorrectCount(0);
                   }}
-                  className="py-2.5 px-5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors flex items-center gap-2"
+                  className="py-2.5 px-5 text-xs font-bold text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors flex items-center gap-2 cursor-pointer"
                 >
                   <RotateCcw className="w-4 h-4" />
                   <span>Luyện tập lại</span>
@@ -829,7 +1016,7 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
                       setIsSessionCompleted(false);
                     }
                   }}
-                  className="py-2.5 px-6 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-xl transition-colors shadow-sm flex items-center gap-2"
+                  className="py-2.5 px-6 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-xl transition-colors shadow-sm flex items-center gap-2 cursor-pointer"
                 >
                   <span>Chuyển sang bài tiếp theo</span>
                   <ArrowRight className="w-4 h-4" />

@@ -448,6 +448,32 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   <p className="text-xs text-slate-600 line-clamp-2">
                     {lesson.description}
                   </p>
+
+                  {/* Explicit sections breakdown (Mục I, Mục II) */}
+                  {lesson.sections && lesson.sections.length > 0 && (
+                    <div className="pt-1.5 space-y-1.5">
+                      <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
+                        <Sparkles className="w-3 h-3 text-amber-500" />
+                        <span>Cấu trúc theo SGK ({lesson.sections.length} mục):</span>
+                      </div>
+                      <div className="space-y-1">
+                        {lesson.sections.map((sec) => (
+                          <div
+                            key={sec.id}
+                            className="p-2 rounded-xl bg-emerald-50/50 border border-emerald-100 flex items-center justify-between text-xs"
+                          >
+                            <div className="flex items-center gap-1.5 truncate">
+                              <span className="font-black text-emerald-800 shrink-0">{sec.code}:</span>
+                              <span className="font-semibold text-slate-800 truncate">{sec.title}</span>
+                            </div>
+                            <span className="text-[10px] font-mono font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded-md shrink-0 ml-2">
+                              {sec.examples.length} ví dụ · {sec.code === 'Phần I' ? '14 bài tập' : '8 bài tập'}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 {/* Lesson Performance Metrics */}

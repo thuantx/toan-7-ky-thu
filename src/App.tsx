@@ -13,7 +13,8 @@ import {
   saveStudentProgress, 
   loadActiveStudentProgress, 
   clearCurrentSession,
-  isTeacherEmail
+  isTeacherEmail,
+  mergeWithCurriculum
 } from './utils/storage';
 
 export default function App() {
@@ -22,7 +23,7 @@ export default function App() {
   // Load initial student data from LocalStorage if available
   const initialData = loadActiveStudentProgress();
 
-  const [chapters, setChapters] = useState<Chapter[]>(initialData?.chapters || CURRICULUM_DATA);
+  const [chapters, setChapters] = useState<Chapter[]>(mergeWithCurriculum(initialData?.chapters));
   const [user, setUser] = useState<UserProfile>(initialData?.user || DEFAULT_STUDENT);
   const [goal, setGoal] = useState<Goal>(initialData?.goal || DEFAULT_GOAL);
 
@@ -110,9 +111,9 @@ export default function App() {
     setCurrentView('theory');
   };
 
-  const handleStartPracticeFromTheory = (lessonId: string) => {
+  const handleStartPracticeFromTheory = (lessonId: string, categoryFilter?: string) => {
     setSelectedLessonForPractice(lessonId);
-    setSelectedPracticeCategory(undefined);
+    setSelectedPracticeCategory(categoryFilter);
     setCurrentView('practice');
   };
 

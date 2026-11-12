@@ -17,7 +17,7 @@ interface TheoryViewProps {
   chapters: Chapter[];
   selectedLessonId: string;
   onSelectLesson: (id: string) => void;
-  onStartPractice: (lessonId: string) => void;
+  onStartPractice: (lessonId: string, categoryFilter?: string) => void;
 }
 
 export const TheoryView: React.FC<TheoryViewProps> = ({
@@ -32,13 +32,30 @@ export const TheoryView: React.FC<TheoryViewProps> = ({
 
   const [showCatalogModal, setShowCatalogModal] = useState<boolean>(false);
   const [activeChapterTabId, setActiveChapterTabId] = useState<string>(currentChapter.id);
+  const [selectedSectionId, setSelectedSectionId] = useState<string>(
+    currentLesson.sections && currentLesson.sections.length > 0 ? currentLesson.sections[0].id : 'all'
+  );
 
-  // Sync active chapter when selected lesson changes
+  // Sync active chapter & reset section tab when selected lesson changes
   useEffect(() => {
     setActiveChapterTabId(currentChapter.id);
-  }, [currentChapter.id]);
+    setSelectedSectionId(
+      currentLesson.sections && currentLesson.sections.length > 0 ? currentLesson.sections[0].id : 'all'
+    );
+  }, [currentChapter.id, currentLesson.id]);
 
   const displayedChapterLessons = chapters.find((c) => c.id === activeChapterTabId)?.lessons || currentChapter.lessons;
+
+  // Derive active section
+  const activeSection = currentLesson.sections?.find((s) => s.id === selectedSectionId);
+  const displayedTheory = activeSection ? activeSection.theory : currentLesson.theory;
+  const displayedExamples = activeSection ? activeSection.examples : currentLesson.examples;
+
+  // Derive questions for active section
+  const currentSectionQuestions = currentLesson.questions.filter((q) => {
+    if (!activeSection) return true;
+    return q.sectionId === activeSection.id || q.category.includes(activeSection.code);
+  });
 
   const scrollToSection = (sectionId: string) => {
     const el = document.getElementById(sectionId);
@@ -143,20 +160,106 @@ export const TheoryView: React.FC<TheoryViewProps> = ({
           </div>
         </div>
 
+        {/* Sub-sections tabs (Phần I, Phần II...) */}
+        {currentLesson.sections && currentLesson.sections.length > 0 && (
+          <div className="pt-3 border-t border-slate-100 space-y-3">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-600 flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4 text-amber-500" />
+                <span>Cấu trúc phân rã theo file PDF SGK Toán 7 ({currentLesson.sections.length} mục):</span>
+              </span>
+              <button
+                onClick={() => setSelectedSectionId('all')}
+                className={`text-xs font-bold px-3 py-1 rounded-xl transition-all ${
+                  selectedSectionId === 'all'
+                    ? 'bg-slate-900 text-white shadow-xs'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                <span>Toàn bộ bài học ({currentLesson.examples.length} ví dụ · {currentLesson.questions.length} bài)</span>
+              </button>
+            </div>
+
+            {/* Prominent Section Cards for Muc I and Muc II */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {currentLesson.sections.map((sec) => {
+                const isSelected = selectedSectionId === sec.id;
+                const secQCount = currentLesson.questions.filter(
+                  (q) => q.sectionId === sec.id || q.category.includes(sec.code)
+                ).length;
+                return (
+                  <button
+                    key={sec.id}
+                    onClick={() => setSelectedSectionId(sec.id)}
+                    className={`p-4 rounded-2xl border text-left transition-all relative overflow-hidden group ${
+                      isSelected
+                        ? 'border-emerald-600 bg-emerald-50/80 shadow-md ring-2 ring-emerald-500/20'
+                        : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50 shadow-2xs'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="space-y-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className={`text-xs font-black px-2 py-0.5 rounded-lg ${
+                            isSelected ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-700'
+                          }`}>
+                            {sec.code}
+                          </span>
+                          <span className="text-[11px] font-semibold text-slate-500">Chuẩn PDF Toán 7</span>
+                        </div>
+                        <h3 className={`text-sm sm:text-base font-extrabold leading-snug mt-1 ${
+                          isSelected ? 'text-emerald-950' : 'text-slate-900'
+                        }`}>
+                          {sec.title}
+                        </h3>
+                        {sec.description && (
+                          <p className="text-xs text-slate-600 line-clamp-1 mt-0.5">
+                            {sec.description}
+                          </p>
+                        )}
+                      </div>
+                      
+                      <div className="shrink-0 text-right space-y-1">
+                        <span className={`inline-block text-xs font-mono font-bold px-2.5 py-1 rounded-xl border ${
+                          isSelected 
+                            ? 'bg-emerald-200/80 text-emerald-900 border-emerald-300' 
+                            : 'bg-slate-100 text-slate-700 border-slate-200'
+                        }`}>
+                          {sec.examples.length} ví dụ
+                        </span>
+                        <div className="text-[11px] font-bold text-slate-500">
+                          {secQCount} bài tập
+                        </div>
+                      </div>
+                    </div>
+
+                    {isSelected && (
+                      <div className="mt-2.5 pt-2 border-t border-emerald-200/60 flex items-center justify-between text-xs font-bold text-emerald-700">
+                        <span>Đang xem nội dung {sec.code}</span>
+                        <span className="text-[11px]">Bấm bên dưới để học chi tiết ↓</span>
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Row with Khung Lý Thuyết and Vào Luyện Tập button (Same row!) */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-slate-100">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-emerald-100/80 border border-emerald-200 flex items-center justify-center text-emerald-700 shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-emerald-100/80 border border-emerald-200 flex items-center justify-center text-emerald-700 shrink-0 shadow-2xs">
               <BookOpen className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-sm sm:text-base font-bold text-slate-900 flex items-center gap-2">
-                <span>Khung Lý Thuyết Cốt Lõi, Ví Dụ Mẫu & Bẫy Sai Lầm</span>
+              <h2 className="text-sm sm:text-base font-black text-slate-900 flex items-center gap-2">
+                <span>{activeSection ? `${activeSection.code}: ${activeSection.title}` : `Bài ${currentLesson.number}: ${currentLesson.title}`}</span>
               </h2>
-              <div className="flex items-center gap-2 text-[11px] text-slate-500 mt-0.5">
+              <div className="flex items-center gap-2 text-[11px] text-slate-500 mt-0.5 flex-wrap">
                 <button 
                   onClick={() => scrollToSection('sec-theory')}
-                  className="hover:text-emerald-700 hover:underline cursor-pointer flex items-center gap-1"
+                  className="hover:text-emerald-700 hover:underline cursor-pointer flex items-center gap-1 font-semibold"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                   <span>1. Lý thuyết</span>
@@ -164,29 +267,42 @@ export const TheoryView: React.FC<TheoryViewProps> = ({
                 <span>·</span>
                 <button 
                   onClick={() => scrollToSection('sec-examples')}
-                  className="hover:text-amber-700 hover:underline cursor-pointer flex items-center gap-1"
+                  className="hover:text-amber-700 hover:underline cursor-pointer flex items-center gap-1 font-semibold"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                  <span>2. Ví dụ ({currentLesson.examples.length})</span>
+                  <span>2. Ví dụ ({displayedExamples.length})</span>
+                </button>
+                <span>·</span>
+                <button 
+                  onClick={() => scrollToSection('sec-exercises')}
+                  className="hover:text-indigo-700 hover:underline cursor-pointer flex items-center gap-1 font-semibold"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>
+                  <span>3. Bài tập ({currentSectionQuestions.length})</span>
                 </button>
                 <span>·</span>
                 <button 
                   onClick={() => scrollToSection('sec-mistakes')}
-                  className="hover:text-rose-700 hover:underline cursor-pointer flex items-center gap-1"
+                  className="hover:text-rose-700 hover:underline cursor-pointer flex items-center gap-1 font-semibold"
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
-                  <span>3. Bẫy sai lầm ({currentLesson.theory.commonMistakes.length})</span>
+                  <span>4. Bẫy sai lầm ({displayedTheory.commonMistakes.length})</span>
                 </button>
               </div>
             </div>
           </div>
 
           <button
-            onClick={() => onStartPractice(currentLesson.id)}
-            className="px-5 py-2.5 text-xs sm:text-sm font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:scale-95 rounded-xl transition-all shadow-sm hover:shadow flex items-center justify-center gap-2 whitespace-nowrap shrink-0"
+            onClick={() => {
+              const catFilter = activeSection
+                ? (activeSection.code === 'Phần I' ? 'Phần I: Khái niệm & Trục số' : 'Phần II: Thứ tự & So sánh')
+                : undefined;
+              onStartPractice(currentLesson.id, catFilter);
+            }}
+            className="px-5 py-2.5 text-xs sm:text-sm font-extrabold text-white bg-emerald-600 hover:bg-emerald-700 active:scale-95 rounded-xl transition-all shadow-sm hover:shadow flex items-center justify-center gap-2 whitespace-nowrap shrink-0"
             title="Bắt đầu giải ngân hàng câu hỏi bài tập"
           >
-            <span>Vào Luyện Tập</span>
+            <span>Vào Luyện Tập {activeSection ? `(${activeSection.code}: ${currentSectionQuestions.length} câu)` : `(${currentLesson.questions.length} câu)`}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
         </div>
@@ -217,7 +333,7 @@ export const TheoryView: React.FC<TheoryViewProps> = ({
               <span>Kiến Thức Trọng Tâm Cần Nắm:</span>
             </h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {currentLesson.theory.keyPoints.map((point, idx) => (
+              {displayedTheory.keyPoints.map((point, idx) => (
                 <div
                   key={idx}
                   className="p-4 sm:p-5 rounded-2xl bg-emerald-50/70 border border-emerald-200/80 text-sm sm:text-base text-slate-900 leading-relaxed font-medium flex items-start gap-3.5 hover:bg-emerald-50 transition-colors shadow-2xs"
@@ -238,7 +354,7 @@ export const TheoryView: React.FC<TheoryViewProps> = ({
               <span>Công Thức & Quy Tắc Cần Nhớ:</span>
             </h4>
             <div className="bg-slate-900 text-emerald-300 p-5 sm:p-6 rounded-2xl font-mono text-sm sm:text-base space-y-3 border border-slate-800 shadow-inner">
-              {currentLesson.theory.formulaSummary.map((formula, idx) => (
+              {displayedTheory.formulaSummary.map((formula, idx) => (
                 <div key={idx} className="flex items-center gap-3">
                   <span className="text-slate-500 text-xs sm:text-sm font-sans font-bold">#{idx + 1}</span>
                   <span className="font-bold tracking-wide text-emerald-300">{formula}</span>
@@ -248,13 +364,13 @@ export const TheoryView: React.FC<TheoryViewProps> = ({
           </div>
 
           {/* Practical Rules */}
-          {currentLesson.theory.rules.length > 0 && (
+          {displayedTheory.rules.length > 0 && (
             <div className="space-y-2.5 pt-3">
               <h4 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-600">
                 Quy ước & Lưu ý khi giải bài:
               </h4>
               <ul className="list-disc pl-5 text-sm sm:text-base text-slate-700 space-y-2">
-                {currentLesson.theory.rules.map((rule, idx) => (
+                {displayedTheory.rules.map((rule, idx) => (
                   <li key={idx} className="leading-relaxed font-normal">{rule}</li>
                 ))}
               </ul>
@@ -273,12 +389,12 @@ export const TheoryView: React.FC<TheoryViewProps> = ({
               <span>Ví Dụ Mẫu (Lời Giải Từng Bước Step-by-Step)</span>
             </h3>
             <span className="text-xs font-semibold text-amber-700 bg-amber-50 px-3 py-1 rounded-full border border-amber-200/60">
-              {currentLesson.examples.length} ví dụ minh họa
+              {displayedExamples.length} ví dụ minh họa
             </span>
           </div>
 
           <div className="space-y-6">
-            {currentLesson.examples.map((example, idx) => (
+            {displayedExamples.map((example, idx) => (
               <div
                 key={idx}
                 className="rounded-2xl border border-slate-200 overflow-hidden bg-white shadow-xs"
@@ -328,18 +444,79 @@ export const TheoryView: React.FC<TheoryViewProps> = ({
           </div>
         </section>
 
-        {/* PHẦN 3: BẪY SAI LẦM THƯỜNG GẶP */}
+        {/* PHẦN 3: BÀI TẬP VẬN DỤNG CHUẨN SGK (THEO PDF) */}
+        <section id="sec-exercises" className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-6 scroll-mt-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-slate-100 gap-3">
+            <h3 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2.5">
+              <span className="w-7 h-7 rounded-lg bg-indigo-100 text-indigo-800 text-xs font-black flex items-center justify-center">
+                3
+              </span>
+              <BookOpen className="w-5 h-5 text-indigo-600" />
+              <span>Bài Tập Vận Dụng Chuẩn SGK ({currentSectionQuestions.length} bài)</span>
+            </h3>
+            
+            <button
+              onClick={() => {
+                const catFilter = activeSection
+                  ? (activeSection.code === 'Phần I' ? 'Phần I: Khái niệm & Trục số' : 'Phần II: Thứ tự & So sánh')
+                  : undefined;
+                onStartPractice(currentLesson.id, catFilter);
+              }}
+              className="px-4 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-700 active:scale-95 rounded-xl transition-all shadow-xs flex items-center gap-1.5 self-start sm:self-auto cursor-pointer"
+            >
+              <span>Vào luyện tập {currentSectionQuestions.length} bài này</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          <p className="text-xs sm:text-sm text-slate-600">
+            {activeSection
+              ? `Tất cả ${currentSectionQuestions.length} bài tập thuộc ${activeSection.code}: ${activeSection.title} được giữ nguyên vẹn nội dung từ file PDF gốc:`
+              : `Toàn bộ ${currentSectionQuestions.length} bài tập vận dụng của Bài ${currentLesson.number} từ file PDF:`}
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            {currentSectionQuestions.map((q, idx) => {
+              const cleanPrompt = q.prompt.replace(/^\[[^\]]+\]\s*/, '').split('\n')[0];
+              return (
+                <div
+                  key={q.id}
+                  className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 hover:border-indigo-300 hover:bg-indigo-50/30 transition-all flex items-start gap-3 shadow-2xs"
+                >
+                  <span className="w-6 h-6 rounded-lg bg-indigo-100 text-indigo-800 text-xs font-bold flex items-center justify-center shrink-0 mt-0.5 font-mono">
+                    {idx + 1}
+                  </span>
+                  <div className="space-y-1 min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-black text-indigo-700 uppercase tracking-wide">
+                        {q.category.split(':')[0]} · Bài {idx + 1}
+                      </span>
+                      <span className="text-[9px] font-semibold text-slate-500 bg-white px-1.5 py-0.2 rounded border border-slate-200">
+                        {q.difficulty}
+                      </span>
+                    </div>
+                    <p className="text-xs font-medium text-slate-800 line-clamp-2">
+                      {cleanPrompt}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* PHẦN 4: BẪY SAI LẦM THƯỜNG GẶP */}
         <section id="sec-mistakes" className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-sm space-y-5 scroll-mt-6">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <h3 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2.5">
               <span className="w-7 h-7 rounded-lg bg-rose-100 text-rose-800 text-xs font-black flex items-center justify-center">
-                3
+                4
               </span>
               <AlertTriangle className="w-5 h-5 text-rose-500" />
               <span>Bẫy Sai Lầm Học Sinh Lớp 7 Thường Mắc Phải</span>
             </h3>
             <span className="text-xs font-semibold text-rose-700 bg-rose-50 px-3 py-1 rounded-full border border-rose-200/60">
-              {currentLesson.theory.commonMistakes.length} lỗi hay gặp
+              {displayedTheory.commonMistakes.length} lỗi hay gặp
             </span>
           </div>
 
@@ -348,7 +525,7 @@ export const TheoryView: React.FC<TheoryViewProps> = ({
           </p>
 
           <div className="space-y-3.5 pt-1">
-            {currentLesson.theory.commonMistakes.map((mistake, idx) => (
+            {displayedTheory.commonMistakes.map((mistake, idx) => (
               <div
                 key={idx}
                 className="p-4 sm:p-5 rounded-2xl bg-rose-50/70 border border-rose-200 text-sm sm:text-base text-rose-950 flex items-start gap-3.5 hover:bg-rose-50 transition-colors shadow-2xs"
@@ -379,17 +556,22 @@ export const TheoryView: React.FC<TheoryViewProps> = ({
               </span>
             </div>
             <h4 className="text-lg font-black tracking-tight">
-              Em đã nắm vững lý thuyết Bài {currentLesson.number}?
+              Em đã nắm vững lý thuyết Bài {currentLesson.number}{activeSection ? ` - ${activeSection.code}` : ''}?
             </h4>
             <p className="text-xs text-emerald-100/90 max-w-xl leading-relaxed">
               Hãy bước vào phần luyện tập để giải các bài tập trắc nghiệm và điền số, tích lũy điểm kinh nghiệm (XP) và mở khóa huy hiệu học tập!
             </p>
           </div>
           <button
-            onClick={() => onStartPractice(currentLesson.id)}
+            onClick={() => {
+              const catFilter = activeSection
+                ? (activeSection.code === 'Phần I' ? 'Phần I: Khái niệm & Trục số' : 'Phần II: Thứ tự & So sánh')
+                : undefined;
+              onStartPractice(currentLesson.id, catFilter);
+            }}
             className="px-6 py-3.5 text-xs sm:text-sm font-bold text-emerald-950 bg-white hover:bg-emerald-50 active:scale-95 rounded-2xl transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 shrink-0"
           >
-            <span>Bắt Đầu Luyện Tập Ngay</span>
+            <span>Bắt Đầu Luyện Tập Ngay {activeSection ? `(${activeSection.code})` : ''}</span>
             <ArrowRight className="w-4 h-4 text-emerald-700" />
           </button>
         </div>
