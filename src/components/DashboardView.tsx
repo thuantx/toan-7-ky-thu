@@ -75,20 +75,33 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <Sparkles className="w-3.5 h-3.5 text-amber-300" />
                 <span>Toán 7 Kết Nối Tri Thức</span>
               </div>
-              {user.email && (
+              {user.isAuthenticated && user.email ? (
                 <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/40 backdrop-blur-md text-emerald-200 text-xs font-medium border border-white/10">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                   <span>Hồ sơ: <strong>{user.name}</strong> · {user.grade} · {user.email}</span>
+                </div>
+              ) : (
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 backdrop-blur-md text-emerald-100 text-xs font-medium border border-white/10">
+                  <Sparkles className="w-3 h-3 text-amber-300" />
+                  <span>Học sinh tự do trải nghiệm · Đăng nhập để lưu XP</span>
                 </div>
               )}
             </div>
 
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white text-balance leading-tight">
-              Xin chào, <span className="text-amber-300">{user.name}</span>! Cùng Pipo chinh phục điểm 10 nào!
+              {user.isAuthenticated && user.name && user.name !== 'Học sinh' ? (
+                <>Xin chào, <span className="text-amber-300">{user.name}</span>! Cùng Pipo chinh phục điểm 10 nào!</>
+              ) : (
+                <>Xin chào các em học sinh! Cùng Pipo chinh phục điểm 10 nào!</>
+              )}
             </h1>
 
             <p className="text-emerald-100/90 text-sm sm:text-base leading-relaxed">
-              Em đã hoàn thành <strong className="text-white font-bold">{completedLessons}/{totalLessons}</strong> bài học với tỉ lệ chính xác <strong className="text-amber-300 font-bold">{averageAccuracy}%</strong>. Hãy duy trì chuỗi <strong className="text-orange-300">{user.streakDays} ngày</strong> học tập xuất sắc nhé!
+              {user.isAuthenticated ? (
+                <>Em đã hoàn thành <strong className="text-white font-bold">{completedLessons}/{totalLessons}</strong> bài học với tỉ lệ chính xác <strong className="text-amber-300 font-bold">{averageAccuracy}%</strong>. Hãy duy trì chuỗi <strong className="text-orange-300">{user.streakDays} ngày</strong> học tập xuất sắc nhé!</>
+              ) : (
+                <>Hệ thống gồm trọn bộ <strong className="text-white font-bold">25 bài học</strong> chuẩn SGK Kết Nối Tri Thức với <strong className="text-amber-300 font-bold">159 câu hỏi</strong> bài tập có phân tích chi tiết. Các em hãy tự do đăng ký/đăng nhập tài khoản của mình để lưu tiến trình nhé!</>
+              )}
             </p>
 
             {/* Quick KPI stats strip */}

@@ -47,12 +47,12 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [regPassword, setRegPassword] = useState<string>('');
   const [regAvatar, setRegAvatar] = useState<string>('pipo_owl');
 
-  // Form states for Email Login
-  const [loginEmail, setLoginEmail] = useState<string>('baoaivn@gmail.com');
-  const [loginPassword, setLoginPassword] = useState<string>('••••••••');
+  // Form states for Email Login (no prefilled teacher account by default)
+  const [loginEmail, setLoginEmail] = useState<string>('');
+  const [loginPassword, setLoginPassword] = useState<string>('');
 
   // Fast Google Login custom input
-  const [googleCustomEmail, setGoogleCustomEmail] = useState<string>('baoaivn@gmail.com');
+  const [googleCustomEmail, setGoogleCustomEmail] = useState<string>('');
 
   const savedAccounts = getSavedAccounts();
 
@@ -60,8 +60,13 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
   // 1. Handle Quick Google Sign-In
   const handleGoogleSignIn = (emailToUse: string) => {
-    setIsLoading(true);
     const targetEmail = emailToUse.trim().toLowerCase();
+    if (!targetEmail) {
+      setNotification('Vui lòng nhập địa chỉ Gmail của em nhé!');
+      return;
+    }
+
+    setIsLoading(true);
     const isTeacher = isTeacherEmail(targetEmail);
 
     setTimeout(() => {
@@ -134,7 +139,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const handleRegisterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!regName.trim() || !regEmail.trim()) {
-      alert('Vui lòng nhập họ tên và Gmail nhé!');
+      setNotification('Vui lòng nhập họ tên và Gmail của em nhé!');
       return;
     }
 
@@ -306,125 +311,119 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <div className="space-y-4">
               <div className="text-center space-y-0.5">
                 <h3 className="text-sm font-bold text-slate-900">
-                  Đăng nhập nhanh qua tài khoản Gmail
+                  Đăng nhập học sinh bằng Gmail
                 </h3>
                 <p className="text-[11px] text-slate-500">
-                  Hệ thống tự động phân vai trò dựa trên địa chỉ email.
+                  Nhập địa chỉ Gmail của em để tự động lưu điểm số, huy hiệu và chuỗi ngày học.
                 </p>
               </div>
 
-              {/* Big Google SSO Button */}
-              <button
-                type="button"
-                disabled={isLoading}
-                onClick={() => handleGoogleSignIn(googleCustomEmail || 'baoaivn@gmail.com')}
-                className="w-full py-3 px-4 rounded-xl border-2 border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-800 font-bold text-xs transition-all shadow-xs flex items-center justify-center gap-2.5"
-              >
-                <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
-                  <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
-                  <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.34 24 12 24z"/>
-                  <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
-                  <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
-                </svg>
-                <span>{isLoading ? 'Đang xác thực...' : `Tiếp tục với Google`}</span>
-              </button>
-
-              {/* Accounts list */}
-              <div className="space-y-1.5 pt-1 border-t border-slate-100">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                  Chọn tài khoản có sẵn:
-                </span>
-
-                <div className="space-y-1.5">
-                  {/* Teacher Account */}
-                  <button
-                    type="button"
-                    disabled={isLoading}
-                    onClick={() => handleGoogleSignIn('baoaivn@gmail.com')}
-                    className="w-full p-2.5 rounded-xl border border-purple-200 bg-purple-50/50 hover:bg-purple-100/60 text-left transition-all flex items-center justify-between group"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-purple-600 text-white font-bold flex items-center justify-center text-xs shrink-0 shadow-xs">
-                        <GraduationCap className="w-4 h-4" />
-                      </div>
-                      <div>
-                        <div className="text-xs font-bold text-purple-950 flex items-center gap-1.5">
-                          <span>Giáo Viên Toán (Admin)</span>
-                          <span className="text-[10px] bg-purple-200 text-purple-800 px-1.5 py-0.2 rounded font-semibold">GV</span>
-                        </div>
-                        <div className="text-[11px] text-purple-700 font-mono">
-                          baoaivn@gmail.com
-                        </div>
-                      </div>
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-purple-400 group-hover:text-purple-700" />
-                  </button>
-
-                  {/* Student Account */}
-                  <button
-                    type="button"
-                    disabled={isLoading}
-                    onClick={() => handleGoogleSignIn('baominh.toan7@gmail.com')}
-                    className="w-full p-2.5 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/40 text-left transition-all flex items-center justify-between group"
-                  >
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-emerald-600 text-white font-bold flex items-center justify-center text-xs shrink-0">
-                        B
-                      </div>
-                      <div>
-                        <div className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
-                          <span>Bảo Minh (Học sinh)</span>
-                          <span className="text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.2 rounded font-semibold">Lớp 7A1</span>
-                        </div>
-                        <div className="text-[11px] text-slate-500 font-mono">
-                          baominh.toan7@gmail.com
-                        </div>
-                      </div>
-                    </div>
-                    <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-600" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Or custom gmail input */}
-              <div className="space-y-1.5 pt-1">
-                <label className="text-[11px] font-semibold text-slate-600 block">
-                  Hoặc đăng nhập bằng địa chỉ Gmail khác:
+              {/* Student Gmail Input */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-700 block">
+                  Địa chỉ Gmail của học sinh:
                 </label>
-                <div className="flex gap-2">
-                  <div className="relative flex-1">
-                    <Mail className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="email"
-                      value={googleCustomEmail}
-                      onChange={(e) => setGoogleCustomEmail(e.target.value)}
-                      placeholder="vidu@gmail.com"
-                      className="w-full pl-8 pr-2.5 py-1.5 text-xs rounded-xl border border-slate-300 focus:border-emerald-500 focus:outline-none font-mono"
-                    />
-                  </div>
-                  <button
-                    type="button"
-                    disabled={isLoading}
-                    onClick={() => handleGoogleSignIn(googleCustomEmail)}
-                    className="px-3.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition-colors shrink-0"
-                  >
-                    Vào học
-                  </button>
+                <div className="relative">
+                  <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="email"
+                    value={googleCustomEmail}
+                    onChange={(e) => setGoogleCustomEmail(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleGoogleSignIn(googleCustomEmail);
+                      }
+                    }}
+                    placeholder="nguyenan.toan7@gmail.com"
+                    className="w-full pl-10 pr-3 py-2.5 text-xs rounded-xl border border-slate-300 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 focus:outline-none font-mono"
+                  />
                 </div>
+
+                {/* Main Action Button */}
+                <button
+                  type="button"
+                  disabled={isLoading}
+                  onClick={() => handleGoogleSignIn(googleCustomEmail)}
+                  className="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold text-xs transition-all shadow-sm flex items-center justify-center gap-2"
+                >
+                  <svg className="w-4 h-4 shrink-0 bg-white rounded-full p-0.5" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+                    <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.26 21.36 7.34 24 12 24z"/>
+                    <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.18 0 9.99 0 12s.45 3.82 1.25 5.42l4.03-3.15z"/>
+                    <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.34 0 3.26 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+                  </svg>
+                  <span>{isLoading ? 'Đang vào học...' : 'Đăng Nhập / Vào Học Bằng Gmail Này'}</span>
+                </button>
               </div>
 
-              {/* Role explanation notice */}
-              <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-[11px] text-slate-600 space-y-1">
-                <div className="font-semibold text-slate-800 flex items-center gap-1">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Quy định phân quyền:</span>
+              {/* Show Saved Accounts on this device if any */}
+              {savedAccounts.length > 0 && (
+                <div className="space-y-1.5 pt-2 border-t border-slate-100">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+                    Tài khoản đã lưu trên thiết bị này:
+                  </span>
+                  <div className="space-y-1 max-h-36 overflow-y-auto pr-1">
+                    {savedAccounts.map((acc) => (
+                      <button
+                        key={acc.email}
+                        type="button"
+                        disabled={isLoading}
+                        onClick={() => handleGoogleSignIn(acc.email)}
+                        className="w-full p-2 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-emerald-50/40 text-left transition-all flex items-center justify-between group"
+                      >
+                        <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 rounded-lg bg-emerald-600 text-white font-bold flex items-center justify-center text-xs shrink-0">
+                            {acc.name.charAt(0).toUpperCase()}
+                          </div>
+                          <div className="truncate">
+                            <div className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                              <span className="truncate">{acc.name}</span>
+                              <span className="text-[10px] bg-slate-100 text-slate-600 px-1.5 py-0.2 rounded font-semibold shrink-0">
+                                {acc.grade}
+                              </span>
+                            </div>
+                            <div className="text-[10px] text-slate-500 font-mono truncate">
+                              {acc.email}
+                            </div>
+                          </div>
+                        </div>
+                        <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-emerald-600 shrink-0" />
+                      </button>
+                    ))}
+                  </div>
                 </div>
-                <p className="leading-snug">
-                  • <strong>baoaivn@gmail.com</strong>: Vai trò Giáo viên (xem trước đáp án, gợi ý sư phạm).
+              )}
+
+              {/* Quick Switch to Register */}
+              <div className="p-3 rounded-2xl bg-amber-50/70 border border-amber-200/70 text-center space-y-1">
+                <span className="text-xs font-bold text-amber-900 block">
+                  Em là học sinh mới chưa có tài khoản?
+                </span>
+                <p className="text-[11px] text-amber-700 leading-tight">
+                  Đăng ký hồ sơ để chọn linh vật đại diện và nhận ngay <strong>+150 XP</strong> khởi đầu!
                 </p>
-                <p className="leading-snug">
-                  • <strong>Tất cả email khác</strong>: Vai trò Học sinh (tự giải toán, lời giải mở sau khi nộp bài).
-                </p>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('register')}
+                  className="mt-1 text-xs font-bold text-emerald-700 hover:text-emerald-800 underline underline-offset-2"
+                >
+                  Tạo tài khoản học sinh ngay →
+                </button>
+              </div>
+
+              {/* Discrete Teacher Login Link */}
+              <div className="pt-2 border-t border-slate-100 text-center">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setGoogleCustomEmail('baoaivn@gmail.com');
+                    handleGoogleSignIn('baoaivn@gmail.com');
+                  }}
+                  className="text-[11px] text-slate-600 hover:text-purple-700 hover:underline inline-flex items-center gap-1"
+                >
+                  <GraduationCap className="w-3.5 h-3.5 text-purple-600" />
+                  <span>Dành cho Giáo viên quản lý (baoaivn@gmail.com)</span>
+                </button>
               </div>
             </div>
           )}

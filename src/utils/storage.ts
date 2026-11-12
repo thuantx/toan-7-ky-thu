@@ -19,24 +19,24 @@ export interface SavedAccountData {
   savedAt: string;
 }
 
-// Default initial student profile
+// Default initial student profile (unregistered / guest student)
 export const DEFAULT_STUDENT: UserProfile = {
-  id: 'user-001',
-  name: 'Bảo Minh',
-  email: 'baominh.toan7@gmail.com',
-  grade: 'Lớp 7A1',
+  id: 'guest-student',
+  name: 'Học sinh',
+  email: '',
+  grade: 'Lớp 7',
   school: 'THCS Kết Nối Tri Thức',
   role: 'student',
   avatar: 'pipo_owl',
-  xp: 480,
-  coins: 160,
+  xp: 0,
+  coins: 50,
   hearts: 5,
   maxHearts: 5,
-  streakDays: 5,
-  unlockedBadges: ['RATIONAL_MASTER', 'EUCLID_EXPLORER', 'STREAK_5'],
-  authProvider: 'google',
-  isAuthenticated: true,
-  registeredAt: '2026-09-05',
+  streakDays: 1,
+  unlockedBadges: [],
+  authProvider: 'guest',
+  isAuthenticated: false,
+  registeredAt: new Date().toISOString().split('T')[0],
   lastActiveAt: new Date().toISOString(),
 };
 
@@ -106,7 +106,8 @@ export function saveStudentProgress(user: UserProfile, chapters: Chapter[], goal
 // Load current active account progress
 export function loadActiveStudentProgress(): SavedAccountData | null {
   try {
-    const activeEmail = localStorage.getItem(CURRENT_USER_KEY) || 'baominh.toan7@gmail.com';
+    const activeEmail = localStorage.getItem(CURRENT_USER_KEY);
+    if (!activeEmail) return null;
     const rawData = localStorage.getItem(`mathquest_data_${activeEmail.toLowerCase().trim()}`);
 
     if (rawData) {
@@ -147,24 +148,7 @@ export function getSavedAccounts(): { email: string; name: string; grade: string
   } catch {
     // ignore
   }
-  return [
-    {
-      email: 'baoaivn@gmail.com',
-      name: 'Giáo Viên Toán (Admin)',
-      grade: 'Tổ Toán 7',
-      avatar: 'pipo_owl',
-      xp: 1200,
-      role: 'admin',
-    },
-    {
-      email: 'baominh.toan7@gmail.com',
-      name: 'Bảo Minh',
-      grade: 'Lớp 7A1',
-      avatar: 'pipo_owl',
-      xp: 480,
-      role: 'student',
-    },
-  ];
+  return [];
 }
 
 // Clear current session (Log out)
