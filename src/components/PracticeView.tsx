@@ -5,10 +5,8 @@ import {
   Heart, 
   Coins, 
   Zap, 
-  Flame, 
   CheckCircle2, 
   XCircle, 
-  Lightbulb, 
   RotateCcw, 
   ArrowRight, 
   WifiOff, 
@@ -22,8 +20,13 @@ import {
   Eye,
   EyeOff,
   BookOpen,
-  Info
+  Info,
+  Layers,
+  ChevronDown
 } from 'lucide-react';
+import { QuickCatalogModal } from './QuickCatalogModal';
+import pipoOwlImg from '../assets/images/math_mascot_owl_1794450740550.jpg';
+import achievementBadgeImg from '../assets/images/math_achievement_badge_1794450742214.jpg';
 
 interface PracticeViewProps {
   chapters: Chapter[];
@@ -32,6 +35,51 @@ interface PracticeViewProps {
   user: UserProfile;
   onUpdateUser: (updated: Partial<UserProfile>) => void;
   onLessonStatusChange: (lessonId: string, newStatus: Lesson['status'], accuracy: number) => void;
+}
+
+// Robust answer verification function: handles casing, unicode NFC/NFD, extra spaces, fractions, and option letters
+export function checkIsAnswerCorrect(userAns: string, correctAns: string, options?: string[]): boolean {
+  if (!userAns || !correctAns) return false;
+
+  const normalize = (s: string) =>
+    s
+      .normalize('NFC')
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, ' ')
+      .replace(/[–—−]/g, '-');
+
+  const u = normalize(userAns);
+  const c = normalize(correctAns);
+
+  // 1. Direct normalized match
+  if (u === c) return true;
+
+  // 2. Compact match (removes spaces and parentheses, e.g. "13/6" vs "13 / 6" or "(-13)/6")
+  const uCompact = u.replace(/\s+/g, '').replace(/[()]/g, '');
+  const cCompact = c.replace(/\s+/g, '').replace(/[()]/g, '');
+  if (uCompact === cCompact) return true;
+
+  // 3. Option letter match (A, B, C, D)
+  if (options && options.length > 0) {
+    const userOptIndex = options.findIndex((opt) => normalize(opt) === u);
+    if (userOptIndex !== -1) {
+      const userLetter = String.fromCharCode(65 + userOptIndex).toLowerCase(); // 'a', 'b', 'c', 'd'
+      if (c === userLetter || c.startsWith(`${userLetter}.`) || c.startsWith(`${userLetter})`)) {
+        return true;
+      }
+    }
+
+    const correctOptIndex = options.findIndex((opt) => normalize(opt) === c);
+    if (correctOptIndex !== -1) {
+      const correctLetter = String.fromCharCode(65 + correctOptIndex).toLowerCase();
+      if (u === correctLetter || u.startsWith(`${correctLetter}.`) || u.startsWith(`${correctLetter})`)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
 }
 
 export const PracticeView: React.FC<PracticeViewProps> = ({
@@ -47,6 +95,15 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
   const [currentLessonId, setCurrentLessonId] = useState<string>(initialLessonId || allLessons[0]?.id || 'c1-l1');
   const currentLesson = allLessons.find((l) => l.id === currentLessonId) || allLessons[0];
   const currentChapter = chapters.find((c) => c.lessons.some((l) => l.id === currentLesson.id)) || chapters[0];
+
+  // Quick Catalog Modal State
+  const [showCatalogModal, setShowCatalogModal] = useState<boolean>(false);
+  const [activeChapterTabId, setActiveChapterTabId] = useState<string>(currentChapter.id);
+
+  // Synchronize active chapter tab when lesson changes
+  useEffect(() => {
+    setActiveChapterTabId(currentChapter.id);
+  }, [currentChapter.id]);
 
   // Filters
   const [selectedTypeFilter, setSelectedTypeFilter] = useState<'all' | 'multiple_choice' | 'fill_in_blank'>('all');
@@ -72,7 +129,7 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
   const [isAnswerSubmitted, setIsAnswerSubmitted] = useState<boolean>(false);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   
-  // Admin-only peek state (Students CANNOT view hints before submission)
+  // Admin-only peek state
   const [showAdminInspection, setShowAdminInspection] = useState<boolean>(false);
 
   // Session Statistics
@@ -99,13 +156,13 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
     setShowAdminInspection(false);
 
     if (user.role === 'admin') {
-      setMascotMessage(`[Chế độ Admin/GV]: Câu ${currentIndex + 1}/${activeQuestions.length}. Thầy/Cô có quyền mở xem trước Gợi ý sư phạm và Đáp án mẫu.`);
+      setMascotMessage(`[Chế độ Giáo viên]: Câu ${currentIndex + 1}/${activeQuestions.length}. Thầy/Cô có quyền mở xem trước Gợi ý sư phạm và Đáp án.`);
     } else {
       setMascotMessage(`Câu hỏi số ${currentIndex + 1}: Em hãy đọc kỹ đề, tự tính toán ra nháp nhé! Cách giải chi tiết sẽ mở sau khi kiểm tra.`);
     }
   }, [currentIndex, currentLessonId, user.role, activeQuestions.length]);
 
-  // Handle checking answers
+  // Handle checking answers (FIXED BUG: Normalized string comparison)
   const handleSubmitAnswer = () => {
     if (!currentQuestion) return;
 
@@ -115,11 +172,14 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
       userAnswer = selectedOption.trim();
     } else {
       if (!textAnswer.trim()) return;
-      userAnswer = textAnswer.trim().toLowerCase();
+      userAnswer = textAnswer.trim();
     }
 
-    const expected = currentQuestion.correctAnswer.trim().toLowerCase();
-    const isAnswerRight = userAnswer === expected;
+    const isAnswerRight = checkIsAnswerCorrect(
+      userAnswer,
+      currentQuestion.correctAnswer,
+      currentQuestion.options
+    );
 
     setIsAnswerSubmitted(true);
     setIsCorrect(isAnswerRight);
@@ -135,7 +195,7 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
       });
 
       setSessionCorrectCount((prev) => prev + 1);
-      setMascotMessage(`Xuất sắc quá! Em đã giải chính xác! +${xpGained} XP và +${coinsGained} Xu vàng! Hãy đọc cách giải bên dưới để củng cố nhé! 🎉`);
+      setMascotMessage(`Xuất sắc quá! Em đã giải chính xác! +${xpGained} XP và +${coinsGained} Xu vàng! Hãy xem cách giải chi tiết bên dưới nhé! 🎉`);
     } else {
       // Penalty: Lose 1 Heart
       const newHearts = Math.max(0, user.hearts - 1);
@@ -167,7 +227,7 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
     }
   };
 
-  // Edge-case simulation: Simulate Sudden App Exit & Auto-Checkpoint Restore
+  // Edge-case simulation
   const handleSimulateAppCrashAndRestore = () => {
     const checkpoint = {
       lessonId: currentLesson.id,
@@ -187,8 +247,19 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
     setTimeout(() => setCheckpointNotice(null), 6000);
   };
 
+  // Switch to a new lesson
+  const handleSwitchLesson = (newLessonId: string) => {
+    setCurrentLessonId(newLessonId);
+    setCurrentIndex(0);
+    setSelectedCategoryFilter('all');
+    setSelectedOption(null);
+    setTextAnswer('');
+    setIsAnswerSubmitted(false);
+  };
+
   // Categories for current lesson
   const availableCategories = Array.from(new Set(currentLesson.questions.map((q) => q.category)));
+  const displayedChapterLessons = chapters.find((c) => c.id === activeChapterTabId)?.lessons || currentChapter.lessons;
 
   return (
     <div className="space-y-6 pb-16">
@@ -224,9 +295,10 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
         </div>
       )}
 
-      {/* 1. Header Toolbar: Lesson Selection & Filters */}
+      {/* 1. Header Toolbar with QUICK CATALOG SELECTION (Click nhanh danh mục bài học) */}
       <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/80 shadow-sm space-y-4">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        {/* Top row: Current Lesson Title + Quick Catalog Button */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-xs font-bold text-emerald-700 uppercase tracking-wide">
               <span>{currentChapter.code}</span>
@@ -235,32 +307,85 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
               <span className="text-slate-300">|</span>
               <span className="text-slate-500 font-medium">Toán 7 Kết Nối Tri Thức</span>
             </div>
-            <h2 className="text-xl font-bold text-slate-900">
-              Bài {currentLesson.number}: {currentLesson.title}
-            </h2>
+
+            <div className="flex items-center gap-2.5">
+              <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
+                Bài {currentLesson.number}: {currentLesson.title}
+              </h2>
+            </div>
           </div>
 
-          {/* Lesson Switcher Dropdown */}
-          <div className="flex items-center gap-2">
-            <label htmlFor="lesson-select" className="text-xs font-semibold text-slate-600 whitespace-nowrap">
-              Đổi bài:
-            </label>
-            <select
-              id="lesson-select"
-              value={currentLessonId}
-              onChange={(e) => {
-                setCurrentLessonId(e.target.value);
-                setCurrentIndex(0);
-                setSelectedCategoryFilter('all');
-              }}
-              className="px-3 py-1.5 text-xs font-medium rounded-xl border border-slate-300 bg-slate-50 text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 max-w-xs truncate"
+          {/* Quick Catalog Menu Trigger Button */}
+          <button
+            onClick={() => setShowCatalogModal(true)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs font-bold shadow-xs hover:shadow-sm transition-all shrink-0 self-start sm:self-auto"
+            title="Mở danh mục chọn nhanh 25 bài học của toàn bộ chương trình"
+          >
+            <Layers className="w-4 h-4" />
+            <span>Danh mục 25 Bài Học</span>
+            <ChevronDown className="w-3.5 h-3.5 text-emerald-200" />
+          </button>
+        </div>
+
+        {/* Quick Chapter Selector Chips (Click 1 chạm đổi chương & bài ngay trên thanh) */}
+        <div className="pt-2 border-t border-slate-100 space-y-2.5">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-slate-500 flex items-center gap-1">
+              <BookOpen className="w-3.5 h-3.5 text-emerald-600" />
+              <span>Chọn nhanh Chương:</span>
+            </span>
+            <button
+              onClick={() => setShowCatalogModal(true)}
+              className="text-[11px] font-semibold text-emerald-700 hover:text-emerald-800 hover:underline"
             >
-              {allLessons.map((l) => (
-                <option key={l.id} value={l.id}>
-                  Bài {l.number}: {l.title}
-                </option>
-              ))}
-            </select>
+              Xem tất cả 25 bài →
+            </button>
+          </div>
+
+          {/* Chapter Chips */}
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+            {chapters.map((ch) => {
+              const isSelected = ch.id === activeChapterTabId;
+              const hasCurrentLesson = ch.lessons.some((l) => l.id === currentLesson.id);
+              return (
+                <button
+                  key={ch.id}
+                  onClick={() => setActiveChapterTabId(ch.id)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all shrink-0 ${
+                    isSelected
+                      ? 'bg-slate-900 text-white shadow-xs'
+                      : hasCurrentLesson
+                      ? 'bg-emerald-100/80 text-emerald-900 border border-emerald-300/80'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  }`}
+                >
+                  <span>{ch.code}: {ch.title.split(':')[0]}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Quick Lesson Pills belonging to the selected chapter */}
+          <div className="flex items-center gap-2 overflow-x-auto py-1 no-scrollbar">
+            {displayedChapterLessons.map((l) => {
+              const isCurrent = l.id === currentLesson.id;
+              return (
+                <button
+                  key={l.id}
+                  onClick={() => handleSwitchLesson(l.id)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all flex items-center gap-1.5 shrink-0 ${
+                    isCurrent
+                      ? 'bg-emerald-600 text-white font-bold shadow-xs ring-2 ring-emerald-500/20'
+                      : 'bg-slate-50 hover:bg-emerald-50 text-slate-700 border border-slate-200 hover:border-emerald-300'
+                  }`}
+                  title={l.title}
+                >
+                  <span className="font-bold">Bài {l.number}:</span>
+                  <span className="truncate max-w-[150px]">{l.title}</span>
+                  {l.status === 'MASTER' && <span className="text-[10px]">⭐</span>}
+                </button>
+              );
+            })}
           </div>
         </div>
 
@@ -302,7 +427,7 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
               onClick={() => setSelectedTypeFilter('all')}
               className={`px-2.5 py-1 rounded-lg ${selectedTypeFilter === 'all' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600'}`}
             >
-              Tất cả loại
+              Tất cả
             </button>
             <button
               onClick={() => setSelectedTypeFilter('multiple_choice')}
@@ -329,10 +454,12 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
             <div className="flex items-center gap-3">
               <div className="w-16 h-16 rounded-2xl overflow-hidden border-2 border-amber-300 shadow-md shrink-0 bg-white">
                 <img
-                  src="/src/assets/images/math_mascot_owl_1794450740550.jpg"
+                  src={pipoOwlImg}
                   alt="Mascot Cú Pipo"
                   className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    e.currentTarget.src = '/images/pipo.jpg';
+                  }}
                 />
               </div>
               <div>
@@ -342,7 +469,7 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
                   <span>Trợ giảng Toán 7</span>
                 </span>
                 <span className="text-[10px] text-slate-500 font-medium">
-                  {user.role === 'admin' ? '🛡️ Vai trò: Admin/GV' : '🎒 Vai trò: Học sinh'}
+                  {user.role === 'admin' ? '🛡️ Vai trò: Giáo viên' : '🎒 Vai trò: Học sinh'}
                 </span>
               </div>
             </div>
@@ -379,13 +506,10 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
             </div>
             <ul className="text-[11px] text-slate-600 space-y-1.5 list-disc pl-4 leading-relaxed">
               <li>
-                <strong className="text-slate-800">Học sinh:</strong> Không được xem gợi ý trước khi nộp bài để rèn luyện tính độc lập.
+                <strong className="text-slate-800">Học sinh:</strong> Tự làm bài, lời giải và giải thích sẽ mở sau khi nhấn "Kiểm tra đáp án".
               </li>
               <li>
-                <strong className="text-emerald-700">Sau khi nộp:</strong> Toàn bộ giải thích & cách giải từng bước sẽ được mở tự động!
-              </li>
-              <li>
-                <strong className="text-purple-700">Admin/Giáo viên:</strong> Có nút xem trước gợi ý sư phạm và đáp án mẫu bất kỳ lúc nào.
+                <strong className="text-purple-700">Giáo viên:</strong> Chỉ tài khoản baoaivn@gmail.com có quyền xem trước đáp án và gợi ý.
               </li>
             </ul>
           </div>
@@ -460,7 +584,13 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
                     let btnStyle = 'border-slate-200 hover:border-slate-300 bg-white text-slate-800';
 
                     if (isAnswerSubmitted) {
-                      if (opt === currentQuestion.correctAnswer) {
+                      const isOptionCorrect = checkIsAnswerCorrect(
+                        opt,
+                        currentQuestion.correctAnswer,
+                        currentQuestion.options
+                      );
+
+                      if (isOptionCorrect) {
                         btnStyle = 'border-emerald-500 bg-emerald-50 text-emerald-950 font-bold ring-2 ring-emerald-500/20';
                       } else if (selectedOption === opt && !isCorrect) {
                         btnStyle = 'border-rose-500 bg-rose-50 text-rose-950 font-medium';
@@ -525,7 +655,7 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
                       className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-semibold text-purple-900 bg-purple-50 hover:bg-purple-100 border border-purple-200 rounded-xl transition-colors"
                     >
                       <ShieldCheck className="w-4 h-4 text-purple-700" />
-                      <span>{showAdminInspection ? 'Đóng gợi ý Admin' : 'Admin: Xem trước Gợi ý & Đáp án'}</span>
+                      <span>{showAdminInspection ? 'Đóng gợi ý Giáo viên' : 'Admin: Xem trước Gợi ý & Đáp án'}</span>
                       {showAdminInspection ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                     </button>
                   ) : (
@@ -559,13 +689,13 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
                 </div>
               </div>
 
-              {/* Admin Pre-Inspection Panel (Visible ONLY to Admin before submit) */}
+              {/* Admin Pre-Inspection Panel */}
               {user.role === 'admin' && showAdminInspection && (
                 <div className="p-4 rounded-2xl bg-purple-50 border border-purple-200 space-y-2 text-purple-950 animate-in fade-in">
                   <div className="flex items-center justify-between text-xs font-bold text-purple-800 uppercase tracking-wider">
                     <span className="flex items-center gap-1.5">
                       <ShieldCheck className="w-4 h-4 text-purple-700" />
-                      Bảng Điều Khiển Dành Cho Admin / Giáo Viên
+                      Bảng Điều Khiển Dành Cho Giáo Viên (baoaivn@gmail.com)
                     </span>
                     <span className="text-[10px] bg-purple-200/60 px-2 py-0.5 rounded font-mono">
                       Đáp án đúng: {currentQuestion.correctAnswer}
@@ -576,7 +706,7 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
                       <strong>Gợi ý sư phạm định hướng:</strong> {currentQuestion.adminHint}
                     </p>
                     <p className="text-[11px] text-purple-700 italic">
-                      * Lưu ý: Giao diện học sinh sẽ hoàn toàn bị ẩn phần gợi ý này. Học sinh chỉ thấy lời giải sau khi ấn "Kiểm tra đáp án".
+                      * Lưu ý: Giao diện học sinh không hiển thị phần gợi ý này. Học sinh chỉ thấy lời giải sau khi ấn "Kiểm tra đáp án".
                     </p>
                   </div>
                 </div>
@@ -614,7 +744,7 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
                     )}
                   </div>
 
-                  {/* GIẢI THÍCH VÀ CÁCH GIẢI CHI TIẾT TỪNG BƯỚC (Step-by-Step Solution & Explanation) */}
+                  {/* GIẢI THÍCH VÀ CÁCH GIẢI CHI TIẾT TỪNG BƯỚC */}
                   <div className="bg-gradient-to-br from-indigo-50/60 via-blue-50/40 to-slate-50 rounded-2xl p-5 border border-indigo-200/80 space-y-3.5 shadow-sm">
                     <div className="flex items-center gap-2 text-indigo-950 font-bold text-sm border-b border-indigo-100 pb-2.5">
                       <BookOpen className="w-4 h-4 text-indigo-600 shrink-0" />
@@ -649,10 +779,12 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
             <div className="bg-white rounded-3xl p-8 sm:p-12 border border-slate-200/80 shadow-md text-center space-y-6">
               <div className="w-24 h-24 mx-auto rounded-3xl overflow-hidden shadow-xl border-4 border-amber-300">
                 <img
-                  src="/src/assets/images/math_achievement_badge_1794450742214.jpg"
+                  src={achievementBadgeImg}
                   alt="Hoàn thành bài học"
                   className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    e.currentTarget.src = '/images/badge.jpg';
+                  }}
                 />
               </div>
 
@@ -706,8 +838,7 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
                     const currentIndexInAll = allLessons.findIndex((l) => l.id === currentLesson.id);
                     const nextLesson = allLessons[currentIndexInAll + 1];
                     if (nextLesson) {
-                      setCurrentLessonId(nextLesson.id);
-                      setCurrentIndex(0);
+                      handleSwitchLesson(nextLesson.id);
                       setSessionCorrectCount(0);
                       setIsSessionCompleted(false);
                     }
@@ -723,7 +854,17 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
         </div>
       </div>
 
-      {/* Refill Hearts Modal if lives run out */}
+      {/* Quick Catalog Modal (Mở danh mục chọn bài học nhanh chóng) */}
+      <QuickCatalogModal
+        isOpen={showCatalogModal}
+        onClose={() => setShowCatalogModal(false)}
+        chapters={chapters}
+        currentLessonId={currentLesson.id}
+        onSelectLesson={handleSwitchLesson}
+        mode="practice"
+      />
+
+      {/* Refill Hearts Modal */}
       {showRefillModal && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl space-y-4 text-center">

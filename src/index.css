@@ -2,7 +2,9 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
-  body {
+  html, body {
+    overflow-x: hidden;
+    max-width: 100vw;
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   }
   code, pre, .font-mono {

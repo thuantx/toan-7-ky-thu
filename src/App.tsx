@@ -12,7 +12,8 @@ import {
   DEFAULT_GOAL, 
   saveStudentProgress, 
   loadActiveStudentProgress, 
-  clearCurrentSession 
+  clearCurrentSession,
+  isTeacherEmail
 } from './utils/storage';
 
 export default function App() {
@@ -123,12 +124,14 @@ export default function App() {
         onViewChange={setCurrentView}
         user={user}
         onOpenGoalsModal={() => setIsGoalModalOpen(true)}
-        onToggleRole={() =>
-          setUser((prev) => ({
-            ...prev,
-            role: prev.role === 'student' ? 'admin' : 'student',
-          }))
-        }
+        onToggleRole={() => {
+          if (isTeacherEmail(user.email)) {
+            setUser((prev) => ({
+              ...prev,
+              role: prev.role === 'student' ? 'admin' : 'student',
+            }));
+          }
+        }}
         onOpenAuthModal={() => setIsAuthModalOpen(true)}
       />
 

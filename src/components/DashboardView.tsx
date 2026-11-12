@@ -15,6 +15,8 @@ import {
   BookOpen,
   Compass
 } from 'lucide-react';
+import pipoOwlImg from '../assets/images/math_mascot_owl_1794450740550.jpg';
+import achievementBadgeImg from '../assets/images/math_achievement_badge_1794450742214.jpg';
 
 interface DashboardViewProps {
   chapters: Chapter[];
@@ -123,10 +125,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="relative group">
               <div className="w-36 h-36 sm:w-44 sm:h-44 rounded-3xl overflow-hidden border-4 border-white/30 shadow-2xl bg-white/20">
                 <img
-                  src="/src/assets/images/math_mascot_owl_1794450740550.jpg"
+                  src={pipoOwlImg}
                   alt="Linh vật Cú Pipo thông thái Toán 7"
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  referrerPolicy="no-referrer"
+                  onError={(e) => {
+                    e.currentTarget.src = '/images/pipo.jpg';
+                  }}
                 />
               </div>
               <div className="absolute -bottom-3 -right-2 bg-amber-400 text-amber-950 px-2.5 py-0.5 rounded-full text-xs font-bold shadow-md flex items-center gap-1">
@@ -247,74 +251,82 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
             {/* Metric 1 */}
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 space-y-2">
-              <div className="flex justify-between items-center text-xs">
-                <span className="font-semibold text-slate-700">1. Số hữu tỉ & Phép tính</span>
-                <span className="font-bold text-emerald-600 font-mono">88% (Tốt)</span>
+            <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2.5 hover:bg-slate-100/70 transition-colors shadow-2xs">
+              <div className="flex justify-between items-center text-sm sm:text-base">
+                <span className="font-bold text-slate-800">1. Số hữu tỉ & Phép tính</span>
+                <span className="font-black text-emerald-600 font-mono text-sm sm:text-base">88% (Tốt)</span>
               </div>
-              <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+              <div className="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
                 <div className="h-full bg-emerald-500 rounded-full w-[88%]" />
               </div>
-              <span className="text-[11px] text-slate-500 block">Thành thạo cộng trừ nhân chia và quy đồng mẫu.</span>
+              <span className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed block">
+                Thành thạo cộng trừ nhân chia và quy đồng mẫu.
+              </span>
             </div>
 
             {/* Metric 2 */}
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 space-y-2">
-              <div className="flex justify-between items-center text-xs">
-                <span className="font-semibold text-slate-700">2. Phương trình Tìm x & Lũy thừa</span>
-                <span className="font-bold text-amber-600 font-mono">74% (Cần rèn)</span>
+            <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2.5 hover:bg-slate-100/70 transition-colors shadow-2xs">
+              <div className="flex justify-between items-center text-sm sm:text-base">
+                <span className="font-bold text-slate-800">2. Phương trình Tìm x & Lũy thừa</span>
+                <span className="font-black text-amber-600 font-mono text-sm sm:text-base">74% (Cần rèn)</span>
               </div>
-              <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+              <div className="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
                 <div className="h-full bg-amber-500 rounded-full w-[74%]" />
               </div>
-              <span className="text-[11px] text-slate-500 block">Còn lúng túng khi đổi dấu chuyển vế số âm.</span>
+              <span className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed block">
+                Còn lúng túng khi đổi dấu chuyển vế số âm.
+              </span>
             </div>
 
             {/* Metric 3 */}
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 space-y-2">
-              <div className="flex justify-between items-center text-xs">
-                <span className="font-semibold text-slate-700">3. Góc, Tia phân giác & Song song</span>
-                <span className="font-bold text-emerald-600 font-mono">92% (Tinh thông)</span>
+            <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2.5 hover:bg-slate-100/70 transition-colors shadow-2xs">
+              <div className="flex justify-between items-center text-sm sm:text-base">
+                <span className="font-bold text-slate-800">3. Góc, Tia phân giác & Song song</span>
+                <span className="font-black text-emerald-600 font-mono text-sm sm:text-base">92% (Tinh thông)</span>
               </div>
-              <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+              <div className="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
                 <div className="h-full bg-emerald-500 rounded-full w-[92%]" />
               </div>
-              <span className="text-[11px] text-slate-500 block">Nhận diện góc so le trong và đối đỉnh rất tốt.</span>
+              <span className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed block">
+                Nhận diện góc so le trong và đối đỉnh rất tốt.
+              </span>
             </div>
 
             {/* Metric 4 */}
-            <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200/60 space-y-2">
-              <div className="flex justify-between items-center text-xs">
-                <span className="font-semibold text-slate-700">4. Tam giác bằng nhau (c-c-c, c-g-c)</span>
-                <span className="font-bold text-rose-600 font-mono">65% (Lỗ hổng)</span>
+            <div className="p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2.5 hover:bg-slate-100/70 transition-colors shadow-2xs">
+              <div className="flex justify-between items-center text-sm sm:text-base">
+                <span className="font-bold text-slate-800">4. Tam giác bằng nhau (c-c-c, c-g-c)</span>
+                <span className="font-black text-rose-600 font-mono text-sm sm:text-base">65% (Lỗ hổng)</span>
               </div>
-              <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+              <div className="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden">
                 <div className="h-full bg-rose-500 rounded-full w-[65%]" />
               </div>
-              <span className="text-[11px] text-slate-500 block">Cần củng cố xác định góc xen giữa và đỉnh tương ứng.</span>
+              <span className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed block">
+                Cần củng cố xác định góc xen giữa và đỉnh tương ứng.
+              </span>
             </div>
           </div>
         </div>
 
         {/* Weakness Alert & 1-Click Drill */}
-        <div className="bg-gradient-to-br from-rose-50 to-orange-50 rounded-3xl p-6 border border-rose-200/70 shadow-sm flex flex-col justify-between space-y-4">
+        <div className="bg-gradient-to-br from-rose-50 to-orange-50 rounded-3xl p-6 sm:p-7 border border-rose-200/80 shadow-sm flex flex-col justify-between space-y-4">
           <div className="space-y-3">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-100 text-rose-700 text-xs font-bold">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-rose-100 text-rose-800 text-xs font-bold">
               <AlertCircle className="w-4 h-4" />
               <span>Phát hiện lỗ hổng cần lấp ngay</span>
             </div>
-            <h4 className="text-base font-bold text-rose-950">
+            <h4 className="text-base sm:text-lg font-bold text-rose-950 leading-snug">
               Dạng bài: Tìm x trong phương trình phân số & Quy tắc chuyển vế
             </h4>
-            <p className="text-xs text-rose-900/80 leading-relaxed">
-              Hệ thống phát hiện em hay quên đổi dấu từ <code className="bg-white/80 px-1 py-0.5 rounded text-rose-800 font-mono">+a</code> sang <code className="bg-white/80 px-1 py-0.5 rounded text-rose-800 font-mono">-a</code> khi chuyển qua vế đối diện ở Bài 2 & Bài 4.
+            <p className="text-xs sm:text-sm text-rose-900/90 leading-relaxed font-normal">
+              Hệ thống phát hiện em hay quên đổi dấu từ <code className="bg-white/90 px-1.5 py-0.5 rounded text-rose-800 font-mono font-bold">+a</code> sang <code className="bg-white/90 px-1.5 py-0.5 rounded text-rose-800 font-mono font-bold">-a</code> khi chuyển qua vế đối diện ở Bài 2 & Bài 4.
             </p>
           </div>
 
           <div className="pt-2">
             <button
               onClick={() => onSelectLessonForPractice('c1-l2', 'Tìm x cơ bản')}
-              className="w-full py-2.5 px-4 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold rounded-xl transition-colors shadow-sm flex items-center justify-center gap-2"
+              className="w-full py-3 px-4 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white text-xs sm:text-sm font-bold rounded-xl transition-all shadow-sm flex items-center justify-center gap-2"
             >
               <span>Luyện riêng 3 câu dạng này</span>
               <ArrowRight className="w-4 h-4" />
@@ -494,10 +506,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="p-4 rounded-2xl bg-gradient-to-b from-amber-50 to-orange-50 border border-amber-200/80 text-center space-y-2">
             <div className="w-16 h-16 mx-auto rounded-2xl overflow-hidden shadow-md">
               <img
-                src="/src/assets/images/math_achievement_badge_1794450742214.jpg"
+                src={achievementBadgeImg}
                 alt="Bậc Thầy Số Hữu Tỉ"
                 className="w-full h-full object-cover"
-                referrerPolicy="no-referrer"
+                onError={(e) => {
+                  e.currentTarget.src = '/images/badge.jpg';
+                }}
               />
             </div>
             <div>
