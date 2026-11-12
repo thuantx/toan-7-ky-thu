@@ -1,0 +1,6 @@
+{
+  "name": "Toán 7 Kỳ Thú - MathQuest LMS & Gamification",
+  "description": "Nền tảng học Toán lớp 7 sinh động (Gamification) chuẩn Kết Nối Tri Thức với tài liệu đặc tả nghiệp vụ BA, LMS phân cấp, State Machine, Dashboard mục tiêu và wireframe luyện tập tương tác.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
