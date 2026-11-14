@@ -1,0 +1,134 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Safety Net (Default-Deny)
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 2. Hardened Global Helpers
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isEmailVerified() {
+      return isSignedIn() && request.auth.token.email_verified == true;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isEmailVerified() && (
+        request.auth.token.email == 'baoaivn@gmail.com' ||
+        request.auth.token.email == 'baovnai@gmail.com'
+      );
+    }
+
+    // 3. Entity Validation Blueprint
+    function isValidUser(data) {
+      return data.keys().hasAll([
+          'uid',
+          'name',
+          'email',
+          'grade',
+          'avatar',
+          'xp',
+          'coins',
+          'hearts',
+          'maxHearts',
+          'streakDays',
+          'unlockedBadges',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'uid',
+          'name',
+          'email',
+          'grade',
+          'school',
+          'avatar',
+          'xp',
+          'coins',
+          'hearts',
+          'maxHearts',
+          'streakDays',
+          'unlockedBadges',
+          'lessonProgress',
+          'goal',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.uid is string && data.uid.size() >= 1 && data.uid.size() <= 128 && data.uid == request.auth.uid
+        && data.name is string && data.name.size() >= 1 && data.name.size() <= 100
+        && data.email is string && data.email.size() >= 3 && data.email.size() <= 150 && data.email == request.auth.token.email
+        && data.grade is string && data.grade.size() >= 1 && data.grade.size() <= 40
+        && (!('school' in data) || (data.school is string && data.school.size() <= 120))
+        && data.avatar is string && data.avatar.size() >= 1 && data.avatar.size() <= 40
+        && data.xp is number && data.xp >= 0 && data.xp <= 10000000
+        && data.coins is number && data.coins >= 0 && data.coins <= 10000000
+        && data.hearts is number && data.hearts >= 0 && data.hearts <= 10
+        && data.maxHearts is number && data.maxHearts >= 1 && data.maxHearts <= 10
+        && data.streakDays is number && data.streakDays >= 0 && data.streakDays <= 10000
+        && data.unlockedBadges is list && data.unlockedBadges.size() <= 30
+        && (data.unlockedBadges.size() == 0 || (data.unlockedBadges[0] is string && data.unlockedBadges[0].size() <= 60))
+        && (!('lessonProgress' in data) || (data.lessonProgress is map && data.lessonProgress.size() <= 50))
+        && (!('goal' in data) || (data.goal is map && data.goal.size() <= 20))
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    // 4. User Profile & Progress Collection (PII isolated to owner or verified teacher admin)
+    match /users/{userId} {
+      allow get: if isValidId(userId) && isEmailVerified() && (isOwner(userId) || isAdmin());
+      allow list: if isAdmin();
+
+      allow create: if isEmailVerified()
+        && isValidId(userId)
+        && isOwner(userId)
+        && isValidUser(incoming())
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+
+      allow update: if isEmailVerified()
+        && isValidId(userId)
+        && isOwner(userId)
+        && isValidUser(incoming())
+        && incoming().uid == existing().uid
+        && incoming().email == existing().email
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly([
+          'name',
+          'grade',
+          'school',
+          'avatar',
+          'xp',
+          'coins',
+          'hearts',
+          'maxHearts',
+          'streakDays',
+          'unlockedBadges',
+          'lessonProgress',
+          'goal',
+          'updatedAt'
+        ]);
+
+      allow delete: if false;
+    }
+  }
+}

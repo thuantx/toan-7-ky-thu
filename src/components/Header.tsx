@@ -159,10 +159,10 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 onClick={onOpenAuthModal}
                 className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition-all shadow-xs shrink-0"
-                title="Đăng nhập hoặc đăng ký nhanh qua Gmail"
+                title="Đăng nhập bằng tài khoản Google (xác thực Gmail)"
               >
                 <LogIn className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Đăng nhập</span>
+                <span>Đăng nhập Google</span>
               </button>
             )}
           </div>

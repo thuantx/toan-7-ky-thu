@@ -76,28 +76,30 @@ export function saveStudentProgress(user: UserProfile, chapters: Chapter[], goal
     localStorage.setItem(`mathquest_data_${emailKey}`, JSON.stringify(accountData));
     localStorage.setItem(CURRENT_USER_KEY, emailKey);
 
-    // Update account index list
-    const existingListRaw = localStorage.getItem(ACCOUNTS_INDEX_KEY);
-    let accountsList: { email: string; name: string; grade: string; avatar: string; xp: number; role?: 'student' | 'admin' }[] = [];
-    if (existingListRaw) {
-      try {
-        accountsList = JSON.parse(existingListRaw);
-      } catch {
-        accountsList = [];
+    // Update account index list only for authenticated users with valid email
+    if (user.isAuthenticated && user.email && user.email.includes('@')) {
+      const existingListRaw = localStorage.getItem(ACCOUNTS_INDEX_KEY);
+      let accountsList: { email: string; name: string; grade: string; avatar: string; xp: number; role?: 'student' | 'admin' }[] = [];
+      if (existingListRaw) {
+        try {
+          accountsList = JSON.parse(existingListRaw);
+        } catch {
+          accountsList = [];
+        }
       }
+
+      const filtered = accountsList.filter((a) => a.email !== emailKey);
+      filtered.unshift({
+        email: emailKey,
+        name: user.name,
+        grade: user.grade,
+        avatar: user.avatar,
+        xp: user.xp,
+        role: enforcedRole,
+      });
+
+      localStorage.setItem(ACCOUNTS_INDEX_KEY, JSON.stringify(filtered.slice(0, 10)));
     }
-
-    const filtered = accountsList.filter((a) => a.email !== emailKey);
-    filtered.unshift({
-      email: emailKey,
-      name: user.name,
-      grade: user.grade,
-      avatar: user.avatar,
-      xp: user.xp,
-      role: enforcedRole,
-    });
-
-    localStorage.setItem(ACCOUNTS_INDEX_KEY, JSON.stringify(filtered.slice(0, 10)));
   } catch (err) {
     console.warn('Could not save to localStorage:', err);
   }

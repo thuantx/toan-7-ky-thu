@@ -1,0 +1,113 @@
+{
+  "entities": {
+    "UserProgress": {
+      "title": "UserProgress",
+      "description": "Authenticated Google student or teacher profile and curriculum progress in MathQuest Grade 7",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Firebase Auth UID of the signed-in Google user",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name of the student or teacher",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Verified Google email address",
+          "minLength": 3,
+          "maxLength": 150
+        },
+        "grade": {
+          "type": "string",
+          "description": "Class/grade level (e.g. Lớp 7A1)",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "school": {
+          "type": "string",
+          "description": "School name",
+          "maxLength": 120
+        },
+        "avatar": {
+          "type": "string",
+          "description": "Selected mascot avatar identifier",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "xp": {
+          "type": "number",
+          "description": "Total experience points earned"
+        },
+        "coins": {
+          "type": "number",
+          "description": "Total gold coins earned"
+        },
+        "hearts": {
+          "type": "number",
+          "description": "Current remaining hearts"
+        },
+        "maxHearts": {
+          "type": "number",
+          "description": "Maximum hearts"
+        },
+        "streakDays": {
+          "type": "number",
+          "description": "Consecutive learning days streak"
+        },
+        "unlockedBadges": {
+          "type": "array",
+          "description": "List of unlocked achievement badge IDs"
+        },
+        "lessonProgress": {
+          "type": "object",
+          "description": "Map of lessonId to lesson completion metrics"
+        },
+        "goal": {
+          "type": "object",
+          "description": "Student learning goal configuration"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp when profile was first created"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of the last progress update"
+        }
+      },
+      "required": [
+        "uid",
+        "name",
+        "email",
+        "grade",
+        "avatar",
+        "xp",
+        "coins",
+        "hearts",
+        "maxHearts",
+        "streakDays",
+        "unlockedBadges",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": {
+        "$ref": "#/entities/UserProgress"
+      },
+      "description": "Private user progress and profile document, strictly readable and writable only by the authenticated owner (and readable by verified teacher admins)."
+    }
+  }
+}
