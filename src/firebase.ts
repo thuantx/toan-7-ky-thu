@@ -27,6 +27,7 @@ import firebaseConfig from '../firebase-applet-config.json';
 import { UserProfile, Goal } from './types';
 import { Chapter, CURRICULUM_DATA } from './data/curriculumData';
 import { DEFAULT_GOAL, isTeacherEmail, mergeWithCurriculum } from './utils/storage';
+import { sanitizeAvatarValue } from './utils/avatar';
 
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
@@ -279,7 +280,7 @@ async function loadOrCreateGoogleUserProfileInternal(
       grade: String(data.grade || (isTeacher ? 'Tổ Toán 7' : 'Lớp 7A1')),
       school: String(data.school || 'THCS Kết Nối Tri Thức'),
       role: isTeacher ? 'admin' : 'student',
-      avatar: String(data.avatar || 'pipo_owl'),
+      avatar: sanitizeAvatarValue(typeof data.avatar === 'string' ? data.avatar : undefined),
       xp: typeof data.xp === 'number' ? data.xp : 0,
       coins: typeof data.coins === 'number' ? data.coins : 50,
       hearts: typeof data.hearts === 'number' ? data.hearts : 5,
@@ -330,7 +331,7 @@ async function loadOrCreateGoogleUserProfileInternal(
     grade: isTeacher ? 'Tổ Toán 7' : localFallbackUser?.grade || 'Lớp 7A1',
     school: localFallbackUser?.school || 'THCS Kết Nối Tri Thức',
     role: isTeacher ? 'admin' : 'student',
-    avatar: localFallbackUser?.avatar || 'pipo_owl',
+    avatar: sanitizeAvatarValue(localFallbackUser?.avatar),
     xp: isTeacher ? 1000 : Math.max(200, localFallbackUser?.xp || 0),
     coins: isTeacher ? 200 : Math.max(50, localFallbackUser?.coins || 0),
     hearts: 5,
@@ -355,7 +356,7 @@ async function loadOrCreateGoogleUserProfileInternal(
     email,
     grade: initialUser.grade.slice(0, 40),
     school: (initialUser.school || 'THCS Kết Nối Tri Thức').slice(0, 120),
-    avatar: initialUser.avatar.slice(0, 40),
+    avatar: sanitizeAvatarValue(initialUser.avatar),
     xp: initialUser.xp,
     coins: initialUser.coins,
     hearts: initialUser.hearts,
@@ -406,7 +407,7 @@ export async function syncUserProgressToFirestore(
     name: (userProfile.name || firebaseUser.displayName || 'Học sinh Toán 7').trim().slice(0, 100) || 'Học sinh',
     grade: (userProfile.grade || 'Lớp 7A1').trim().slice(0, 40) || 'Lớp 7A1',
     school: (userProfile.school || 'THCS Kết Nối Tri Thức').trim().slice(0, 120),
-    avatar: (userProfile.avatar || 'pipo_owl').trim().slice(0, 40) || 'pipo_owl',
+    avatar: sanitizeAvatarValue(userProfile.avatar),
     xp: Math.max(0, Math.min(10000000, Math.round(userProfile.xp || 0))),
     coins: Math.max(0, Math.min(10000000, Math.round(userProfile.coins || 0))),
     hearts: Math.max(0, Math.min(10, Math.round(userProfile.hearts ?? 5))),
@@ -477,7 +478,7 @@ export async function syncLeaderboardEntry(
     uid,
     name: (userProfile.name || firebaseUser.displayName || 'Học sinh Toán 7').trim().slice(0, 100) || 'Học sinh',
     grade: (userProfile.grade || 'Lớp 7A1').trim().slice(0, 40) || 'Lớp 7A1',
-    avatar: (userProfile.avatar || 'pipo_owl').trim().slice(0, 40) || 'pipo_owl',
+    avatar: sanitizeAvatarValue(userProfile.avatar),
     xp: Math.max(0, Math.min(10000000, Math.round(userProfile.xp || 0))),
     streakDays: Math.max(0, Math.min(10000, Math.round(userProfile.streakDays || 0))),
     updatedAt: serverTimestamp(),
@@ -499,7 +500,7 @@ function mapLeaderboardSnapshotDocs(
       uid: String(data.uid || d.id),
       name: String(data.name || 'Học sinh Toán 7'),
       grade: String(data.grade || 'Lớp 7'),
-      avatar: String(data.avatar || 'pipo_owl'),
+      avatar: sanitizeAvatarValue(typeof data.avatar === 'string' ? data.avatar : undefined),
       xp: typeof data.xp === 'number' ? data.xp : 0,
       streakDays: typeof data.streakDays === 'number' ? data.streakDays : 0,
     };

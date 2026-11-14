@@ -15,8 +15,16 @@ import {
   Loader2,
   RefreshCw,
   Save,
+  Upload,
+  Trash2,
 } from 'lucide-react';
 import { getSavedAccounts, isTeacherEmail } from '../utils/storage';
+import {
+  BUILTIN_AVATAR_OPTIONS,
+  AVATAR_EMOJI_MAP,
+  compressAvatarImageFile,
+  isCustomImageAvatar,
+} from '../utils/avatar';
 import {
   signInWithGoogleAccount,
   loadOrCreateGoogleUserProfile,
@@ -53,6 +61,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isSaving, setIsSaving] = useState<boolean>(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState<boolean>(false);
   const [notification, setNotification] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -62,6 +71,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [editSchool, setEditSchool] = useState<string>(currentUser.school || 'THCS Kết Nối Tri Thức');
   const [editAvatar, setEditAvatar] = useState<string>(currentUser.avatar || 'pipo_owl');
 
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const wasOpenRef = useRef<boolean>(false);
   const lastUidRef = useRef<string | null>(null);
 
@@ -197,13 +207,30 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     }
   };
 
-  const avatarOptions = [
-    { id: 'pipo_owl', label: 'Cú Pipo', emoji: '🦉' },
-    { id: 'lion', label: 'Sư Tử', emoji: '🦁' },
-    { id: 'rabbit', label: 'Thỏ Nhanh', emoji: '🐰' },
-    { id: 'dolphin', label: 'Cá Heo', emoji: '🐬' },
-    { id: 'penguin', label: 'Cánh Cụt', emoji: '🐧' },
-  ];
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = '';
+    if (!file) return;
+
+    setErrorMessage(null);
+    setNotification(null);
+    setIsUploadingAvatar(true);
+
+    try {
+      const compressedDataUrl = await compressAvatarImageFile(file);
+      setEditAvatar(compressedDataUrl);
+      setNotification('Đã tải ảnh đại diện lên! Hãy nhấn "Lưu cập nhật hồ sơ" để lưu lại.');
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setErrorMessage(msg || 'Không thể xử lý ảnh đại diện đã chọn.');
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  };
+
+  const hasCustomAvatar = isCustomImageAvatar(editAvatar);
+  const currentHasCustomAvatar = isCustomImageAvatar(currentUser.avatar);
+  const currentMascotEmoji = AVATAR_EMOJI_MAP[currentUser.avatar];
 
   const isAuthenticatedWithGoogle = Boolean(currentUser.isAuthenticated && firebaseUser);
 
@@ -257,7 +284,17 @@ export const AuthModal: React.FC<AuthModalProps> = ({
             <div className="space-y-4">
               <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
-                  {firebaseUser?.photoURL ? (
+                  {currentHasCustomAvatar ? (
+                    <img
+                      src={currentUser.avatar}
+                      alt={currentUser.name}
+                      className="w-10 h-10 rounded-xl object-cover border border-emerald-200 shrink-0"
+                    />
+                  ) : currentMascotEmoji ? (
+                    <div className="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-xl shrink-0">
+                      {currentMascotEmoji}
+                    </div>
+                  ) : firebaseUser?.photoURL ? (
                     <img
                       src={firebaseUser.photoURL}
                       alt={currentUser.name}
@@ -340,34 +377,101 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   />
                 </div>
 
-                <div className="space-y-1">
-                  <label className="text-[11px] font-bold text-slate-700 block">
-                    Linh vật đại diện:
-                  </label>
-                  <div className="grid grid-cols-5 gap-1.5">
-                    {avatarOptions.map((av) => (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <label className="text-[11px] font-bold text-slate-700 block">
+                      Linh vật / Ảnh đại diện:
+                    </label>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        disabled={isUploadingAvatar || isSaving}
+                        onClick={() => fileInputRef.current?.click()}
+                        className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 text-[10px] font-bold transition-colors cursor-pointer disabled:opacity-60"
+                      >
+                        <Upload className="w-3 h-3" />
+                        <span>{hasCustomAvatar ? 'Đổi ảnh tải lên' : 'Tải ảnh ngoài'}</span>
+                      </button>
+                      {hasCustomAvatar && (
+                        <button
+                          type="button"
+                          disabled={isUploadingAvatar || isSaving}
+                          onClick={() => setEditAvatar('pipo_owl')}
+                          className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-[10px] font-bold transition-colors cursor-pointer"
+                          title="Xóa ảnh tải lên và dùng lại linh vật mặc định"
+                        >
+                          <Trash2 className="w-3 h-3" />
+                          <span>Xóa ảnh</span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp,image/gif"
+                    onChange={handleAvatarUpload}
+                    className="hidden"
+                  />
+
+                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
+                    {BUILTIN_AVATAR_OPTIONS.map((av) => (
                       <button
                         type="button"
                         key={av.id}
                         onClick={() => setEditAvatar(av.id)}
-                        className={`p-1.5 rounded-xl border text-center transition-all ${
+                        className={`p-1.5 rounded-xl border text-center transition-all cursor-pointer ${
                           editAvatar === av.id
                             ? 'border-emerald-500 bg-emerald-50/80 ring-2 ring-emerald-500/20'
                             : 'border-slate-200 hover:border-slate-300 bg-slate-50/50'
                         }`}
                       >
-                        <div className="text-base">{av.emoji}</div>
+                        <div className="text-base h-6 flex items-center justify-center">{av.emoji}</div>
                         <span className="text-[9px] font-bold text-slate-700 block truncate">
                           {av.label}
                         </span>
                       </button>
                     ))}
+
+                    <button
+                      type="button"
+                      disabled={isUploadingAvatar || isSaving}
+                      onClick={() => fileInputRef.current?.click()}
+                      className={`p-1.5 rounded-xl border text-center transition-all cursor-pointer ${
+                        hasCustomAvatar
+                          ? 'border-emerald-500 bg-emerald-50/80 ring-2 ring-emerald-500/20'
+                          : 'border-dashed border-slate-300 hover:border-indigo-400 hover:bg-indigo-50/40 bg-slate-50/50'
+                      }`}
+                      title="Tải ảnh từ thiết bị làm biểu tượng đại diện"
+                    >
+                      <div className="h-6 flex items-center justify-center">
+                        {isUploadingAvatar ? (
+                          <Loader2 className="w-4 h-4 text-indigo-600 animate-spin" />
+                        ) : hasCustomAvatar ? (
+                          <img
+                            src={editAvatar}
+                            alt="Ảnh đại diện tùy chỉnh"
+                            className="w-6 h-6 rounded-md object-cover border border-emerald-300"
+                          />
+                        ) : (
+                          <Upload className="w-4 h-4 text-indigo-600" />
+                        )}
+                      </div>
+                      <span className="text-[9px] font-bold text-slate-700 block truncate">
+                        {hasCustomAvatar ? 'Ảnh riêng' : 'Tải ảnh'}
+                      </span>
+                    </button>
                   </div>
+
+                  <p className="text-[10px] text-slate-500 leading-snug">
+                    Có thể chọn linh vật có sẵn hoặc tải ảnh PNG/JPG/WEBP từ máy (tự động thu gọn làm icon).
+                  </p>
                 </div>
 
                 <button
                   type="submit"
-                  disabled={isSaving}
+                  disabled={isSaving || isUploadingAvatar}
                   className="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 disabled:cursor-not-allowed text-white rounded-xl text-xs font-bold transition-colors shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
                 >
                   {isSaving ? (

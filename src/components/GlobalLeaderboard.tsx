@@ -15,19 +15,13 @@ import {
   LogIn,
 } from 'lucide-react';
 
+import { AVATAR_EMOJI_MAP, isCustomImageAvatar } from '../utils/avatar';
+
 interface GlobalLeaderboardProps {
   currentUser: UserProfile;
   onOpenAuthModal?: () => void;
   onStartPractice?: () => void;
 }
-
-const AVATAR_EMOJI_MAP: Record<string, string> = {
-  pipo_owl: '🦉',
-  lion: '🦁',
-  rabbit: '🐰',
-  dolphin: '🐬',
-  penguin: '🐧',
-};
 
 export const GlobalLeaderboard: React.FC<GlobalLeaderboardProps> = ({
   currentUser,
@@ -266,12 +260,20 @@ export const GlobalLeaderboard: React.FC<GlobalLeaderboardProps> = ({
 
                       <td className="py-2 px-3 align-middle">
                         <div className="flex items-center gap-2.5 min-w-0">
-                          <span
-                            className="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center text-sm shrink-0"
-                            aria-hidden="true"
-                          >
-                            {emoji}
-                          </span>
+                          {isCustomImageAvatar(entry.avatar) ? (
+                            <img
+                              src={entry.avatar}
+                              alt={entry.name}
+                              className="w-7 h-7 rounded-lg object-cover border border-slate-200 shrink-0"
+                            />
+                          ) : (
+                            <span
+                              className="w-7 h-7 rounded-lg bg-slate-100 flex items-center justify-center text-sm shrink-0"
+                              aria-hidden="true"
+                            >
+                              {emoji}
+                            </span>
+                          )}
                           <div className="min-w-0">
                             <div className="flex items-center gap-1.5">
                               <span

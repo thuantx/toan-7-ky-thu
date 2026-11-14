@@ -7,7 +7,7 @@ export interface UserProfile {
   grade: string;
   school?: string;
   role: 'student' | 'admin';
-  avatar: string; // 'pipo_owl' | 'lion' | 'rabbit' | 'dolphin' | 'penguin'
+  avatar: string; // 'pipo_owl' | 'lion' | 'rabbit' | 'dolphin' | 'penguin' | base64 image data URL
   xp: number;
   coins: number;
   hearts: number;

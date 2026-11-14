@@ -38,6 +38,16 @@ service cloud.firestore {
       );
     }
 
+    function isValidAvatar(avatar) {
+      return avatar is string
+        && avatar.size() >= 1
+        && avatar.size() <= 50000
+        && (
+          avatar in ['pipo_owl', 'lion', 'rabbit', 'dolphin', 'penguin'] ||
+          avatar.matches('^data:image/(png|jpeg|webp);base64,[A-Za-z0-9+/=]+$')
+        );
+    }
+
     // 3. Entity Validation Blueprints
     function isValidUser(data) {
       return data.keys().hasAll([
@@ -78,7 +88,7 @@ service cloud.firestore {
         && data.email is string && data.email.size() >= 3 && data.email.size() <= 150 && data.email == request.auth.token.email
         && data.grade is string && data.grade.size() >= 1 && data.grade.size() <= 40
         && (!('school' in data) || (data.school is string && data.school.size() <= 120))
-        && data.avatar is string && data.avatar.size() >= 1 && data.avatar.size() <= 40
+        && isValidAvatar(data.avatar)
         && data.xp is number && data.xp >= 0 && data.xp <= 10000000
         && data.coins is number && data.coins >= 0 && data.coins <= 10000000
         && data.hearts is number && data.hearts >= 0 && data.hearts <= 10
@@ -114,7 +124,7 @@ service cloud.firestore {
         && data.uid is string && data.uid.size() >= 1 && data.uid.size() <= 128 && data.uid == request.auth.uid
         && data.name is string && data.name.size() >= 1 && data.name.size() <= 100
         && data.grade is string && data.grade.size() >= 1 && data.grade.size() <= 40
-        && data.avatar is string && data.avatar.size() >= 1 && data.avatar.size() <= 40
+        && isValidAvatar(data.avatar)
         && data.xp is number && data.xp >= 0 && data.xp <= 10000000
         && data.streakDays is number && data.streakDays >= 0 && data.streakDays <= 10000
         && data.updatedAt is timestamp;

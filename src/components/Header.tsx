@@ -12,6 +12,7 @@ import {
   GraduationCap
 } from 'lucide-react';
 import { isTeacherEmail } from '../utils/storage';
+import { AVATAR_EMOJI_MAP, isCustomImageAvatar } from '../utils/avatar';
 
 interface HeaderProps {
   currentView: ViewMode;
@@ -143,9 +144,23 @@ export const Header: React.FC<HeaderProps> = ({
                 className="flex items-center gap-1.5 p-1 sm:px-2.5 sm:py-1 rounded-xl border border-slate-200 hover:border-emerald-500 hover:bg-slate-50 transition-all text-left shrink-0"
                 title={`Đang đăng nhập: ${user.name} (${user.email || 'Học sinh'}). Nhấn để quản lý tài khoản.`}
               >
-                <div className="w-6 h-6 rounded-lg bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shrink-0">
-                  {isTeacher ? <GraduationCap className="w-3.5 h-3.5" /> : user.name.charAt(0)}
-                </div>
+                {isCustomImageAvatar(user.avatar) ? (
+                  <img
+                    src={user.avatar}
+                    alt={user.name}
+                    className="w-6 h-6 rounded-lg object-cover border border-emerald-200 shrink-0"
+                  />
+                ) : (
+                  <div className="w-6 h-6 rounded-lg bg-emerald-600 text-white font-bold text-xs flex items-center justify-center shrink-0">
+                    {isTeacher ? (
+                      <GraduationCap className="w-3.5 h-3.5" />
+                    ) : AVATAR_EMOJI_MAP[user.avatar] ? (
+                      <span className="text-sm leading-none">{AVATAR_EMOJI_MAP[user.avatar]}</span>
+                    ) : (
+                      user.name.charAt(0)
+                    )}
+                  </div>
+                )}
                 <div className="hidden sm:block leading-tight text-left max-w-[100px] truncate">
                   <span className="text-xs font-bold text-slate-800 block truncate">
                     {user.name}

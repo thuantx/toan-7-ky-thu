@@ -38,9 +38,9 @@
         },
         "avatar": {
           "type": "string",
-          "description": "Selected mascot avatar identifier",
+          "description": "Selected mascot avatar identifier or safe raster base64 data URL (<= 50KB)",
           "minLength": 1,
-          "maxLength": 40
+          "maxLength": 50000
         },
         "xp": {
           "type": "number",
@@ -127,9 +127,9 @@
         },
         "avatar": {
           "type": "string",
-          "description": "Student mascot avatar ID",
+          "description": "Student mascot avatar ID or safe raster base64 data URL (<= 50KB)",
           "minLength": 1,
-          "maxLength": 40
+          "maxLength": 50000
         },
         "xp": {
           "type": "number",
