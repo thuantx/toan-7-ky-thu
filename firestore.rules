@@ -38,7 +38,7 @@ service cloud.firestore {
       );
     }
 
-    // 3. Entity Validation Blueprint
+    // 3. Entity Validation Blueprints
     function isValidUser(data) {
       return data.keys().hasAll([
           'uid',
@@ -92,6 +92,34 @@ service cloud.firestore {
         && data.updatedAt is timestamp;
     }
 
+    function isValidLeaderboardEntry(data) {
+      return data.keys().hasAll([
+          'uid',
+          'name',
+          'grade',
+          'avatar',
+          'xp',
+          'streakDays',
+          'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'uid',
+          'name',
+          'grade',
+          'avatar',
+          'xp',
+          'streakDays',
+          'updatedAt'
+        ])
+        && data.uid is string && data.uid.size() >= 1 && data.uid.size() <= 128 && data.uid == request.auth.uid
+        && data.name is string && data.name.size() >= 1 && data.name.size() <= 100
+        && data.grade is string && data.grade.size() >= 1 && data.grade.size() <= 40
+        && data.avatar is string && data.avatar.size() >= 1 && data.avatar.size() <= 40
+        && data.xp is number && data.xp >= 0 && data.xp <= 10000000
+        && data.streakDays is number && data.streakDays >= 0 && data.streakDays <= 10000
+        && data.updatedAt is timestamp;
+    }
+
     // 4. User Profile & Progress Collection (PII isolated to owner or verified teacher admin)
     match /users/{userId} {
       allow get: if isValidId(userId) && isEmailVerified() && (isOwner(userId) || isAdmin());
@@ -129,6 +157,38 @@ service cloud.firestore {
         ]);
 
       allow delete: if false;
+    }
+
+    // 5. Public Non-PII Global Leaderboard Collection (Top 10 Students)
+    match /leaderboard/{userId} {
+      allow get: if isValidId(userId)
+        && resource.data.xp is number
+        && resource.data.xp >= 0;
+
+      allow list: if resource.data.xp >= 0;
+
+      allow create: if isEmailVerified()
+        && isValidId(userId)
+        && isOwner(userId)
+        && isValidLeaderboardEntry(incoming())
+        && incoming().updatedAt == request.time;
+
+      allow update: if isEmailVerified()
+        && isValidId(userId)
+        && isOwner(userId)
+        && isValidLeaderboardEntry(incoming())
+        && incoming().uid == existing().uid
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly([
+          'name',
+          'grade',
+          'avatar',
+          'xp',
+          'streakDays',
+          'updatedAt'
+        ]);
+
+      allow delete: if isEmailVerified() && isOwner(userId);
     }
   }
 }

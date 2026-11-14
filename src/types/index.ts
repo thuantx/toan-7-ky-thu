@@ -20,6 +20,11 @@ export interface UserProfile {
   lastActiveAt?: string;
 }
 
+export interface DailyQuestionCount {
+  date: string; // YYYY-MM-DD
+  count: number;
+}
+
 export interface Goal {
   id: string;
   title: string;
@@ -30,6 +35,7 @@ export interface Goal {
   weeklyTargetQuestions: number;
   targetAccuracy: number; // e.g. 85%
   completedQuestionsThisWeek: number;
+  dailyCompletedQuestions?: DailyQuestionCount[];
   currentAccuracy: number;
   progressPercent: number;
   recommendedMessage: string;

@@ -72,7 +72,7 @@
         },
         "goal": {
           "type": "object",
-          "description": "Student learning goal configuration"
+          "description": "Student learning goal configuration including dailyCompletedQuestions"
         },
         "createdAt": {
           "type": "string",
@@ -100,6 +100,60 @@
         "createdAt",
         "updatedAt"
       ]
+    },
+    "LeaderboardEntry": {
+      "title": "LeaderboardEntry",
+      "description": "Public non-PII student score entry for the Global Leaderboard (top XP rankings)",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Firebase Auth UID of the student",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "name": {
+          "type": "string",
+          "description": "Student display name",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "grade": {
+          "type": "string",
+          "description": "Student class/grade label",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "avatar": {
+          "type": "string",
+          "description": "Student mascot avatar ID",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "xp": {
+          "type": "number",
+          "description": "Total XP score used to rank top 10 students"
+        },
+        "streakDays": {
+          "type": "number",
+          "description": "Consecutive days of learning"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of the last score update"
+        }
+      },
+      "required": [
+        "uid",
+        "name",
+        "grade",
+        "avatar",
+        "xp",
+        "streakDays",
+        "updatedAt"
+      ]
     }
   },
   "firestore": {
@@ -108,6 +162,12 @@
         "$ref": "#/entities/UserProgress"
       },
       "description": "Private user progress and profile document, strictly readable and writable only by the authenticated owner (and readable by verified teacher admins)."
+    },
+    "/leaderboard/{userId}": {
+      "schema": {
+        "$ref": "#/entities/LeaderboardEntry"
+      },
+      "description": "Public non-PII student scoreboard entries ordered by XP for the Global Leaderboard."
     }
   }
 }

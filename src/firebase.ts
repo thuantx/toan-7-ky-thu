@@ -14,6 +14,14 @@ import {
   setDoc,
   updateDoc,
   serverTimestamp,
+  collection,
+  query,
+  orderBy,
+  limit,
+  where,
+  getDocs,
+  onSnapshot,
+  Unsubscribe,
 } from 'firebase/firestore';
 import firebaseConfig from '../firebase-applet-config.json';
 import { UserProfile, Goal } from './types';
@@ -142,7 +150,7 @@ function buildLessonProgressMap(chapters: Chapter[]) {
 }
 
 function buildCleanGoalMap(goal: Goal) {
-  const cleanGoal: Record<string, string | number> = {
+  const cleanGoal: Record<string, unknown> = {
     id: String(goal.id || 'goal-01').slice(0, 64),
     title: String(goal.title || DEFAULT_GOAL.title).slice(0, 200),
     scope: goal.scope || 'SEMESTER',
@@ -157,6 +165,12 @@ function buildCleanGoalMap(goal: Goal) {
   };
   if (goal.targetChapterId) {
     cleanGoal.targetChapterId = String(goal.targetChapterId).slice(0, 64);
+  }
+  if (Array.isArray(goal.dailyCompletedQuestions)) {
+    cleanGoal.dailyCompletedQuestions = goal.dailyCompletedQuestions.slice(-14).map((entry) => ({
+      date: String(entry.date || '').slice(0, 12),
+      count: Math.max(0, Math.round(Number(entry.count || 0))),
+    }));
   }
   return cleanGoal;
 }
@@ -192,7 +206,47 @@ export function applyLessonProgressToCurriculum(
   }));
 }
 
+const inFlightProfileLoads = new Map<
+  string,
+  Promise<{
+    user: UserProfile;
+    chapters: Chapter[];
+    goal: Goal;
+    isNewUser: boolean;
+  }>
+>();
+
 export async function loadOrCreateGoogleUserProfile(
+  firebaseUser: FirebaseUser,
+  localFallbackUser?: UserProfile | null,
+  localFallbackChapters?: Chapter[],
+  localFallbackGoal?: Goal
+): Promise<{
+  user: UserProfile;
+  chapters: Chapter[];
+  goal: Goal;
+  isNewUser: boolean;
+}> {
+  const uid = firebaseUser.uid;
+  const existingPromise = inFlightProfileLoads.get(uid);
+  if (existingPromise) {
+    return existingPromise;
+  }
+
+  const loadPromise = loadOrCreateGoogleUserProfileInternal(
+    firebaseUser,
+    localFallbackUser,
+    localFallbackChapters,
+    localFallbackGoal
+  ).finally(() => {
+    inFlightProfileLoads.delete(uid);
+  });
+
+  inFlightProfileLoads.set(uid, loadPromise);
+  return loadPromise;
+}
+
+async function loadOrCreateGoogleUserProfileInternal(
   firebaseUser: FirebaseUser,
   localFallbackUser?: UserProfile | null,
   localFallbackChapters?: Chapter[],
@@ -245,6 +299,12 @@ export async function loadOrCreateGoogleUserProfile(
     const loadedGoal: Goal = data.goal
       ? { ...DEFAULT_GOAL, ...(data.goal as Partial<Goal>) }
       : localFallbackGoal || DEFAULT_GOAL;
+
+    if (loadedUser.role === 'student') {
+      syncLeaderboardEntry(firebaseUser, loadedUser).catch((err) =>
+        console.warn('Initial leaderboard sync skipped:', err)
+      );
+    }
 
     return {
       user: loadedUser,
@@ -314,6 +374,12 @@ export async function loadOrCreateGoogleUserProfile(
     handleFirestoreError(error, OperationType.CREATE, path);
   }
 
+  if (initialUser.role === 'student') {
+    syncLeaderboardEntry(firebaseUser, initialUser).catch((err) =>
+      console.warn('New user leaderboard sync skipped:', err)
+    );
+  }
+
   return {
     user: initialUser,
     chapters: initialChapters,
@@ -328,7 +394,9 @@ export async function syncUserProgressToFirestore(
   chapters: Chapter[],
   goal: Goal
 ): Promise<void> {
-  if (!firebaseUser || !firebaseUser.emailVerified || !firebaseUser.email) return;
+  if (!firebaseUser || !firebaseUser.emailVerified || !firebaseUser.email) {
+    throw new Error('Phiên đăng nhập Google chưa hợp lệ hoặc email chưa được xác minh.');
+  }
 
   const uid = firebaseUser.uid;
   const path = `users/${uid}`;
@@ -353,9 +421,16 @@ export async function syncUserProgressToFirestore(
   try {
     await updateDoc(docRef, updatablePayload);
   } catch (error) {
-    // If document doesn't exist yet, create it
+    const errCode =
+      typeof error === 'object' && error !== null && 'code' in error
+        ? String((error as { code?: string }).code)
+        : '';
     const errMsg = error instanceof Error ? error.message : String(error);
-    if (errMsg.includes('No document to update') || errMsg.includes('not-found')) {
+    if (
+      errCode === 'not-found' ||
+      errMsg.includes('No document to update') ||
+      errMsg.includes('not-found')
+    ) {
       try {
         await setDoc(docRef, {
           uid,
@@ -366,8 +441,115 @@ export async function syncUserProgressToFirestore(
       } catch (createErr) {
         handleFirestoreError(createErr, OperationType.CREATE, path);
       }
+      if (userProfile.role === 'student') {
+        await syncLeaderboardEntry(firebaseUser, userProfile);
+      }
       return;
     }
     handleFirestoreError(error, OperationType.UPDATE, path);
   }
+
+  if (userProfile.role === 'student') {
+    await syncLeaderboardEntry(firebaseUser, userProfile);
+  }
+}
+
+export interface LeaderboardEntry {
+  uid: string;
+  name: string;
+  grade: string;
+  avatar: string;
+  xp: number;
+  streakDays: number;
+}
+
+export async function syncLeaderboardEntry(
+  firebaseUser: FirebaseUser,
+  userProfile: UserProfile
+): Promise<void> {
+  if (!firebaseUser || !firebaseUser.emailVerified || !firebaseUser.email) return;
+
+  const uid = firebaseUser.uid;
+  const path = `leaderboard/${uid}`;
+  const docRef = doc(db, 'leaderboard', uid);
+
+  const payload = {
+    uid,
+    name: (userProfile.name || firebaseUser.displayName || 'Học sinh Toán 7').trim().slice(0, 100) || 'Học sinh',
+    grade: (userProfile.grade || 'Lớp 7A1').trim().slice(0, 40) || 'Lớp 7A1',
+    avatar: (userProfile.avatar || 'pipo_owl').trim().slice(0, 40) || 'pipo_owl',
+    xp: Math.max(0, Math.min(10000000, Math.round(userProfile.xp || 0))),
+    streakDays: Math.max(0, Math.min(10000, Math.round(userProfile.streakDays || 0))),
+    updatedAt: serverTimestamp(),
+  };
+
+  try {
+    await setDoc(docRef, payload);
+  } catch (error) {
+    handleFirestoreError(error, OperationType.WRITE, path);
+  }
+}
+
+function mapLeaderboardSnapshotDocs(
+  docs: { id: string; data: () => Record<string, unknown> }[]
+): LeaderboardEntry[] {
+  return docs.map((d) => {
+    const data = d.data();
+    return {
+      uid: String(data.uid || d.id),
+      name: String(data.name || 'Học sinh Toán 7'),
+      grade: String(data.grade || 'Lớp 7'),
+      avatar: String(data.avatar || 'pipo_owl'),
+      xp: typeof data.xp === 'number' ? data.xp : 0,
+      streakDays: typeof data.streakDays === 'number' ? data.streakDays : 0,
+    };
+  });
+}
+
+export async function fetchTopLeaderboardStudents(
+  topCount: number = 10
+): Promise<LeaderboardEntry[]> {
+  const path = 'leaderboard';
+  try {
+    const q = query(
+      collection(db, path),
+      where('xp', '>=', 0),
+      orderBy('xp', 'desc'),
+      limit(Math.max(1, Math.min(10, topCount)))
+    );
+    const snap = await getDocs(q);
+    return mapLeaderboardSnapshotDocs(snap.docs);
+  } catch (error) {
+    handleFirestoreError(error, OperationType.LIST, path);
+  }
+}
+
+export function subscribeTopLeaderboardStudents(
+  topCount: number,
+  onData: (entries: LeaderboardEntry[]) => void,
+  onError: (error: Error) => void
+): Unsubscribe {
+  const path = 'leaderboard';
+  const q = query(
+    collection(db, path),
+    where('xp', '>=', 0),
+    orderBy('xp', 'desc'),
+    limit(Math.max(1, Math.min(10, topCount)))
+  );
+
+  return onSnapshot(
+    q,
+    (snapshot) => {
+      onData(mapLeaderboardSnapshotDocs(snapshot.docs));
+    },
+    (error) => {
+      try {
+        handleFirestoreError(error, OperationType.LIST, path);
+      } catch (formattedError) {
+        onError(
+          formattedError instanceof Error ? formattedError : new Error(String(formattedError))
+        );
+      }
+    }
+  );
 }

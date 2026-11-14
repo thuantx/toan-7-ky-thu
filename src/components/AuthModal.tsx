@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { UserProfile, Goal } from '../types';
 import { Chapter } from '../data/curriculumData';
 import {
@@ -36,7 +36,7 @@ interface AuthModalProps {
     goal: Goal,
     fbUser: FirebaseUser
   ) => void;
-  onUpdateProfile: (updated: Partial<UserProfile>) => void;
+  onUpdateProfile: (updated: Partial<UserProfile>) => Promise<void> | void;
   onLogout: () => Promise<void> | void;
 }
 
@@ -52,6 +52,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   onLogout,
 }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSaving, setIsSaving] = useState<boolean>(false);
   const [notification, setNotification] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -61,16 +62,27 @@ export const AuthModal: React.FC<AuthModalProps> = ({
   const [editSchool, setEditSchool] = useState<string>(currentUser.school || 'THCS Kết Nối Tri Thức');
   const [editAvatar, setEditAvatar] = useState<string>(currentUser.avatar || 'pipo_owl');
 
+  const wasOpenRef = useRef<boolean>(false);
+  const lastUidRef = useRef<string | null>(null);
+
   useEffect(() => {
-    if (isOpen) {
+    const currentUid = firebaseUser?.uid || null;
+    const isOpening = isOpen && !wasOpenRef.current;
+    const isSwitchingAccount = isOpen && lastUidRef.current !== currentUid;
+
+    if (isOpening || isSwitchingAccount) {
       setEditName(currentUser.name || '');
       setEditGrade(currentUser.grade || 'Lớp 7A1');
       setEditSchool(currentUser.school || 'THCS Kết Nối Tri Thức');
       setEditAvatar(currentUser.avatar || 'pipo_owl');
       setErrorMessage(null);
-      setNotification(null);
+      if (isOpening) {
+        setNotification(null);
+      }
     }
-  }, [isOpen, currentUser]);
+    wasOpenRef.current = isOpen;
+    lastUidRef.current = currentUid;
+  }, [isOpen, firebaseUser?.uid, currentUser.name, currentUser.grade, currentUser.school, currentUser.avatar]);
 
   const savedAccounts = getSavedAccounts();
 
@@ -141,21 +153,48 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     }
   };
 
-  const handleSaveProfileChanges = (e: React.FormEvent) => {
+  const handleSaveProfileChanges = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isSaving) return;
+
     if (!editName.trim()) {
       setErrorMessage('Vui lòng nhập họ và tên của em.');
       return;
     }
 
-    onUpdateProfile({
-      name: editName.trim(),
-      grade: currentUser.role === 'admin' ? 'Tổ Toán 7' : editGrade,
-      school: editSchool.trim() || 'THCS Kết Nối Tri Thức',
-      avatar: editAvatar,
-    });
     setErrorMessage(null);
-    setNotification('Đã lưu cập nhật hồ sơ học tập lên hệ thống!');
+    setNotification(null);
+    setIsSaving(true);
+
+    try {
+      await onUpdateProfile({
+        name: editName.trim(),
+        grade: currentUser.role === 'admin' ? 'Tổ Toán 7' : editGrade,
+        school: editSchool.trim() || 'THCS Kết Nối Tri Thức',
+        avatar: editAvatar,
+      });
+      setNotification('Đã lưu cập nhật hồ sơ học tập lên hệ thống!');
+    } catch (err: unknown) {
+      let detail = err instanceof Error ? err.message : String(err);
+      try {
+        const parsed = JSON.parse(detail) as { error?: string };
+        if (parsed?.error) detail = parsed.error;
+      } catch {
+        // plain error message
+      }
+
+      if (detail.toLowerCase().includes('permission') || detail.toLowerCase().includes('insufficient')) {
+        setErrorMessage('Không đủ quyền lưu hồ sơ lên máy chủ. Vui lòng đăng xuất và đăng nhập lại Google.');
+      } else if (detail.toLowerCase().includes('quota')) {
+        setErrorMessage('Hệ thống đang vượt quá giới hạn lượt lưu miễn phí trong ngày.');
+      } else if (detail.toLowerCase().includes('offline') || detail.toLowerCase().includes('network')) {
+        setErrorMessage('Không thể kết nối máy chủ để lưu hồ sơ. Vui lòng kiểm tra kết nối mạng.');
+      } else {
+        setErrorMessage(`Không thể lưu hồ sơ: ${detail}`);
+      }
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const avatarOptions = [
@@ -328,10 +367,20 @@ export const AuthModal: React.FC<AuthModalProps> = ({
 
                 <button
                   type="submit"
-                  className="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold transition-colors shadow-sm flex items-center justify-center gap-1.5"
+                  disabled={isSaving}
+                  className="w-full py-2.5 px-4 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 disabled:cursor-not-allowed text-white rounded-xl text-xs font-bold transition-colors shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
                 >
-                  <Save className="w-3.5 h-3.5" />
-                  <span>Lưu cập nhật hồ sơ</span>
+                  {isSaving ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Đang lưu hồ sơ...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Save className="w-3.5 h-3.5" />
+                      <span>Lưu cập nhật hồ sơ</span>
+                    </>
+                  )}
                 </button>
               </form>
 

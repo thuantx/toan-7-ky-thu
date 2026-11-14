@@ -17,12 +17,16 @@ import {
 } from 'lucide-react';
 import { PipoOwlMascot } from './PipoOwlMascot';
 import { MathBadgeIcon } from './MathBadgeIcon';
+import { WeeklyProgress } from './WeeklyProgress';
+import { StreakBadge } from './StreakBadge';
+import { GlobalLeaderboard } from './GlobalLeaderboard';
 
 interface DashboardViewProps {
   chapters: Chapter[];
   user: UserProfile;
   goal: Goal;
   onOpenGoalsModal: () => void;
+  onOpenAuthModal?: () => void;
   onSelectLessonForPractice: (lessonId: string, categoryFilter?: string) => void;
   onSelectLessonForTheory: (lessonId: string) => void;
 }
@@ -32,6 +36,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   user,
   goal,
   onOpenGoalsModal,
+  onOpenAuthModal,
   onSelectLessonForPractice,
   onSelectLessonForTheory,
 }) => {
@@ -238,6 +243,22 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
         </div>
       </section>
+
+      {/* 2B. Streak Badge & Weekly Progress D3 Chart */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        <div className="lg:col-span-4">
+          <StreakBadge
+            goal={goal}
+            onStartPractice={() => onSelectLessonForPractice('c1-l2')}
+          />
+        </div>
+        <div className="lg:col-span-8">
+          <WeeklyProgress
+            goal={goal}
+            onStartPractice={() => onSelectLessonForPractice('c1-l2')}
+          />
+        </div>
+      </div>
 
       {/* 3. Skill Diagnostics & Weakness Radar (Phân tích Lỗ hổng Kiến thức) */}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -579,6 +600,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
         </div>
       </section>
+
+      {/* 6. Global Leaderboard (Top 10 Students from Firestore) */}
+      <GlobalLeaderboard
+        currentUser={user}
+        onOpenAuthModal={onOpenAuthModal}
+        onStartPractice={() => onSelectLessonForPractice('c1-l2')}
+      />
     </div>
   );
 };

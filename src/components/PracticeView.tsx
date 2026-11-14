@@ -39,6 +39,7 @@ interface PracticeViewProps {
   user: UserProfile;
   onUpdateUser: (updated: Partial<UserProfile>) => void;
   onLessonStatusChange: (lessonId: string, newStatus: Lesson['status'], accuracy: number) => void;
+  onQuestionCompleted?: (isCorrect: boolean) => void;
 }
 
 // Robust answer verification function: handles casing, unicode NFC/NFD, extra spaces, fractions, and option letters
@@ -95,6 +96,7 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
   user,
   onUpdateUser,
   onLessonStatusChange,
+  onQuestionCompleted,
 }) => {
   // Find current lesson
   const allLessons = chapters.flatMap((c) => c.lessons);
@@ -229,6 +231,7 @@ export const PracticeView: React.FC<PracticeViewProps> = ({
         coins: user.coins + coinsGained,
       });
 
+      onQuestionCompleted?.(true);
       setSessionCorrectCount((prev) => prev + 1);
       setMascotMessage(`Xuất sắc quá! Em đã giải chính xác! +${xpGained} XP và +${coinsGained} Xu vàng! Hãy đọc lời giải chi tiết rồi bấm "Câu tiếp theo" nhé! 🎉`);
     } else {

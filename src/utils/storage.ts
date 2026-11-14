@@ -1,8 +1,43 @@
-import { UserProfile, Goal } from '../types';
+import { UserProfile, Goal, DailyQuestionCount } from '../types';
 import { Chapter, CURRICULUM_DATA } from '../data/curriculumData';
 
 const CURRENT_USER_KEY = 'mathquest_current_user_email';
 const ACCOUNTS_INDEX_KEY = 'mathquest_saved_accounts_list';
+
+export function formatLocalDateKey(date: Date): string {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+export function buildLast7DaysSchedule(totalCompleted: number = 9): DailyQuestionCount[] {
+  const weights = [1, 2, 0, 2, 1, 2, 1];
+  const baseSum = weights.reduce((a, b) => a + b, 0);
+  const result: DailyQuestionCount[] = [];
+  const today = new Date();
+  let remaining = Math.max(0, Math.round(totalCompleted));
+
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - i);
+    const idx = 6 - i;
+    let count = 0;
+    if (remaining > 0) {
+      if (idx === 6) {
+        count = remaining;
+      } else {
+        count = Math.min(remaining, Math.round((weights[idx] / baseSum) * totalCompleted));
+        remaining -= count;
+      }
+    }
+    result.push({
+      date: formatLocalDateKey(d),
+      count,
+    });
+  }
+  return result;
+}
 
 // Allowed teacher emails: baoaivn@gmail.com (and baovnai@gmail.com)
 export const TEACHER_EMAILS = ['baoaivn@gmail.com', 'baovnai@gmail.com'];
@@ -49,6 +84,7 @@ export const DEFAULT_GOAL: Goal = {
   weeklyTargetQuestions: 15,
   targetAccuracy: 85,
   completedQuestionsThisWeek: 9,
+  dailyCompletedQuestions: buildLast7DaysSchedule(9),
   currentAccuracy: 88,
   progressPercent: 60,
   recommendedMessage:

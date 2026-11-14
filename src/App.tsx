@@ -13,7 +13,9 @@ import {
   saveStudentProgress, 
   clearCurrentSession,
   isTeacherEmail,
-  mergeWithCurriculum
+  mergeWithCurriculum,
+  formatLocalDateKey,
+  buildLast7DaysSchedule
 } from './utils/storage';
 import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
 import {
@@ -22,6 +24,7 @@ import {
   syncUserProgressToFirestore,
   signOutGoogleAccount,
 } from './firebase';
+import { calculateLearningStreak } from './components/StreakBadge';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<ViewMode>('dashboard');
@@ -112,9 +115,26 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [user, chapters, goal, firebaseUser, isFirebaseHydrated]);
 
-  // Handle User profile updates
+  // Handle User profile updates (e.g. XP/coins/hearts from PracticeView)
   const handleUpdateUser = (updated: Partial<UserProfile>) => {
     setUser((prev) => ({ ...prev, ...updated }));
+  };
+
+  // Handle explicit profile save from AuthModal (immediate local + Firestore persistence)
+  const handleSaveProfile = async (updated: Partial<UserProfile>) => {
+    const mergedUser: UserProfile = {
+      ...user,
+      ...updated,
+      lastActiveAt: new Date().toISOString(),
+    };
+
+    const activeFbUser = auth.currentUser || firebaseUser;
+    if (activeFbUser && mergedUser.isAuthenticated) {
+      await syncUserProgressToFirestore(activeFbUser, mergedUser, chapters, goal);
+    }
+
+    setUser(mergedUser);
+    saveStudentProgress(mergedUser, chapters, goal);
   };
 
   // Handle Google OAuth Login success
@@ -156,6 +176,50 @@ export default function App() {
     });
   };
 
+  // Record a completed question onto today's date in goal.dailyCompletedQuestions
+  const handleQuestionCompleted = (isCorrect: boolean) => {
+    if (!isCorrect) return;
+    const todayKey = formatLocalDateKey(new Date());
+
+    setGoal((prev) => {
+      const baseHistory =
+        Array.isArray(prev.dailyCompletedQuestions) && prev.dailyCompletedQuestions.length > 0
+          ? prev.dailyCompletedQuestions
+          : buildLast7DaysSchedule(prev.completedQuestionsThisWeek);
+
+      const map = new Map<string, number>();
+      baseHistory.forEach((entry) => {
+        if (entry?.date) map.set(entry.date, Math.max(0, Number(entry.count) || 0));
+      });
+      map.set(todayKey, (map.get(todayKey) ?? 0) + 1);
+
+      const today = new Date();
+      const updated7Days = [];
+      let rollingSum = 0;
+      for (let i = 6; i >= 0; i--) {
+        const d = new Date(today);
+        d.setDate(today.getDate() - i);
+        const key = formatLocalDateKey(d);
+        const count = map.get(key) ?? 0;
+        rollingSum += count;
+        updated7Days.push({ date: key, count });
+      }
+
+      const target = Math.max(1, prev.weeklyTargetQuestions || 15);
+      const nextStreak = calculateLearningStreak(updated7Days).streakDays;
+      setUser((uPrev) =>
+        uPrev.streakDays !== nextStreak ? { ...uPrev, streakDays: nextStreak } : uPrev
+      );
+
+      return {
+        ...prev,
+        dailyCompletedQuestions: updated7Days,
+        completedQuestionsThisWeek: rollingSum,
+        progressPercent: Math.min(100, Math.round((rollingSum / target) * 100)),
+      };
+    });
+  };
+
   // Handle lesson status transitions (State Machine execution)
   const handleLessonStatusChange = (lessonId: string, newStatus: Lesson['status'], accuracy: number) => {
     setChapters((prevChapters) =>
@@ -176,11 +240,10 @@ export default function App() {
       }))
     );
 
-    // Update goal progress
+    // Update overall goal progress percent on lesson completion
     setGoal((prev) => ({
       ...prev,
-      completedQuestionsThisWeek: prev.completedQuestionsThisWeek + 3,
-      progressPercent: Math.min(100, prev.progressPercent + 8),
+      progressPercent: Math.min(100, Math.max(prev.progressPercent, prev.progressPercent + 5)),
     }));
   };
 
@@ -229,6 +292,7 @@ export default function App() {
             user={user}
             goal={goal}
             onOpenGoalsModal={() => setIsGoalModalOpen(true)}
+            onOpenAuthModal={() => setIsAuthModalOpen(true)}
             onSelectLessonForPractice={handleStartPracticeFromDashboard}
             onSelectLessonForTheory={handleStartTheoryFromDashboard}
           />
@@ -242,6 +306,7 @@ export default function App() {
             user={user}
             onUpdateUser={handleUpdateUser}
             onLessonStatusChange={handleLessonStatusChange}
+            onQuestionCompleted={handleQuestionCompleted}
           />
         )}
 
@@ -272,7 +337,7 @@ export default function App() {
         currentChapters={chapters}
         currentGoal={goal}
         onLoginSuccess={handleLoginSuccess}
-        onUpdateProfile={handleUpdateUser}
+        onUpdateProfile={handleSaveProfile}
         onLogout={handleLogout}
       />
 
