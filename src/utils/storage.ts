@@ -188,6 +188,9 @@ export function loadActiveStudentProgress(): SavedAccountData | null {
 
     if (rawData) {
       const parsed: SavedAccountData = JSON.parse(rawData);
+      if (!parsed || !parsed.user || typeof parsed.user !== 'object') {
+        return null;
+      }
       // Guarantee role consistency based on email
       parsed.user.role = isTeacherEmail(parsed.user.email) ? 'admin' : 'student';
       // Always merge with latest curriculum data so new sections, examples & questions are never lost
@@ -207,6 +210,9 @@ export function loadStudentByEmail(email: string): SavedAccountData | null {
     const rawData = localStorage.getItem(`mathquest_data_${cleanEmail}`);
     if (rawData) {
       const parsed: SavedAccountData = JSON.parse(rawData);
+      if (!parsed || !parsed.user || typeof parsed.user !== 'object') {
+        return null;
+      }
       parsed.user.role = isTeacherEmail(cleanEmail) ? 'admin' : 'student';
       parsed.chapters = mergeWithCurriculum(parsed.chapters);
       return parsed;

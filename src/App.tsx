@@ -36,6 +36,7 @@ export default function App() {
   // Firebase Auth state
   const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
   const [isFirebaseHydrated, setIsFirebaseHydrated] = useState<boolean>(false);
+  const [authSyncError, setAuthSyncError] = useState<string | null>(null);
   const hydratedUidRef = useRef<string | null>(null);
 
   // Modals state
@@ -46,6 +47,34 @@ export default function App() {
   const [selectedLessonForPractice, setSelectedLessonForPractice] = useState<string>('c1-l1');
   const [selectedPracticeCategory, setSelectedPracticeCategory] = useState<string | undefined>(undefined);
   const [selectedLessonForTheory, setSelectedLessonForTheory] = useState<string>('c1-l1');
+
+  const hydrateAuthenticatedUser = async (fbUser: FirebaseUser) => {
+    setAuthSyncError(null);
+    try {
+      const { user: loadedUser, chapters: loadedChapters, goal: loadedGoal } =
+        await loadOrCreateGoogleUserProfile(fbUser, null, CURRICULUM_DATA, DEFAULT_GOAL);
+
+      hydratedUidRef.current = fbUser.uid;
+      setUser(loadedUser);
+      setChapters(loadedChapters);
+      setGoal(loadedGoal);
+      saveStudentProgress(loadedUser, loadedChapters, loadedGoal);
+    } catch (err) {
+      console.error('Failed to load Google user profile from Firestore:', err);
+      let detail = err instanceof Error ? err.message : String(err);
+      try {
+        const parsed = JSON.parse(detail) as { error?: string };
+        if (parsed?.error) detail = parsed.error;
+      } catch {
+        // plain string
+      }
+      setAuthSyncError(
+        `Không thể tải hồ sơ tài khoản Google (${fbUser.email}) từ Firestore: ${detail}`
+      );
+    } finally {
+      setIsFirebaseHydrated(true);
+    }
+  };
 
   // Subscribe to Firebase Auth state (Real Google OAuth verification)
   useEffect(() => {
@@ -59,24 +88,12 @@ export default function App() {
           return;
         }
 
-        try {
-          const { user: loadedUser, chapters: loadedChapters, goal: loadedGoal } =
-            await loadOrCreateGoogleUserProfile(fbUser, null, CURRICULUM_DATA, DEFAULT_GOAL);
-
-          hydratedUidRef.current = fbUser.uid;
-          setUser(loadedUser);
-          setChapters(loadedChapters);
-          setGoal(loadedGoal);
-          saveStudentProgress(loadedUser, loadedChapters, loadedGoal);
-        } catch (err) {
-          console.error('Failed to load Google user profile from Firestore:', err);
-        } finally {
-          setIsFirebaseHydrated(true);
-        }
+        await hydrateAuthenticatedUser(fbUser);
       } else {
         // Not authenticated via Google -> strictly guest mode (no unauthenticated admin/email bypass)
         hydratedUidRef.current = null;
         setFirebaseUser(null);
+        setAuthSyncError(null);
         clearCurrentSession();
         setUser((prev) =>
           prev.isAuthenticated
@@ -145,6 +162,7 @@ export default function App() {
     fbUser: FirebaseUser
   ) => {
     hydratedUidRef.current = fbUser.uid;
+    setAuthSyncError(null);
     setFirebaseUser(fbUser);
     setUser(loggedUser);
     setChapters(savedChapters && savedChapters.length > 0 ? savedChapters : mergeWithCurriculum(CURRICULUM_DATA));
@@ -161,6 +179,7 @@ export default function App() {
       console.warn('Sign out warning:', err);
     }
     hydratedUidRef.current = null;
+    setAuthSyncError(null);
     setFirebaseUser(null);
     clearCurrentSession();
     setChapters(mergeWithCurriculum(CURRICULUM_DATA));
@@ -175,6 +194,15 @@ export default function App() {
       isAuthenticated: false,
     });
   };
+
+  // Sync user.streakDays cleanly from goal.dailyCompletedQuestions
+  useEffect(() => {
+    if (!goal.dailyCompletedQuestions) return;
+    const nextStreak = calculateLearningStreak(goal.dailyCompletedQuestions).streakDays;
+    setUser((uPrev) =>
+      uPrev.streakDays !== nextStreak ? { ...uPrev, streakDays: nextStreak } : uPrev
+    );
+  }, [goal.dailyCompletedQuestions]);
 
   // Record a completed question onto today's date in goal.dailyCompletedQuestions
   const handleQuestionCompleted = (isCorrect: boolean) => {
@@ -206,10 +234,6 @@ export default function App() {
       }
 
       const target = Math.max(1, prev.weeklyTargetQuestions || 15);
-      const nextStreak = calculateLearningStreak(updated7Days).streakDays;
-      setUser((uPrev) =>
-        uPrev.streakDays !== nextStreak ? { ...uPrev, streakDays: nextStreak } : uPrev
-      );
 
       return {
         ...prev,
@@ -286,6 +310,32 @@ export default function App() {
 
       {/* 2. Main View Canvas */}
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+        {authSyncError && (
+          <div className="mb-5 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-950 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="text-xs font-medium leading-relaxed">
+              <strong className="font-bold block text-rose-800">Lỗi đồng bộ tài khoản Google:</strong>
+              <span>{authSyncError}</span>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              {firebaseUser && (
+                <button
+                  type="button"
+                  onClick={() => hydrateAuthenticatedUser(firebaseUser)}
+                  className="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold cursor-pointer"
+                >
+                  Thử lại
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => setIsAuthModalOpen(true)}
+                className="px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-rose-200 text-rose-800 text-xs font-bold cursor-pointer"
+              >
+                Đăng nhập lại
+              </button>
+            </div>
+          </div>
+        )}
         {currentView === 'dashboard' && (
           <DashboardView
             chapters={chapters}

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Goal } from '../types';
-import { Target, X, Check, Sparkles, Calendar, BookOpen, Award } from 'lucide-react';
+import { Target, X, Check, Sparkles } from 'lucide-react';
 
 interface GoalModalProps {
   currentGoal: Goal;
@@ -15,12 +15,21 @@ export const GoalModal: React.FC<GoalModalProps> = ({
   onClose,
   onSaveGoal,
 }) => {
-  if (!isOpen) return null;
-
   const [title, setTitle] = useState(currentGoal.title);
   const [scope, setScope] = useState<Goal['scope']>(currentGoal.scope);
   const [targetGrade, setTargetGrade] = useState<number>(currentGoal.targetGrade);
   const [targetDate, setTargetDate] = useState<string>(currentGoal.targetDate);
+
+  useEffect(() => {
+    if (isOpen) {
+      setTitle(currentGoal.title);
+      setScope(currentGoal.scope);
+      setTargetGrade(currentGoal.targetGrade);
+      setTargetDate(currentGoal.targetDate);
+    }
+  }, [isOpen, currentGoal]);
+
+  if (!isOpen) return null;
 
   // Dynamic interpolation math:
   // If targetGrade is 9.0 -> targetAccuracy is 90%, weekly target questions is 15-20 questions

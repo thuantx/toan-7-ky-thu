@@ -152,8 +152,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
           'Trình duyệt đang chặn cửa sổ đăng nhập (Popup). Vui lòng cho phép mở Popup rồi thử lại.'
         );
       } else if (code === 'auth/unauthorized-domain') {
+        const currentHost = typeof window !== 'undefined' ? window.location.hostname : '';
         setErrorMessage(
-          'Tên miền hiện tại chưa được cấp phép trong Firebase Authorized Domains. Vui lòng thêm domain này vào Firebase Console -> Authentication -> Settings -> Authorized domains.'
+          `Tên miền "${currentHost}" chưa được cấp phép trong Firebase Authorized Domains. Vui lòng vào Firebase Console -> Authentication -> Settings -> Authorized domains và thêm "${currentHost}".`
         );
       } else if (code === 'auth/network-request-failed') {
         setErrorMessage('Lỗi kết nối mạng khi xác thực Google. Vui lòng kiểm tra Internet.');

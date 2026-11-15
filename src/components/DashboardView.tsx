@@ -223,7 +223,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <div
                 className="h-full bg-amber-600 rounded-full"
                 style={{
-                  width: `${Math.min(100, Math.round((goal.completedQuestionsThisWeek / goal.weeklyTargetQuestions) * 100))}%`,
+                  width: `${Math.min(100, Math.round((goal.completedQuestionsThisWeek / Math.max(1, goal.weeklyTargetQuestions || 15)) * 100))}%`,
                 }}
               />
             </div>
