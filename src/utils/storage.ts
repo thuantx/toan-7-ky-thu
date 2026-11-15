@@ -1,8 +1,9 @@
-import { UserProfile, Goal, DailyQuestionCount } from '../types';
+import { UserProfile, Goal, DailyQuestionCount, LessonPracticeSession } from '../types';
 import { Chapter, CURRICULUM_DATA } from '../data/curriculumData';
 
 const CURRENT_USER_KEY = 'mathquest_current_user_email';
 const ACCOUNTS_INDEX_KEY = 'mathquest_saved_accounts_list';
+const PRACTICE_SESSIONS_PREFIX = 'mathquest_practice_sessions_';
 
 export function formatLocalDateKey(date: Date): string {
   const y = date.getFullYear();
@@ -244,3 +245,73 @@ export function clearCurrentSession() {
     // ignore
   }
 }
+
+export function getPracticeStorageKey(user?: Pick<UserProfile, 'id' | 'email' | 'isAuthenticated'> | null): string {
+  if (user?.isAuthenticated && user.email) {
+    return user.email.trim().toLowerCase();
+  }
+  return 'guest';
+}
+
+export function loadPracticeSessions(accountKey: string): Record<string, LessonPracticeSession> {
+  try {
+    const raw = localStorage.getItem(`${PRACTICE_SESSIONS_PREFIX}${accountKey}`);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return {};
+    return parsed as Record<string, LessonPracticeSession>;
+  } catch {
+    return {};
+  }
+}
+
+export function savePracticeSessions(
+  accountKey: string,
+  sessions: Record<string, LessonPracticeSession>
+): void {
+  try {
+    localStorage.setItem(`${PRACTICE_SESSIONS_PREFIX}${accountKey}`, JSON.stringify(sessions));
+  } catch (err) {
+    console.warn('Could not save practice sessions:', err);
+  }
+}
+
+/**
+ * Shuffles multiple-choice options using Fisher-Yates while ensuring
+ * the correct answer moves to a different position (A/B/C/D) on reset
+ * so students cannot memorize option letters.
+ */
+export function shuffleQuestionOptionsAvoidingSamePosition(
+  options: string[],
+  correctAnswer: string,
+  previousOptions?: string[]
+): string[] {
+  if (!Array.isArray(options) || options.length <= 1) return options;
+
+  const normalize = (s: string) => s.normalize('NFC').trim().toLowerCase();
+  const prev = previousOptions && previousOptions.length === options.length ? previousOptions : options;
+  const prevCorrectIdx = prev.findIndex((o) => normalize(o) === normalize(correctAnswer));
+
+  const fisherYates = (arr: string[]) => {
+    const copy = [...arr];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  };
+
+  for (let attempt = 0; attempt < 12; attempt++) {
+    const candidate = fisherYates(options);
+    const nextCorrectIdx = candidate.findIndex((o) => normalize(o) === normalize(correctAnswer));
+    const sameOrder = candidate.every((val, i) => val === prev[i]);
+    if (!sameOrder && (prevCorrectIdx === -1 || nextCorrectIdx !== prevCorrectIdx)) {
+      return candidate;
+    }
+  }
+
+  // Deterministic fallback rotation if random attempts hit same slot
+  const rotated = [...prev.slice(1), prev[0]];
+  return rotated;
+}
+

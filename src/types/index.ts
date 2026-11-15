@@ -56,3 +56,25 @@ export interface EdgeCaseState {
     timestamp: string;
   } | null;
 }
+
+export interface QuestionAttemptState {
+  selectedOption: string | null;
+  textAnswer: string;
+  isSubmitted: boolean;
+  isCorrect: boolean | null;
+  wrongAttempts: number;
+}
+
+export interface LessonPracticeSession {
+  lessonId: string;
+  currentIndex: number;
+  selectedCategoryFilter: string;
+  selectedTypeFilter: 'all' | 'multiple_choice' | 'fill_in_blank';
+  answers: Record<string, QuestionAttemptState>;
+  mistakeQuestionIds: string[];
+  rewardedQuestionIds: string[];
+  isSessionCompleted: boolean;
+  optionOrders: Record<string, string[]>;
+  resetCount: number;
+}
+

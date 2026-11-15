@@ -332,11 +332,11 @@ async function loadOrCreateGoogleUserProfileInternal(
     school: localFallbackUser?.school || 'THCS Kết Nối Tri Thức',
     role: isTeacher ? 'admin' : 'student',
     avatar: sanitizeAvatarValue(localFallbackUser?.avatar),
-    xp: isTeacher ? 1000 : Math.max(200, localFallbackUser?.xp || 0),
-    coins: isTeacher ? 200 : Math.max(50, localFallbackUser?.coins || 0),
+    xp: isTeacher ? 1000 : Math.min(500, Math.max(200, localFallbackUser?.xp || 0)),
+    coins: isTeacher ? 200 : Math.min(200, Math.max(50, localFallbackUser?.coins || 0)),
     hearts: 5,
     maxHearts: 5,
-    streakDays: Math.max(1, localFallbackUser?.streakDays || 1),
+    streakDays: Math.min(7, Math.max(1, localFallbackUser?.streakDays ?? 1)),
     unlockedBadges:
       localFallbackUser?.unlockedBadges && localFallbackUser.unlockedBadges.length > 0
         ? localFallbackUser.unlockedBadges
@@ -412,7 +412,7 @@ export async function syncUserProgressToFirestore(
     coins: Math.max(0, Math.min(10000000, Math.round(userProfile.coins || 0))),
     hearts: Math.max(0, Math.min(10, Math.round(userProfile.hearts ?? 5))),
     maxHearts: Math.max(1, Math.min(10, Math.round(userProfile.maxHearts || 5))),
-    streakDays: Math.max(0, Math.min(10000, Math.round(userProfile.streakDays || 1))),
+    streakDays: Math.max(0, Math.min(10000, Math.round(userProfile.streakDays ?? 0))),
     unlockedBadges: (userProfile.unlockedBadges || []).slice(0, 30).map((b) => String(b).slice(0, 60)),
     lessonProgress: buildLessonProgressMap(chapters),
     goal: buildCleanGoalMap(goal),

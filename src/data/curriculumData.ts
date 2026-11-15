@@ -390,7 +390,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Phần I: Khái niệm & Trục số',
             difficulty: 'Cơ bản',
             prompt: "[Phần I - Bài 2] Sử dụng kí hiệu ∈, ∉ điền vào chỗ chấm:\na) 1/2 ... ℚ\nb) 6/2 ... ℤ\nc) 5/(-0,12) ... ℚ",
-            options: ["a) ∈ ; b) ∈ ; c) ∈","a) ∈ ; b) ∉ ; c) ∈","a) ∈ ; b) ∈ ; c) ∉","a) ∉ ; b) ∈ ; c) ∈"],
+            options: ["a) ∉ ; b) ∈ ; c) ∈","a) ∈ ; b) ∈ ; c) ∈","a) ∈ ; b) ∉ ; c) ∈","a) ∈ ; b) ∈ ; c) ∉"],
             correctAnswer: "a) ∈ ; b) ∈ ; c) ∈",
             adminHint: "1/2 thuộc Q; 6/2 = 3 là số nguyên thuộc Z; 5/(-0,12) = -500/12 = -125/3 là phân số nên thuộc Q.",
             stepByStepSolution: "Bước 1: 1/2 là phân số có tử 1, mẫu 2 nguyên khác 0, nên 1/2 ∈ ℚ.\nBước 2: 6/2 = 3 là số nguyên, do đó 6/2 ∈ ℤ.\nBước 3: 5/(-0,12) = 500/(-12) = -125/3 viết được dưới dạng phân số a/b với a, b ∈ ℤ, b ≠ 0, nên 5/(-0,12) ∈ ℚ.\nKết luận: Cả 3 khẳng định đều mang kí hiệu ∈.",
@@ -406,7 +406,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Phần I: Khái niệm & Trục số',
             difficulty: 'Cơ bản',
             prompt: "[Phần I - Bài 3] Sử dụng kí hiệu ∈, ∉ điền vào chỗ chấm:\na) -3/2 ... ℚ\nb) -5,2 ... ℤ\nc) 0,4 ... ℚ",
-            options: ["a) ∈ ; b) ∉ ; c) ∈","a) ∉ ; b) ∉ ; c) ∈","a) ∈ ; b) ∈ ; c) ∈","a) ∈ ; b) ∉ ; c) ∉"],
+            options: ["a) ∈ ; b) ∉ ; c) ∉","a) ∈ ; b) ∈ ; c) ∈","a) ∈ ; b) ∉ ; c) ∈","a) ∉ ; b) ∉ ; c) ∈"],
             correctAnswer: "a) ∈ ; b) ∉ ; c) ∈",
             adminHint: "-3/2 là phân số thuộc Q; -5,2 là số thập phân không phải số nguyên nên không thuộc Z; 0,4 = 2/5 thuộc Q.",
             stepByStepSolution: "Bước 1: -3/2 là phân số số hữu tỉ nên -3/2 ∈ ℚ.\nBước 2: -5,2 có phần thập phân khác 0, không phải số nguyên nên -5,2 ∉ ℤ.\nBước 3: 0,4 = 4/10 = 2/5 ∈ ℚ.\nKết luận: a) ∈ ; b) ∉ ; c) ∈.",
@@ -422,7 +422,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Phần I: Khái niệm & Trục số',
             difficulty: 'Trung bình',
             prompt: "[Phần I - Bài 4] Sử dụng kí hiệu ∈, ∉ điền vào chỗ chấm:\na) -2/3 ... ℚ\nb) 0 ... ℚ*\nc) -3/(2 - 1) ... ℤ",
-            options: ["a) ∈ ; b) ∉ ; c) ∈","a) ∈ ; b) ∈ ; c) ∈","a) ∉ ; b) ∉ ; c) ∈","a) ∈ ; b) ∉ ; c) ∉"],
+            options: ["a) ∉ ; b) ∉ ; c) ∈","a) ∈ ; b) ∈ ; c) ∈","a) ∈ ; b) ∉ ; c) ∉","a) ∈ ; b) ∉ ; c) ∈"],
             correctAnswer: "a) ∈ ; b) ∉ ; c) ∈",
             adminHint: "Chú ý tập Q* là tập hợp các số hữu tỉ khác 0, do đó 0 không thuộc Q*. Biểu thức -3/(2-1) = -3/1 = -3 thuộc Z.",
             stepByStepSolution: "Bước 1: -2/3 là phân số nên -2/3 ∈ ℚ.\nBước 2: Tập ℚ* gồm các số hữu tỉ khác 0, vì vậy 0 ∉ ℚ*.\nBước 3: Biểu thức -3/(2 - 1) = -3/1 = -3 là một số nguyên âm, do đó thuộc ℤ.\nKết luận: a) ∈ ; b) ∉ ; c) ∈.",
@@ -438,7 +438,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Phần I: Khái niệm & Trục số',
             difficulty: 'Trung bình',
             prompt: "[Phần I - Bài 5] Điền kí hiệu tập hợp thích hợp (ℕ, ℤ, ℚ) vào chỗ chấm:\na) -2/(-5) ∈ ...\nb) -3,2 ∈ ...\nc) -1 3/4 ∉ ...",
-            options: ["a) ℚ ; b) ℚ ; c) ℤ","a) ℤ ; b) ℚ ; c) ℚ","a) ℕ ; b) ℤ ; c) ℤ","a) ℚ ; b) ℤ ; c) ℕ"],
+            options: ["a) ℚ ; b) ℚ ; c) ℤ","a) ℤ ; b) ℚ ; c) ℚ","a) ℚ ; b) ℤ ; c) ℕ","a) ℕ ; b) ℤ ; c) ℤ"],
             correctAnswer: "a) ℚ ; b) ℚ ; c) ℤ",
             adminHint: "-2/(-5) = 2/5 thuộc Q; -3,2 = -16/5 thuộc Q; hỗn số âm -1 3/4 = -7/4 không phải số nguyên nên không thuộc Z.",
             stepByStepSolution: "Bước 1: Ta có -2/(-5) = 2/5 là phân số không phải số nguyên, nên thuộc tập ℚ.\nBước 2: -3,2 = -32/10 = -16/5 là số hữu tỉ, thuộc tập ℚ.\nBước 3: -1 3/4 = -7/4 không chia hết nên không thuộc tập số nguyên ℤ (hoặc ℕ).\nKết luận: a) ℚ ; b) ℚ ; c) ℤ.",
@@ -544,7 +544,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Phần I: Khái niệm & Trục số',
             difficulty: 'Cơ bản',
             prompt: "[Phần I - Bài 12] Cặp phân số nào sau đây cùng biểu diễn số nguyên -11?",
-            options: ["-11/1 và -22/2","-11/1 và 22/2","-11/2 và -22/4","11/(-1) và 11/1"],
+            options: ["-11/1 và 22/2","-11/1 và -22/2","-11/2 và -22/4","11/(-1) và 11/1"],
             correctAnswer: "-11/1 và -22/2",
             adminHint: "Mỗi số nguyên a đều có thể viết dưới dạng phân số a/1, 2a/2, 3a/3...",
             stepByStepSolution: "Bước 1: Số nguyên -11 có thể biểu diễn thành phân số mẫu 1: -11/1.\nBước 2: Nhân cả tử và mẫu với 2: (-11 · 2) / (1 · 2) = -22/2.\nBước 3: Do đó hai phân số -11/1 và -22/2 cùng biểu diễn số nguyên -11.",
@@ -560,7 +560,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Phần I: Khái niệm & Trục số',
             difficulty: 'Cơ bản',
             prompt: "[Phần I - Bài 13] Khẳng định nào sau đây biểu diễn ĐÚNG số 0 dưới dạng hai số hữu tỉ?",
-            options: ["0 = 0/1 = 0/5 (mẫu số khác 0)","0 = 1/0 = 5/0","0 = 0/0 = 1/1","Số 0 không viết được dưới dạng phân số"],
+            options: ["Số 0 không viết được dưới dạng phân số","0 = 1/0 = 5/0","0 = 0/1 = 0/5 (mẫu số khác 0)","0 = 0/0 = 1/1"],
             correctAnswer: "0 = 0/1 = 0/5 (mẫu số khác 0)",
             adminHint: "Số 0 viết được thành 0/b với b là bất kì số nguyên khác 0.",
             stepByStepSolution: "Bước 1: Theo định nghĩa số hữu tỉ a/b, mẫu số b phải khác 0.\nBước 2: Số 0 chia cho mọi số khác 0 đều bằng 0, do đó 0 = 0/1 = 0/5 = 0/(-7).\nBước 3: Vì vậy 0 là số hữu tỉ và viết được dưới dạng 0/1 = 0/5.",
@@ -591,7 +591,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Phần II: Thứ tự & So sánh',
             difficulty: 'Cơ bản',
             prompt: "[Phần II - Bài 1] So sánh hai phân số cùng mẫu: a = -7/13 và b = -8/13. Khẳng định nào ĐÚNG?",
-            options: ["a > b (vì -7 > -8)","a < b (vì 7 < 8)","a = b","Không so sánh được vì là số âm"],
+            options: ["Không so sánh được vì là số âm","a = b","a < b (vì 7 < 8)","a > b (vì -7 > -8)"],
             correctAnswer: "a > b (vì -7 > -8)",
             adminHint: "Hai phân số cùng mẫu dương 13, so sánh hai tử số: -7 > -8 nên -7/13 > -8/13.",
             stepByStepSolution: "Bước 1: Hai phân số đã có cùng mẫu số dương là 13.\nBước 2: So sánh tử số: ta có -7 > -8.\nBước 3: Vì mẫu số dương nên -7/13 > -8/13, tức là a > b.",
@@ -607,7 +607,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Phần II: Thứ tự & So sánh',
             difficulty: 'Trung bình',
             prompt: "[Phần II - Bài 2] So sánh hai số hữu tỉ: x = 1111/3131 và y = 11/31. Khẳng định nào ĐÚNG?",
-            options: ["x = y (hai phân số bằng nhau)","x > y","x < y","Không xác định"],
+            options: ["x = y (hai phân số bằng nhau)","x < y","x > y","Không xác định"],
             correctAnswer: "x = y (hai phân số bằng nhau)",
             adminHint: "Rút gọn 1111/3131 bằng cách chia cả tử và mẫu cho 101.",
             stepByStepSolution: "Bước 1: Nhận thấy 1111 = 11 · 101 và 3131 = 31 · 101.\nBước 2: Rút gọn x: 1111/3131 = (11 · 101)/(31 · 101) = 11/31.\nBước 3: So sánh: x = 11/31 = y. Vậy x = y.",
@@ -623,7 +623,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Phần II: Thứ tự & So sánh',
             difficulty: 'Trung bình',
             prompt: "[Phần II - Bài 3] Quy đồng mẫu để so sánh: u = -5/6 và v = -6/7. Khẳng định nào ĐÚNG?",
-            options: ["u > v (vì -35/42 > -36/42)","u < v (vì 5/6 < 6/7)","u = v","u < -1 và v > -1"],
+            options: ["u < v (vì 5/6 < 6/7)","u > v (vì -35/42 > -36/42)","u < -1 và v > -1","u = v"],
             correctAnswer: "u > v (vì -35/42 > -36/42)",
             adminHint: "Mẫu chung là 42. Quy đồng: -5/6 = -35/42; -6/7 = -36/42.",
             stepByStepSolution: "Bước 1: Mẫu số chung của 6 và 7 là 42.\nBước 2: Quy đồng u: -5/6 = (-5 · 7)/(6 · 7) = -35/42.\nBước 3: Quy đồng v: -6/7 = (-6 · 6)/(7 · 6) = -36/42.\nBước 4: So sánh hai tử số: vì -35 > -36 nên -35/42 > -36/42 ⟹ u > v.",
@@ -639,7 +639,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Phần II: Thứ tự & So sánh',
             difficulty: 'Trung bình',
             prompt: "[Phần II - Bài 4] So sánh hai số hữu tỉ: p = -2/7 và q = -3/11. Khẳng định nào ĐÚNG?",
-            options: ["p < q (vì -22/77 < -21/77)","p > q (vì -2/7 > -3/11)","p = q","Không so sánh được"],
+            options: ["p = q","Không so sánh được","p < q (vì -22/77 < -21/77)","p > q (vì -2/7 > -3/11)"],
             correctAnswer: "p < q (vì -22/77 < -21/77)",
             adminHint: "Quy đồng mẫu 77: -2/7 = -22/77; -3/11 = -21/77. Vì -22 < -21 nên p < q.",
             stepByStepSolution: "Bước 1: Mẫu chung là 7 · 11 = 77.\nBước 2: Quy đồng p: -2/7 = -22/77.\nBước 3: Quy đồng q: -3/11 = -21/77.\nBước 4: Vì -22 < -21 nên -22/77 < -21/77 ⟹ p < q.",
@@ -655,7 +655,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Phần II: Thứ tự & So sánh',
             difficulty: 'Cơ bản',
             prompt: "[Phần II - Bài 5] So sánh hai phân số cùng tử dương: 99/123 và 99/132. Dấu thích hợp là:",
-            options: ["99/123 > 99/132 (mẫu bé hơn thì phân số lớn hơn)","99/123 < 99/132","99/123 = 99/132","Không so sánh được"],
+            options: ["99/123 < 99/132","99/123 = 99/132","Không so sánh được","99/123 > 99/132 (mẫu bé hơn thì phân số lớn hơn)"],
             correctAnswer: "99/123 > 99/132 (mẫu bé hơn thì phân số lớn hơn)",
             adminHint: "Hai phân số dương có cùng tử dương, phân số nào có mẫu bé hơn thì lớn hơn.",
             stepByStepSolution: "Bước 1: Hai phân số đều dương và có cùng tử số là 99 > 0.\nBước 2: So sánh hai mẫu số: ta có 123 < 132.\nBước 3: Với hai phân số dương cùng tử, mẫu càng bé thì giá trị càng lớn. Do đó 99/123 > 99/132.",
@@ -671,7 +671,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Phần II: Thứ tự & So sánh',
             difficulty: 'Trung bình',
             prompt: "[Phần II - Bài 6] So sánh hai phân số có tử số âm: m = -17/35 và n = -17/34. Khẳng định nào ĐÚNG?",
-            options: ["m > n (vì 17/35 < 17/34 nên khi lấy dấu âm sẽ đảo chiều)","m < n","m = n","m = -1/2 và n = -1"],
+            options: ["m > n (vì 17/35 < 17/34 nên khi lấy dấu âm sẽ đảo chiều)","m = -1/2 và n = -1","m < n","m = n"],
             correctAnswer: "m > n (vì 17/35 < 17/34 nên khi lấy dấu âm sẽ đảo chiều)",
             adminHint: "So sánh số dương trước: 17/35 < 17/34. Khi nhân cả hai vế với -1 thì đổi chiều bất đẳng thức: -17/35 > -17/34.",
             stepByStepSolution: "Bước 1: Xét phần số dương: 17/35 và 17/34 có cùng tử dương 17.\nBước 2: Vì 35 > 34 nên 17/35 < 17/34.\nBước 3: Lấy số đối (hoặc nhân -1) thì bất đẳng thức đổi chiều: -17/35 > -17/34 ⟹ m > n.",
@@ -687,7 +687,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Phần II: Thứ tự & So sánh',
             difficulty: 'Nâng cao',
             prompt: "[Phần II - Bài 7] So sánh bằng phương pháp phần bù tới 1:\nA = 2019/2020 và B = 2020/2021. Khẳng định nào ĐÚNG?",
-            options: ["A < B (vì phần bù 1/2020 > 1/2021)","A > B","A = B","A + B = 1"],
+            options: ["A + B = 1","A < B (vì phần bù 1/2020 > 1/2021)","A = B","A > B"],
             correctAnswer: "A < B (vì phần bù 1/2020 > 1/2021)",
             adminHint: "1 - A = 1/2020 và 1 - B = 1/2021. Phần bù càng lớn thì phân số ban đầu càng nhỏ.",
             stepByStepSolution: "Bước 1: Tính phần bù tới 1 của A: 1 - 2019/2020 = 1/2020.\nBước 2: Tính phần bù tới 1 của B: 1 - 2020/2021 = 1/2021.\nBước 3: So sánh phần bù: vì 2020 < 2021 nên 1/2020 > 1/2021.\nBước 4: Phân số nào có phần bù tới 1 lớn hơn thì phân số đó bé hơn. Vậy A < B.",
@@ -703,7 +703,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Phần II: Thứ tự & So sánh',
             difficulty: 'Nâng cao',
             prompt: "[Phần II - Bài 8] So sánh hai phân số bằng phương pháp phần bù:\nX = 1234/1235 và Y = 4319/4320. Khẳng định nào ĐÚNG?",
-            options: ["X < Y (vì 1 - X = 1/1235 > 1/4320 = 1 - Y)","X > Y","X = Y","Cả hai đều lớn hơn 1"],
+            options: ["X = Y","X > Y","X < Y (vì 1 - X = 1/1235 > 1/4320 = 1 - Y)","Cả hai đều lớn hơn 1"],
             correctAnswer: "X < Y (vì 1 - X = 1/1235 > 1/4320 = 1 - Y)",
             adminHint: "Phần bù tới 1 của X là 1/1235, của Y là 1/4320. Vì 1/1235 > 1/4320 nên X < Y.",
             stepByStepSolution: "Bước 1: Tính phần bù: 1 - 1234/1235 = 1/1235.\nBước 2: Tính phần bù: 1 - 4319/4320 = 1/4320.\nBước 3: Vì 1235 < 4320 nên 1/1235 > 1/4320.\nBước 4: Phần bù lớn hơn thì giá trị ban đầu nhỏ hơn: 1234/1235 < 4319/4320 ⟹ X < Y.",
@@ -767,7 +767,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Tìm x',
             difficulty: 'Trung bình',
             prompt: 'Tìm x biết: x + 1/3 = 3/4',
-            options: ['x = 5/12', 'x = 7/12', 'x = -5/12', 'x = 13/12'],
+            options: ["x = -5/12","x = 7/12","x = 13/12","x = 5/12"],
             correctAnswer: 'x = 5/12',
             adminHint: 'Chuyển vế: x = 3/4 - 1/3 = 9/12 - 4/12.',
             stepByStepSolution: 'Bước 1: Chuyển +1/3 sang vế phải đổi thành -1/3: x = 3/4 - 1/3.\nBước 2: Quy đồng mẫu chung là 12: 3/4 = 9/12 và 1/3 = 4/12.\nBước 3: Trừ hai phân số: x = 9/12 - 4/12 = 5/12.',
@@ -794,7 +794,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Phép nhân chia',
             difficulty: 'Trung bình',
             prompt: 'Tính kết quả: (-2/3) · (6/5):',
-            options: ['-4/5', '4/5', '-12/15', '-5/4'],
+            options: ["-4/5","-5/4","-12/15","4/5"],
             correctAnswer: '-4/5',
             adminHint: 'Rút gọn 6 với 3 trước khi nhân: (-2 · 2) / 5 = -4/5.',
             stepByStepSolution: 'Bước 1: Nhân tử với tử, mẫu với mẫu: (-2 · 6) / (3 · 5).\nBước 2: Rút gọn 6 chia cho 3 được 2: (-2 · 2) / 5 = -4/5.',
@@ -877,7 +877,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Quy tắc lũy thừa',
             difficulty: 'Cơ bản',
             prompt: 'Viết kết quả phép tính (0,5)^3 · (0,5)^2 dưới dạng một lũy thừa:',
-            options: ['(0,5)^5', '(0,5)^6', '(0,5)^1', '(0,25)^5'],
+            options: ["(0,5)^1","(0,5)^5","(0,5)^6","(0,25)^5"],
             correctAnswer: '(0,5)^5',
             adminHint: 'Áp dụng quy tắc nhân hai lũy thừa cùng cơ số: x^m · x^n = x^(m+n).',
             stepByStepSolution: 'Bước 1: Giữ nguyên cơ số 0,5.\nBước 2: Cộng hai số mũ: 3 + 2 = 5.\nBước 3: Kết quả là (0,5)^5.',
@@ -904,7 +904,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Tìm x',
             difficulty: 'Trung bình',
             prompt: 'Tìm số tự nhiên n biết: 2^n = 32',
-            options: ['n = 5', 'n = 4', 'n = 6', 'n = 16'],
+            options: ["n = 6","n = 4","n = 5","n = 16"],
             correctAnswer: 'n = 5',
             adminHint: 'Phân tích 32 = 2 · 2 · 2 · 2 · 2 = 2^5.',
             stepByStepSolution: 'Bước 1: Phân tích 32 ra thừa số nguyên tố: 32 = 2^5.\nBước 2: Ta có 2^n = 2^5, do đó n = 5.',
@@ -981,7 +981,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Quy tắc chuyển vế',
             difficulty: 'Cơ bản',
             prompt: 'Khi chuyển số hạng -2/3 từ vế trái sang vế phải của một đẳng thức, ta đổi thành:',
-            options: ['+2/3', '-3/2', '+3/2', '-2/3'],
+            options: ["+3/2","-3/2","-2/3","+2/3"],
             correctAnswer: '+2/3',
             adminHint: 'Quy tắc chuyển vế: Đổi dấu trừ thành dấu cộng.',
             stepByStepSolution: 'Bước 1: Theo quy tắc chuyển vế, khi chuyển một số hạng từ vế này sang vế kia ta phải đổi dấu của số hạng đó.\nBước 2: Dấu âm (-) đổi thành dấu dương (+).\nBước 3: Do đó -2/3 đổi thành +2/3.',
@@ -994,7 +994,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             type: 'fill_in_blank',
             category: 'Thứ tự phép tính',
             difficulty: 'Trung bình',
-            prompt: 'Tính giá trị biểu thức: 1/2 + 3/2 · 2 (nhập kết quả số nguyên):',
+            prompt: 'Tính giá trị biểu thức: 1/2 + 3/2 · 2 (nhập phân số tối giản a/b):',
             correctAnswer: '7/2',
             adminHint: 'Nhân chia trước cộng trừ sau: 3/2 · 2 = 3, sau đó 1/2 + 3 = 7/2.',
             stepByStepSolution: 'Bước 1: Thực hiện phép nhân trước: 3/2 · 2 = 3.\nBước 2: Thực hiện phép cộng: 1/2 + 3 = 1/2 + 6/2 = 7/2.',
@@ -1008,7 +1008,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Tìm x',
             difficulty: 'Trung bình',
             prompt: 'Tìm x biết: 2/3 - x = 1/6',
-            options: ['x = 1/2', 'x = 5/6', 'x = -1/2', 'x = 1/3'],
+            options: ["x = 1/2","x = 5/6","x = 1/3","x = -1/2"],
             correctAnswer: 'x = 1/2',
             adminHint: 'x = 2/3 - 1/6 = 4/6 - 1/6 = 3/6 = 1/2.',
             stepByStepSolution: 'Bước 1: Chuyển -x sang vế phải và 1/6 sang vế trái: x = 2/3 - 1/6.\nBước 2: Quy đồng mẫu chung 6: 2/3 = 4/6.\nBước 3: x = 4/6 - 1/6 = 3/6 = 1/2.',
@@ -1029,20 +1029,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             explanation: 'Áp dụng quy tắc chuyển vế đổi dấu, ta tìm được x = 7/6.',
             pointsXP: 25
           }
-        ,
-          {
-            id: 'q4-5',
-            lessonId: 'c1-l4',
-            type: 'fill_in_blank',
-            category: 'Tìm x',
-            difficulty: 'Trung bình',
-            prompt: 'Tìm x biết: x - 1/3 = 5/6 (Nhập kết quả dưới dạng phân số tối giản a/b):',
-            correctAnswer: '7/6',
-            adminHint: 'Chuyển vế -1/3 sang vế phải thành +1/3. 5/6 + 2/6 = 7/6.',
-            stepByStepSolution: 'Bước 1: Chuyển vế: x = 5/6 + 1/3.\nBước 2: Quy đồng mẫu số: x = 5/6 + 2/6.\nBước 3: Cộng tử số: x = 7/6.',
-            explanation: 'Áp dụng quy tắc chuyển vế đổi dấu, ta tìm được x = 7/6.',
-            pointsXP: 25
-          }
+        
         ]
       }
     ]
@@ -1101,7 +1088,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Nhận biết chu kì',
             difficulty: 'Cơ bản',
             prompt: 'Số thập phân vô hạn tuần hoàn 0,363636... được viết thu gọn là:',
-            options: ['0,(36)', '0,3(6)', '0,(3)', '0,(363)'],
+            options: ["0,(3)","0,(36)","0,3(6)","0,(363)"],
             correctAnswer: '0,(36)',
             adminHint: 'Nhóm chữ số lặp lại là 36 nên chu kì là 36, viết trong ngoặc: 0,(36).',
             stepByStepSolution: 'Bước 1: Quan sát phần thập phân lặp lại: 36, 36, 36...\nBước 2: Chu kì lặp lại là 36.\nBước 3: Viết gọn dưới dạng 0,(36).',
@@ -1128,7 +1115,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Làm tròn số',
             difficulty: 'Cơ bản',
             prompt: 'Làm tròn số 4,356 đến hàng phần mười (chữ số thập phân thứ nhất) được kết quả:',
-            options: ['4,4', '4,3', '4,36', '4,0'],
+            options: ["4,0","4,36","4,4","4,3"],
             correctAnswer: '4,4',
             adminHint: 'Chữ số ngay sau hàng phần mười là 5 (≥ 5), nên tăng chữ số hàng phần mười lên 1: 3 + 1 = 4.',
             stepByStepSolution: 'Bước 1: Hàng phần mười là chữ số 3.\nBước 2: Chữ số ngay sau nó là 5 (≥ 5).\nBước 3: Làm tròn lên: 4,356 ≈ 4,4.',
@@ -1162,20 +1149,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             explanation: '0,(3) = 1/3.',
             pointsXP: 25
           }
-        ,
-          {
-            id: 'q5-5',
-            lessonId: 'c2-l5',
-            type: 'fill_in_blank',
-            category: 'Phân số sang số thập phân',
-            difficulty: 'Cơ bản',
-            prompt: 'Số thập phân vô hạn tuần hoàn 0,(3) được viết dưới dạng phân số tối giản là a/b. Giá trị của phân số đó là:',
-            correctAnswer: '1/3',
-            adminHint: '0,(3) = 3/9 = 1/3.',
-            stepByStepSolution: 'Bước 1: Đặt x = 0,(3) => 10x = 3,(3).\nBước 2: Lấy 10x - x = 3 => 9x = 3.\nBước 3: Rút gọn: x = 3/9 = 1/3.',
-            explanation: '0,(3) = 1/3.',
-            pointsXP: 25
-          }
+        
         ]
       },
       {
@@ -1234,7 +1208,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Nhận biết số vô tỉ',
             difficulty: 'Cơ bản',
             prompt: 'Số nào sau đây là số VÔ TỈ?',
-            options: ['√2', '√4', '3/5', '-0,25'],
+            options: ["3/5","√4","-0,25","√2"],
             correctAnswer: '√2',
             adminHint: '√2 ≈ 1,41421356... là số thập phân vô hạn không tuần hoàn, không viết được dưới dạng phân số.',
             stepByStepSolution: 'Bước 1: √4 = 2 ∈ ℚ.\nBước 2: 3/5 ∈ ℚ và -0,25 = -1/4 ∈ ℚ.\nBước 3: √2 là số thập phân vô hạn không tuần hoàn nên √2 là số vô tỉ.',
@@ -1261,7 +1235,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'So sánh căn',
             difficulty: 'Trung bình',
             prompt: 'So sánh: 3 và √10. Khẳng định nào đúng?',
-            options: ['3 < √10', '3 > √10', '3 = √10', 'Không so sánh được'],
+            options: ["3 < √10","3 = √10","3 > √10","Không so sánh được"],
             correctAnswer: '3 < √10',
             adminHint: 'Viết 3 = √9. Vì 9 < 10 nên √9 < √10, do đó 3 < √10.',
             stepByStepSolution: 'Bước 1: Ta có 3 = √9.\nBước 2: Vì 9 < 10 nên √9 < √10.\nBước 3: Vậy 3 < √10.',
@@ -1282,20 +1256,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             explanation: 'Căn bậc hai số học của 144 là 12.',
             pointsXP: 20
           }
-        ,
-          {
-            id: 'q6-5',
-            lessonId: 'c2-l6',
-            type: 'fill_in_blank',
-            category: 'Căn bậc hai số học',
-            difficulty: 'Cơ bản',
-            prompt: 'Căn bậc hai số học của số 144 là (nhập số nguyên):',
-            correctAnswer: '12',
-            adminHint: 'Vì 12 > 0 và 12^2 = 144 nên √144 = 12.',
-            stepByStepSolution: 'Bước 1: Ta có 12^2 = 144 và 12 ≥ 0.\nBước 2: Theo định nghĩa căn bậc hai số học, √144 = 12.',
-            explanation: 'Căn bậc hai số học của 144 là 12.',
-            pointsXP: 20
-          }
+        
         ]
       },
       {
@@ -1354,12 +1315,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Tập hợp số',
             difficulty: 'Cơ bản',
             prompt: 'Quan hệ bao hàm nào sau đây là ĐÚNG giữa các tập hợp số?',
-            options: [
-              'ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ',
-              'ℝ ⊂ ℚ ⊂ ℤ ⊂ ℕ',
-              'ℤ ⊂ ℕ ⊂ ℚ ⊂ ℝ',
-              'ℚ ⊂ ℤ ⊂ ℕ ⊂ ℝ'
-            ],
+            options: ["ℤ ⊂ ℕ ⊂ ℚ ⊂ ℝ","ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ","ℝ ⊂ ℚ ⊂ ℤ ⊂ ℕ","ℚ ⊂ ℤ ⊂ ℕ ⊂ ℝ"],
             correctAnswer: 'ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ',
             adminHint: 'Tự nhiên (ℕ) là con của Nguyên (ℤ), Nguyên là con của Hữu tỉ (ℚ), Hữu tỉ là con của Thực (ℝ).',
             stepByStepSolution: 'Bước 1: Mọi số tự nhiên đều là số nguyên: ℕ ⊂ ℤ.\nBước 2: Mọi số nguyên đều là số hữu tỉ: ℤ ⊂ ℚ.\nBước 3: Mọi số hữu tỉ đều là số thực: ℚ ⊂ ℝ.\nBước 4: Do đó ℕ ⊂ ℤ ⊂ ℚ ⊂ ℝ.',
@@ -1373,12 +1329,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Tìm x',
             difficulty: 'Trung bình',
             prompt: 'Tìm tất cả các giá trị của x thỏa mãn: |x| = 2,5',
-            options: [
-              'x = 2,5 hoặc x = -2,5',
-              'x = 2,5',
-              'x = -2,5',
-              'x = 5'
-            ],
+            options: ["x = 2,5","x = 5","x = 2,5 hoặc x = -2,5","x = -2,5"],
             correctAnswer: 'x = 2,5 hoặc x = -2,5',
             adminHint: 'Có hai điểm trên trục số cách gốc 0 một khoảng 2,5 đơn vị là 2,5 và -2,5.',
             stepByStepSolution: 'Bước 1: Phương trình |x| = a (a > 0) có 2 nghiệm: x = a hoặc x = -a.\nBước 2: Ở đây a = 2,5 nên x = 2,5 hoặc x = -2,5.',
@@ -1406,28 +1357,14 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Giá trị tuyệt đối',
             difficulty: 'Cơ bản',
             prompt: 'Tìm tất cả các giá trị của x thỏa mãn |x| = 7:',
-            options: ['x = 7 hoặc x = -7', 'x = 7', 'x = -7', 'x = 49'],
+            options: ["x = -7","x = 7","x = 49","x = 7 hoặc x = -7"],
             correctAnswer: 'x = 7 hoặc x = -7',
             adminHint: 'Giá trị tuyệt đối của hai số đối nhau là bằng nhau (|7| = |-7| = 7).',
             stepByStepSolution: 'Bước 1: Định nghĩa giá trị tuyệt đối |x| = a (với a > 0) thì x = a hoặc x = -a.\nBước 2: Với a = 7, ta có x = 7 hoặc x = -7.',
             explanation: 'Có hai giá trị thỏa mãn là x = 7 hoặc x = -7.',
             pointsXP: 20
           }
-        ,
-          {
-            id: 'q7-5',
-            lessonId: 'c2-l7',
-            type: 'multiple_choice',
-            category: 'Giá trị tuyệt đối',
-            difficulty: 'Cơ bản',
-            prompt: 'Tìm tất cả các giá trị của x thỏa mãn |x| = 7:',
-            options: ['x = 7 hoặc x = -7', 'x = 7', 'x = -7', 'x = 49'],
-            correctAnswer: 'x = 7 hoặc x = -7',
-            adminHint: 'Giá trị tuyệt đối của hai số đối nhau là bằng nhau (|7| = |-7| = 7).',
-            stepByStepSolution: 'Bước 1: Định nghĩa giá trị tuyệt đối |x| = a (với a > 0) thì x = a hoặc x = -a.\nBước 2: Với a = 7, ta có x = 7 hoặc x = -7.',
-            explanation: 'Có hai giá trị thỏa mãn là x = 7 hoặc x = -7.',
-            pointsXP: 20
-          }
+        
         ]
       }
     ]
@@ -1500,7 +1437,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Góc đối đỉnh',
             difficulty: 'Cơ bản',
             prompt: 'Hai đường thẳng xx’ và yy’ cắt nhau tại O tạo thành góc xOy = 60°. Góc đối đỉnh với góc xOy có số đo là:',
-            options: ['60°', '120°', '180°', '30°'],
+            options: ["60°","30°","180°","120°"],
             correctAnswer: '60°',
             adminHint: 'Tính chất: Hai góc đối đỉnh thì bằng nhau.',
             stepByStepSolution: 'Bước 1: Góc đối đỉnh với xOy là x’Oy’.\nBước 2: Hai góc đối đỉnh thì có số đo bằng nhau.\nBước 3: Do đó ∠x’Oy’ = ∠xOy = 60°.',
@@ -1527,7 +1464,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Tính góc',
             difficulty: 'Trung bình',
             prompt: 'Cho hai góc kề bù aOb và bOc biết ∠aOb = 2 · ∠bOc. Số đo góc bOc là:',
-            options: ['60°', '120°', '90°', '45°'],
+            options: ["90°","60°","120°","45°"],
             correctAnswer: '60°',
             adminHint: '∠aOb + ∠bOc = 180° <=> 2·∠bOc + ∠bOc = 180° <=> 3·∠bOc = 180°.',
             stepByStepSolution: 'Bước 1: Đặt số đo góc bOc là x, khi đó ∠aOb = 2x.\nBước 2: Vì hai góc kề bù nên: 2x + x = 180° <=> 3x = 180°.\nBước 3: x = 180° / 3 = 60°.',
@@ -1548,20 +1485,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             explanation: 'Số đo góc xOz = 45°.',
             pointsXP: 20
           }
-        ,
-          {
-            id: 'q8-5',
-            lessonId: 'c3-l8',
-            type: 'fill_in_blank',
-            category: 'Tia phân giác góc vuông',
-            difficulty: 'Cơ bản',
-            prompt: 'Tia Oz là tia phân giác của góc vuông xOy (có số đo 90°). Số đo góc xOz là bao nhiêu độ (chỉ điền số):',
-            correctAnswer: '45',
-            adminHint: 'Góc vuông 90° chia 2 = 45°.',
-            stepByStepSolution: 'Bước 1: Góc vuông có số đo 90°.\nBước 2: Tia phân giác chia đôi góc: 90° : 2 = 45°.',
-            explanation: 'Số đo góc xOz = 45°.',
-            pointsXP: 20
-          }
+        
         ]
       },
       {
@@ -1606,12 +1530,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Dấu hiệu nhận biết',
             difficulty: 'Cơ bản',
             prompt: 'Đường thẳng c cắt hai đường thẳng a và b. Điều kiện nào sau đây chứng tỏ a song song với b?',
-            options: [
-              'Một cặp góc so le trong bằng nhau',
-              'Một cặp góc trong cùng phía bằng nhau',
-              'Hai góc đối đỉnh bằng nhau',
-              'Một cặp góc kề bù bằng nhau'
-            ],
+            options: ["Hai góc đối đỉnh bằng nhau","Một cặp góc trong cùng phía bằng nhau","Một cặp góc so le trong bằng nhau","Một cặp góc kề bù bằng nhau"],
             correctAnswer: 'Một cặp góc so le trong bằng nhau',
             adminHint: 'Dấu hiệu nhận biết: một cặp góc so le trong bằng nhau hoặc đồng vị bằng nhau.',
             stepByStepSolution: 'Bước 1: Xem lại dấu hiệu nhận biết hai đường thẳng song song.\nBước 2: Nếu đường thẳng c cắt a và b tạo ra một cặp góc so le trong bằng nhau (hoặc đồng vị bằng nhau) thì a // b.',
@@ -1638,7 +1557,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Góc trong cùng phía',
             difficulty: 'Trung bình',
             prompt: 'Cho a // b. Biết một góc trong cùng phía bằng 110°. Góc trong cùng phía còn lại có số đo là:',
-            options: ['70°', '110°', '90°', '180°'],
+            options: ["90°","110°","180°","70°"],
             correctAnswer: '70°',
             adminHint: 'Hai góc trong cùng phía của hai đường thẳng song song thì bù nhau: tổng bằng 180°.',
             stepByStepSolution: 'Bước 1: Vì a // b nên hai góc trong cùng phía bù nhau: tổng bằng 180°.\nBước 2: Góc còn lại = 180° - 110° = 70°.',
@@ -1666,41 +1585,14 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Góc trong cùng phía',
             difficulty: 'Cơ bản',
             prompt: 'Nếu một đường thẳng cắt hai đường thẳng song song thì hai góc trong cùng phía:',
-            options: ['Bù nhau (tổng bằng 180°)', 'Bằng nhau', 'Phụ nhau (tổng bằng 90°)', 'Kề nhau'],
+            options: ["Bù nhau (tổng bằng 180°)","Bằng nhau","Kề nhau","Phụ nhau (tổng bằng 90°)"],
             correctAnswer: 'Bù nhau (tổng bằng 180°)',
             adminHint: 'Tính chất hai đường thẳng song song: hai góc trong cùng phía bù nhau (tổng số đo bằng 180°).',
             stepByStepSolution: 'Bước 1: Nhớ lại định lí hai đường thẳng song song: hai góc so le trong bằng nhau, hai góc đồng vị bằng nhau, hai góc trong cùng phía bù nhau.\nBước 2: Bù nhau nghĩa là tổng bằng 180°.',
             explanation: 'Hai góc trong cùng phía bù nhau (tổng bằng 180°).',
             pointsXP: 20
           }
-        ,
-          {
-            id: 'q9-4',
-            lessonId: 'c3-l9',
-            type: 'fill_in_blank',
-            category: 'Góc so le trong và đồng vị',
-            difficulty: 'Cơ bản',
-            prompt: 'Một đường thẳng c cắt hai đường thẳng song song a và b. Nếu một góc so le trong có số đo 55° thì góc đồng vị tương ứng có số đo là bao nhiêu độ (chỉ điền số):',
-            correctAnswer: '55',
-            adminHint: 'Nếu hai đường thẳng song song thì các cặp góc so le trong bằng nhau và các cặp góc đồng vị cũng bằng nhau.',
-            stepByStepSolution: 'Bước 1: Khi hai đường thẳng song song, các góc so le trong và các góc đồng vị đều có số đo bằng nhau.\nBước 2: Do đó góc đồng vị = góc so le trong = 55°.',
-            explanation: 'Góc đồng vị có số đo 55°.',
-            pointsXP: 20
-          },
-          {
-            id: 'q9-5',
-            lessonId: 'c3-l9',
-            type: 'multiple_choice',
-            category: 'Góc trong cùng phía',
-            difficulty: 'Cơ bản',
-            prompt: 'Nếu một đường thẳng cắt hai đường thẳng song song thì hai góc trong cùng phía:',
-            options: ['Bù nhau (tổng bằng 180°)', 'Bằng nhau', 'Phụ nhau (tổng bằng 90°)', 'Kề nhau'],
-            correctAnswer: 'Bù nhau (tổng bằng 180°)',
-            adminHint: 'Tính chất hai đường thẳng song song: hai góc trong cùng phía bù nhau (tổng số đo bằng 180°).',
-            stepByStepSolution: 'Bước 1: Nhớ lại định lí hai đường thẳng song song: hai góc so le trong bằng nhau, hai góc đồng vị bằng nhau, hai góc trong cùng phía bù nhau.\nBước 2: Bù nhau nghĩa là tổng bằng 180°.',
-            explanation: 'Hai góc trong cùng phía bù nhau (tổng bằng 180°).',
-            pointsXP: 20
-          }
+        
         ]
       },
       {
@@ -1745,12 +1637,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Tiên đề Euclid',
             difficulty: 'Cơ bản',
             prompt: 'Theo Tiên đề Euclid, qua một điểm M nằm ngoài đường thẳng a:',
-            options: [
-              'Chỉ có duy nhất một đường thẳng song song với a',
-              'Có ít nhất hai đường thẳng song song với a',
-              'Có vô số đường thẳng song song với a',
-              'Không có đường thẳng nào song song với a'
-            ],
+            options: ["Không có đường thẳng nào song song với a","Chỉ có duy nhất một đường thẳng song song với a","Có vô số đường thẳng song song với a","Có ít nhất hai đường thẳng song song với a"],
             correctAnswer: 'Chỉ có duy nhất một đường thẳng song song với a',
             adminHint: 'Tiên đề Euclid khẳng định tính duy nhất của đường thẳng song song đi qua một điểm ngoài đường thẳng.',
             stepByStepSolution: 'Bước 1: Nhớ lại nội dung Tiên đề Euclid.\nBước 2: Qua một điểm ở ngoài một đường thẳng, chỉ có MỘT đường thẳng song song với đường thẳng đó.',
@@ -1764,12 +1651,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Từ vuông góc đến song song',
             difficulty: 'Trung bình',
             prompt: 'Cho hai đường thẳng phân biệt a và b cùng vuông góc với đường thẳng d (a ⊥ d và b ⊥ d). Kết luận nào đúng?',
-            options: [
-              'a song song với b (a // b)',
-              'a cắt b',
-              'a trùng với b',
-              'a vuông góc với b'
-            ],
+            options: ["a trùng với b","a cắt b","a song song với b (a // b)","a vuông góc với b"],
             correctAnswer: 'a song song với b (a // b)',
             adminHint: 'Tính chất: Hai đường thẳng phân biệt cùng vuông góc với một đường thẳng thứ ba thì song song với nhau.',
             stepByStepSolution: 'Bước 1: Xét đường thẳng d cắt a và b.\nBước 2: Vì a ⊥ d và b ⊥ d nên các góc đồng vị đều bằng 90° (bằng nhau).\nBước 3: Do đó a // b.',
@@ -1797,7 +1679,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Tiên đề Euclid',
             difficulty: 'Cơ bản',
             prompt: 'Theo Tiên đề Euclid, qua một điểm A nằm ngoài đường thẳng d, có thể kẻ được bao nhiêu đường thẳng song song với d?',
-            options: ['Duy nhất một đường thẳng', 'Vô số đường thẳng', 'Hai đường thẳng phân biệt', 'Không có đường thẳng nào'],
+            options: ["Hai đường thẳng phân biệt","Vô số đường thẳng","Không có đường thẳng nào","Duy nhất một đường thẳng"],
             correctAnswer: 'Duy nhất một đường thẳng',
             adminHint: 'Nội dung tiên đề Euclid: Qua một điểm nằm ngoài một đường thẳng, chỉ có duy nhất một đường thẳng song song với đường thẳng đó.',
             stepByStepSolution: 'Bước 1: Phát biểu tiên đề Euclid: Qua một điểm ở ngoài một đường thẳng chỉ có một đường thẳng song song với đường thẳng đó.',
@@ -1817,34 +1699,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             explanation: 'Góc so le trong tương ứng có số đo bằng 65°.',
             pointsXP: 25
           }
-        ,
-          {
-            id: 'q10-4',
-            lessonId: 'c3-l10',
-            type: 'multiple_choice',
-            category: 'Tiên đề Euclid',
-            difficulty: 'Cơ bản',
-            prompt: 'Theo Tiên đề Euclid, qua một điểm A nằm ngoài đường thẳng d, có thể kẻ được bao nhiêu đường thẳng song song với d?',
-            options: ['Duy nhất một đường thẳng', 'Vô số đường thẳng', 'Hai đường thẳng phân biệt', 'Không có đường thẳng nào'],
-            correctAnswer: 'Duy nhất một đường thẳng',
-            adminHint: 'Nội dung tiên đề Euclid: Qua một điểm nằm ngoài một đường thẳng, chỉ có duy nhất một đường thẳng song song với đường thẳng đó.',
-            stepByStepSolution: 'Bước 1: Phát biểu tiên đề Euclid: Qua một điểm ở ngoài một đường thẳng chỉ có một đường thẳng song song với đường thẳng đó.',
-            explanation: 'Chỉ có duy nhất một đường thẳng song song với d qua điểm A.',
-            pointsXP: 20
-          },
-          {
-            id: 'q10-5',
-            lessonId: 'c3-l10',
-            type: 'fill_in_blank',
-            category: 'Tính chất bắc cầu song song',
-            difficulty: 'Trung bình',
-            prompt: 'Cho ba đường thẳng a, b, c phân biệt thỏa mãn a // b và b // c. Biết góc so le trong giữa a và một cát tuyến là 65°. Góc so le trong tương ứng giữa c và cát tuyến đó bằng bao nhiêu độ (chỉ điền số):',
-            correctAnswer: '65',
-            adminHint: 'Vì a // b và b // c nên a // c. Do đó góc so le trong cũng bằng 65°.',
-            stepByStepSolution: 'Bước 1: Tính chất ba đường thẳng song song: hai đường thẳng cùng song song với đường thẳng thứ ba thì chúng song song với nhau (a // c).\nBước 2: Vì a // c nên cặp góc so le trong bằng nhau = 65°.',
-            explanation: 'Góc so le trong tương ứng có số đo bằng 65°.',
-            pointsXP: 25
-          }
+        
         ]
       },
       {
@@ -1888,12 +1743,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Cấu trúc định lí',
             difficulty: 'Cơ bản',
             prompt: 'Trong định lí "Nếu một đường thẳng cắt hai đường thẳng song song thì hai góc so le trong bằng nhau", phần Giả thiết (GT) là:',
-            options: [
-              'Một đường thẳng cắt hai đường thẳng song song',
-              'Hai góc so le trong bằng nhau',
-              'Hai đường thẳng song song',
-              'Cả câu trên'
-            ],
+            options: ["Một đường thẳng cắt hai đường thẳng song song","Hai đường thẳng song song","Hai góc so le trong bằng nhau","Cả câu trên"],
             correctAnswer: 'Một đường thẳng cắt hai đường thẳng song song',
             adminHint: 'Phần nằm giữa từ "Nếu" và từ "thì" chính là Giả thiết của định lí.',
             stepByStepSolution: 'Bước 1: Định lí có dạng "Nếu P thì Q".\nBước 2: P là Giả thiết, Q là Kết luận.\nBước 3: Sau chữ "Nếu" là "một đường thẳng cắt hai đường thẳng song song", đó là Giả thiết.',
@@ -1907,12 +1757,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Khái niệm định lí',
             difficulty: 'Cơ bản',
             prompt: 'Khẳng định nào sau đây là ĐÚNG về việc chứng minh định lí?',
-            options: [
-              'Chứng minh định lí là dùng lập luận suy diễn từ Giả thiết để suy ra Kết luận',
-              'Chứng minh định lí là dùng thước đo kiểm tra thực tế',
-              'Chỉ cần kiểm tra đúng cho 1 hình vẽ là định lí được chứng minh',
-              'Không cần chứng minh vì định lí tự nhiên đúng'
-            ],
+            options: ["Chứng minh định lí là dùng thước đo kiểm tra thực tế","Chứng minh định lí là dùng lập luận suy diễn từ Giả thiết để suy ra Kết luận","Không cần chứng minh vì định lí tự nhiên đúng","Chỉ cần kiểm tra đúng cho 1 hình vẽ là định lí được chứng minh"],
             correctAnswer: 'Chứng minh định lí là dùng lập luận suy diễn từ Giả thiết để suy ra Kết luận',
             adminHint: 'Chứng minh là quá trình dùng các lập luận logic từ GT để khẳng định KL là đúng.',
             stepByStepSolution: 'Bước 1: Nhớ lại định nghĩa chứng minh định lí.\nBước 2: Phải dùng các định nghĩa, tiên đề, tính chất đã biết để lập luận suy diễn từ GT suy ra KL.',
@@ -1927,7 +1772,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Cấu trúc định lí',
             difficulty: 'Cơ bản',
             prompt: 'Trong một định lí toán học viết dưới dạng "Nếu ... thì ...", phần nằm sau từ "thì" là:',
-            options: ['Kết luận (KL)', 'Giả thiết (GT)', 'Chứng minh', 'Hình vẽ minh họa'],
+            options: ["Chứng minh","Giả thiết (GT)","Kết luận (KL)","Hình vẽ minh họa"],
             correctAnswer: 'Kết luận (KL)',
             adminHint: 'Nếu [Giả thiết] thì [Kết luận].',
             stepByStepSolution: 'Bước 1: Một định lí gồm 2 phần:\n- Giả thiết: phần nằm sau từ "Nếu" và trước từ "thì".\n- Kết luận: phần nằm sau từ "thì".',
@@ -1941,7 +1786,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Giả thiết - Kết luận',
             difficulty: 'Cơ bản',
             prompt: 'Cho định lí: "Hai góc cùng bù với một góc thứ ba thì bằng nhau". Giả thiết (GT) của định lí là gì?',
-            options: ['Hai góc cùng bù với một góc thứ ba', 'Hai góc bằng nhau', 'Tổng số đo ba góc bằng 180°', 'Hai góc đối đỉnh'],
+            options: ["Hai góc đối đỉnh","Tổng số đo ba góc bằng 180°","Hai góc bằng nhau","Hai góc cùng bù với một góc thứ ba"],
             correctAnswer: 'Hai góc cùng bù với một góc thứ ba',
             adminHint: 'Điều cho trước là "hai góc cùng bù với một góc thứ ba", điều được suy ra là "bằng nhau".',
             stepByStepSolution: 'Bước 1: Viết lại dưới dạng: Nếu hai góc cùng bù với góc thứ ba thì hai góc đó bằng nhau.\nBước 2: GT: Hai góc cùng bù với một góc thứ ba; KL: Chúng bằng nhau.',
@@ -1961,48 +1806,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             explanation: 'Góc vuông có số đo 90°.',
             pointsXP: 25
           }
-        ,
-          {
-            id: 'q11-3',
-            lessonId: 'c3-l11',
-            type: 'multiple_choice',
-            category: 'Cấu trúc định lí',
-            difficulty: 'Cơ bản',
-            prompt: 'Trong một định lí toán học viết dưới dạng "Nếu ... thì ...", phần nằm sau từ "thì" là:',
-            options: ['Kết luận (KL)', 'Giả thiết (GT)', 'Chứng minh', 'Hình vẽ minh họa'],
-            correctAnswer: 'Kết luận (KL)',
-            adminHint: 'Nếu [Giả thiết] thì [Kết luận].',
-            stepByStepSolution: 'Bước 1: Một định lí gồm 2 phần:\n- Giả thiết: phần nằm sau từ "Nếu" và trước từ "thì".\n- Kết luận: phần nằm sau từ "thì".',
-            explanation: 'Phần sau từ "thì" là Kết luận của định lí.',
-            pointsXP: 20
-          },
-          {
-            id: 'q11-4',
-            lessonId: 'c3-l11',
-            type: 'multiple_choice',
-            category: 'Giả thiết - Kết luận',
-            difficulty: 'Cơ bản',
-            prompt: 'Cho định lí: "Hai góc cùng bù với một góc thứ ba thì bằng nhau". Giả thiết (GT) của định lí là gì?',
-            options: ['Hai góc cùng bù với một góc thứ ba', 'Hai góc bằng nhau', 'Tổng số đo ba góc bằng 180°', 'Hai góc đối đỉnh'],
-            correctAnswer: 'Hai góc cùng bù với một góc thứ ba',
-            adminHint: 'Điều cho trước là "hai góc cùng bù với một góc thứ ba", điều được suy ra là "bằng nhau".',
-            stepByStepSolution: 'Bước 1: Viết lại dưới dạng: Nếu hai góc cùng bù với góc thứ ba thì hai góc đó bằng nhau.\nBước 2: GT: Hai góc cùng bù với một góc thứ ba; KL: Chúng bằng nhau.',
-            explanation: 'Giả thiết là điều kiện ban đầu cho trước: hai góc cùng bù với góc thứ ba.',
-            pointsXP: 20
-          },
-          {
-            id: 'q11-5',
-            lessonId: 'c3-l11',
-            type: 'fill_in_blank',
-            category: 'Định lí vuông góc - song song',
-            difficulty: 'Trung bình',
-            prompt: 'Định lí: "Một đường thẳng vuông góc với một trong hai đường thẳng song song thì nó cũng vuông góc với đường thẳng kia". Góc tạo bởi đường thẳng đó với đường thẳng kia có số đo bằng bao nhiêu độ (chỉ điền số):',
-            correctAnswer: '90',
-            adminHint: 'Vuông góc nghĩa là tạo thành một góc 90°.',
-            stepByStepSolution: 'Bước 1: Hai đường thẳng vuông góc với nhau tạo thành góc 90°.\nBước 2: Do đó góc tạo thành có số đo 90°.',
-            explanation: 'Góc vuông có số đo 90°.',
-            pointsXP: 25
-          }
+        
         ]
       }
     ]
@@ -2074,7 +1878,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Tam giác vuông',
             difficulty: 'Cơ bản',
             prompt: 'Cho tam giác DEF vuông tại D, có góc E = 35°. Số đo góc F là:',
-            options: ['55°', '65°', '145°', '45°'],
+            options: ["55°","145°","65°","45°"],
             correctAnswer: '55°',
             adminHint: 'Trong tam giác vuông, hai góc nhọn phụ nhau: ∠F = 90° - ∠E = 90° - 35° = 55°.',
             stepByStepSolution: 'Bước 1: Tam giác DEF vuông tại D nên ∠E + ∠F = 90°.\nBước 2: Thay số: 35° + ∠F = 90°.\nBước 3: ∠F = 90° - 35° = 55°.',
@@ -2115,41 +1919,14 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Góc ngoài của tam giác',
             difficulty: 'Trung bình',
             prompt: 'Mỗi góc ngoài của một tam giác có số đo bằng:',
-            options: ['Tổng số đo hai góc trong không kề với nó', 'Tổng số đo ba góc trong của tam giác', 'Số đo góc trong kề bù với nó', 'Hiệu số đo hai góc trong không kề với nó'],
+            options: ["Số đo góc trong kề bù với nó","Tổng số đo hai góc trong không kề với nó","Tổng số đo ba góc trong của tam giác","Hiệu số đo hai góc trong không kề với nó"],
             correctAnswer: 'Tổng số đo hai góc trong không kề với nó',
             adminHint: 'Định lí góc ngoài tam giác: Góc ngoài tại một đỉnh bằng tổng hai góc trong không kề với đỉnh đó.',
             stepByStepSolution: 'Bước 1: Góc ngoài kề bù với góc trong tại đỉnh đó: ∠ngoài + ∠trong = 180°.\nBước 2: Mặt khác, tổng 3 góc trong = 180° => 2 góc trong còn lại + ∠trong = 180°.\nBước 3: Suy ra: ∠ngoài = tổng hai góc trong không kề với nó.',
             explanation: 'Mỗi góc ngoài bằng tổng hai góc trong không kề với nó.',
             pointsXP: 25
           }
-        ,
-          {
-            id: 'q12-4',
-            lessonId: 'c4-l12',
-            type: 'fill_in_blank',
-            category: 'Góc trong tam giác vuông',
-            difficulty: 'Cơ bản',
-            prompt: 'Cho tam giác ABC vuông tại A có ∠B = 35°. Số đo của góc C là bao nhiêu độ (chỉ điền số):',
-            correctAnswer: '55',
-            adminHint: 'Trong tam giác vuông, hai góc nhọn phụ nhau: ∠B + ∠C = 90° => ∠C = 90° - 35° = 55°.',
-            stepByStepSolution: 'Bước 1: Tam giác ABC vuông tại A nên ∠B + ∠C = 90°.\nBước 2: ∠C = 90° - ∠B = 90° - 35° = 55°.',
-            explanation: 'Góc C = 90° - 35° = 55°.',
-            pointsXP: 20
-          },
-          {
-            id: 'q12-5',
-            lessonId: 'c4-l12',
-            type: 'multiple_choice',
-            category: 'Góc ngoài của tam giác',
-            difficulty: 'Trung bình',
-            prompt: 'Mỗi góc ngoài của một tam giác có số đo bằng:',
-            options: ['Tổng số đo hai góc trong không kề với nó', 'Tổng số đo ba góc trong của tam giác', 'Số đo góc trong kề bù với nó', 'Hiệu số đo hai góc trong không kề với nó'],
-            correctAnswer: 'Tổng số đo hai góc trong không kề với nó',
-            adminHint: 'Định lí góc ngoài tam giác: Góc ngoài tại một đỉnh bằng tổng hai góc trong không kề với đỉnh đó.',
-            stepByStepSolution: 'Bước 1: Góc ngoài kề bù với góc trong tại đỉnh đó: ∠ngoài + ∠trong = 180°.\nBước 2: Mặt khác, tổng 3 góc trong = 180° => 2 góc trong còn lại + ∠trong = 180°.\nBước 3: Suy ra: ∠ngoài = tổng hai góc trong không kề với nó.',
-            explanation: 'Mỗi góc ngoài bằng tổng hai góc trong không kề với nó.',
-            pointsXP: 25
-          }
+        
         ]
       },
       {
@@ -2193,12 +1970,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Trường hợp c.c.c',
             difficulty: 'Cơ bản',
             prompt: 'Cho ΔABC = ΔMNP theo trường hợp cạnh - cạnh - cạnh (c.c.c). Khẳng định nào sau đây là ĐÚNG?',
-            options: [
-              'AB = MN, BC = NP, AC = MP',
-              'AB = NP, BC = MN, AC = MP',
-              'AB = MP, BC = NP, AC = MN',
-              '∠A = ∠N'
-            ],
+            options: ["AB = MP, BC = NP, AC = MN","AB = NP, BC = MN, AC = MP","AB = MN, BC = NP, AC = MP","∠A = ∠N"],
             correctAnswer: 'AB = MN, BC = NP, AC = MP',
             adminHint: 'Các cạnh tương ứng theo thứ tự đỉnh: A tương ứng M, B tương ứng N, C tương ứng P.',
             stepByStepSolution: 'Bước 1: Từ ký hiệu ΔABC = ΔMNP ta có các đỉnh tương ứng: A <-> M, B <-> N, C <-> P.\nBước 2: Các cạnh tương ứng bằng nhau: AB = MN, BC = NP, AC = MP.',
@@ -2225,7 +1997,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Chứng minh c.c.c',
             difficulty: 'Trung bình',
             prompt: 'Cho tam giác ABC có AB = AC, gọi M là trung điểm của BC. Ta chứng minh được ΔABM = ΔACM theo trường hợp nào?',
-            options: ['c.c.c', 'c.g.c', 'g.c.g', 'cạnh huyền - góc nhọn'],
+            options: ["c.g.c","cạnh huyền - góc nhọn","g.c.g","c.c.c"],
             correctAnswer: 'c.c.c',
             adminHint: 'AB = AC (giả thiết), MB = MC (M là trung điểm), AM là cạnh chung => 3 cạnh bằng nhau (c.c.c).',
             stepByStepSolution: 'Bước 1: AB = AC (giả thiết).\nBước 2: MB = MC (do M là trung điểm BC).\nBước 3: AM là cạnh chung.\nBước 4: Do đó ΔABM = ΔACM (c.c.c).',
@@ -2253,41 +2025,14 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Chứng minh tam giác bằng nhau c.c.c',
             difficulty: 'Trung bình',
             prompt: 'Cho tam giác ABC có AB = AC. Gọi M là trung điểm của đoạn thẳng BC. Yếu tố chung khi chứng minh ΔABM = ΔACM theo trường hợp c.c.c là:',
-            options: ['Cạnh AM là cạnh chung', 'Cạnh BC là cạnh chung', 'Góc A là góc chung', 'Góc M bằng 90°'],
+            options: ["Cạnh AM là cạnh chung","Góc A là góc chung","Cạnh BC là cạnh chung","Góc M bằng 90°"],
             correctAnswer: 'Cạnh AM là cạnh chung',
             adminHint: 'Xét ΔABM và ΔACM có: AB = AC (giả thiết), BM = CM (M là trung điểm), AM là cạnh chung.',
             stepByStepSolution: 'Bước 1: Liệt kê 3 cặp cạnh:\n- AB = AC (gt)\n- BM = CM (M là trung điểm BC)\n- AM là cạnh chung.\nBước 2: Kết luận ΔABM = ΔACM (c.c.c).',
             explanation: 'AM là cạnh chung của cả hai tam giác.',
             pointsXP: 25
           }
-        ,
-          {
-            id: 'q13-4',
-            lessonId: 'c4-l13',
-            type: 'fill_in_blank',
-            category: 'Đỉnh và cạnh tương ứng',
-            difficulty: 'Cơ bản',
-            prompt: 'Cho ΔABC = ΔDEF. Biết AB = 5cm, BC = 7cm, AC = 6cm. Chu vi của tam giác DEF bằng bao nhiêu cm (chỉ điền số):',
-            correctAnswer: '18',
-            adminHint: 'Hai tam giác bằng nhau thì chu vi bằng nhau: 5 + 7 + 6 = 18 cm.',
-            stepByStepSolution: 'Bước 1: Vì ΔABC = ΔDEF nên DE = AB = 5cm, EF = BC = 7cm, DF = AC = 6cm.\nBước 2: Chu vi ΔDEF = DE + EF + DF = 5 + 7 + 6 = 18 cm.',
-            explanation: 'Chu vi tam giác DEF là 18 cm.',
-            pointsXP: 20
-          },
-          {
-            id: 'q13-5',
-            lessonId: 'c4-l13',
-            type: 'multiple_choice',
-            category: 'Chứng minh tam giác bằng nhau c.c.c',
-            difficulty: 'Trung bình',
-            prompt: 'Cho tam giác ABC có AB = AC. Gọi M là trung điểm của đoạn thẳng BC. Yếu tố chung khi chứng minh ΔABM = ΔACM theo trường hợp c.c.c là:',
-            options: ['Cạnh AM là cạnh chung', 'Cạnh BC là cạnh chung', 'Góc A là góc chung', 'Góc M bằng 90°'],
-            correctAnswer: 'Cạnh AM là cạnh chung',
-            adminHint: 'Xét ΔABM và ΔACM có: AB = AC (giả thiết), BM = CM (M là trung điểm), AM là cạnh chung.',
-            stepByStepSolution: 'Bước 1: Liệt kê 3 cặp cạnh:\n- AB = AC (gt)\n- BM = CM (M là trung điểm BC)\n- AM là cạnh chung.\nBước 2: Kết luận ΔABM = ΔACM (c.c.c).',
-            explanation: 'AM là cạnh chung của cả hai tam giác.',
-            pointsXP: 25
-          }
+        
         ]
       },
       {
@@ -2332,12 +2077,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Trường hợp c.g.c',
             difficulty: 'Cơ bản',
             prompt: 'Điều kiện cần để áp dụng trường hợp bằng nhau c.g.c là:',
-            options: [
-              'Góc bằng nhau phải là góc xen giữa hai cạnh',
-              'Góc có thể là bất kỳ góc nào',
-              'Cả ba góc phải bằng nhau',
-              'Hai cạnh phải là cạnh đáy'
-            ],
+            options: ["Hai cạnh phải là cạnh đáy","Góc bằng nhau phải là góc xen giữa hai cạnh","Cả ba góc phải bằng nhau","Góc có thể là bất kỳ góc nào"],
             correctAnswer: 'Góc bằng nhau phải là góc xen giữa hai cạnh',
             adminHint: 'Quy tắc: Góc phải nằm xen giữa hai cạnh tương ứng bằng nhau.',
             stepByStepSolution: 'Bước 1: Xem lại định lí c.g.c: hai cạnh và góc xen giữa của tam giác này bằng hai cạnh và góc xen giữa của tam giác kia.',
@@ -2351,7 +2091,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Trường hợp g.c.g',
             difficulty: 'Trung bình',
             prompt: 'Cho ΔABC và ΔMNP có ∠B = ∠N, BC = NP. Để ΔABC = ΔMNP theo trường hợp g.c.g thì cần thêm điều kiện gì?',
-            options: ['∠C = ∠P', '∠A = ∠M', 'AB = MN', 'AC = MP'],
+            options: ["AB = MN","∠A = ∠M","∠C = ∠P","AC = MP"],
             correctAnswer: '∠C = ∠P',
             adminHint: 'Cạnh BC có hai góc kề là ∠B và ∠C. Cạnh NP có hai góc kề là ∠N và ∠P.',
             stepByStepSolution: 'Bước 1: Cạnh đã cho là BC và NP.\nBước 2: Hai góc kề cạnh BC là góc B và góc C.\nBước 3: Do đó để đủ điều kiện g.c.g cần thêm góc C = góc P.',
@@ -2379,7 +2119,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Trường hợp g.c.g',
             difficulty: 'Trung bình',
             prompt: 'Cho đoạn thẳng AB và CD cắt nhau tại trung điểm O của mỗi đoạn. Để chứng minh ΔOAC = ΔOBD, ta sử dụng trường hợp bằng nhau nào?',
-            options: ['c.g.c (cạnh - góc - cạnh)', 'c.c.c (cạnh - cạnh - cạnh)', 'g.c.g (góc - cạnh - góc)', 'Cạnh huyền - góc nhọn'],
+            options: ["g.c.g (góc - cạnh - góc)","c.c.c (cạnh - cạnh - cạnh)","Cạnh huyền - góc nhọn","c.g.c (cạnh - góc - cạnh)"],
             correctAnswer: 'c.g.c (cạnh - góc - cạnh)',
             adminHint: 'OA = OB, OC = OD (O là trung điểm) và hai góc xen giữa ∠AOC = ∠BOD (hai góc đối đỉnh).',
             stepByStepSolution: 'Bước 1: OA = OB, OC = OD (giả thiết trung điểm).\nBước 2: Góc ∠AOC = ∠BOD (hai góc đối đỉnh xen giữa hai cặp cạnh).\nBước 3: Kết luận ΔOAC = ΔOBD (c.g.c).',
@@ -2399,47 +2139,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             explanation: 'Góc D = 70°.',
             pointsXP: 25
           }
-        ,
-          {
-            id: 'q14-3',
-            lessonId: 'c4-l14',
-            type: 'fill_in_blank',
-            category: 'Trường hợp c.g.c',
-            difficulty: 'Cơ bản',
-            prompt: 'Cho ΔABC = ΔMNP theo trường hợp c.g.c với AB = MN = 6cm, góc A = góc M = 70°, AC = MP. Biết cạnh BC = 8cm. Độ dài cạnh NP là bao nhiêu cm (chỉ điền số):',
-            correctAnswer: '8',
-            adminHint: 'Hai tam giác bằng nhau thì các cạnh tương ứng bằng nhau: NP = BC = 8cm.',
-            stepByStepSolution: 'Bước 1: Vì ΔABC = ΔMNP nên các cạnh tương ứng bằng nhau.\nBước 2: Cạnh tương ứng với BC là NP => NP = BC = 8cm.',
-            explanation: 'Độ dài NP = 8 cm.',
-            pointsXP: 20
-          },
-          {
-            id: 'q14-4',
-            lessonId: 'c4-l14',
-            type: 'multiple_choice',
-            category: 'Trường hợp g.c.g',
-            difficulty: 'Trung bình',
-            prompt: 'Cho đoạn thẳng AB và CD cắt nhau tại trung điểm O của mỗi đoạn. Để chứng minh ΔOAC = ΔOBD, ta sử dụng trường hợp bằng nhau nào?',
-            options: ['c.g.c (cạnh - góc - cạnh)', 'c.c.c (cạnh - cạnh - cạnh)', 'g.c.g (góc - cạnh - góc)', 'Cạnh huyền - góc nhọn'],
-            correctAnswer: 'c.g.c (cạnh - góc - cạnh)',
-            adminHint: 'OA = OB, OC = OD (O là trung điểm) và hai góc xen giữa ∠AOC = ∠BOD (hai góc đối đỉnh).',
-            stepByStepSolution: 'Bước 1: OA = OB, OC = OD (giả thiết trung điểm).\nBước 2: Góc ∠AOC = ∠BOD (hai góc đối đỉnh xen giữa hai cặp cạnh).\nBước 3: Kết luận ΔOAC = ΔOBD (c.g.c).',
-            explanation: 'Áp dụng trường hợp cạnh - góc - cạnh (c.g.c).',
-            pointsXP: 25
-          },
-          {
-            id: 'q14-5',
-            lessonId: 'c4-l14',
-            type: 'fill_in_blank',
-            category: 'Góc tương ứng',
-            difficulty: 'Cơ bản',
-            prompt: 'Cho ΔABC = ΔDEF. Biết góc B = 45°, góc C = 65°. Số đo của góc D là bao nhiêu độ (chỉ điền số):',
-            correctAnswer: '70',
-            adminHint: 'Góc A = 180° - 45° - 65° = 70°. Góc D tương ứng với góc A nên góc D = 70°.',
-            stepByStepSolution: 'Bước 1: Tính góc A trong ΔABC: ∠A = 180° - (45° + 65°) = 70°.\nBước 2: Vì ΔABC = ΔDEF nên góc tương ứng ∠D = ∠A = 70°.',
-            explanation: 'Góc D = 70°.',
-            pointsXP: 25
-          }
+        
         ]
       },
       {
@@ -2485,12 +2185,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Tam giác vuông',
             difficulty: 'Cơ bản',
             prompt: 'Trường hợp bằng nhau đặc biệt nào sau đây chỉ áp dụng cho TAM GIÁC VUÔNG?',
-            options: [
-              'Cạnh huyền - góc nhọn',
-              'Cạnh - Cạnh - Cạnh',
-              'Cạnh - Góc - Cạnh',
-              'Góc - Cạnh - Góc'
-            ],
+            options: ["Cạnh huyền - góc nhọn","Cạnh - Góc - Cạnh","Cạnh - Cạnh - Cạnh","Góc - Cạnh - Góc"],
             correctAnswer: 'Cạnh huyền - góc nhọn',
             adminHint: 'Cạnh huyền chỉ có trong tam giác vuông.',
             stepByStepSolution: 'Bước 1: Cạnh huyền là cạnh đối diện với góc vuông trong tam giác vuông.\nBước 2: Trường hợp "cạnh huyền - góc nhọn" chỉ tồn tại ở tam giác vuông.',
@@ -2504,12 +2199,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Nhận diện tam giác vuông',
             difficulty: 'Trung bình',
             prompt: 'Cho tam giác ABC vuông tại A và tam giác DEF vuông tại D có BC = EF và AB = DE. Hai tam giác bằng nhau theo trường hợp:',
-            options: [
-              'Cạnh huyền - cạnh góc vuông',
-              'Cạnh huyền - góc nhọn',
-              'Hai cạnh góc vuông',
-              'Cạnh - Góc - Cạnh'
-            ],
+            options: ["Cạnh huyền - góc nhọn","Cạnh huyền - cạnh góc vuông","Cạnh - Góc - Cạnh","Hai cạnh góc vuông"],
             correctAnswer: 'Cạnh huyền - cạnh góc vuông',
             adminHint: 'BC và EF là cạnh huyền, AB và DE là cạnh góc vuông.',
             stepByStepSolution: 'Bước 1: BC và EF đối diện góc vuông nên là cạnh huyền.\nBước 2: AB và DE kề góc vuông nên là cạnh góc vuông.\nBước 3: Do đó bằng nhau theo trường hợp cạnh huyền - cạnh góc vuông.',
@@ -2524,7 +2214,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Cạnh huyền - góc nhọn',
             difficulty: 'Cơ bản',
             prompt: 'Cho tam giác vuông ABC (vuông tại A) và tam giác vuông DEF (vuông tại D) có BC = EF và góc B = góc E. Hai tam giác này bằng nhau theo trường hợp:',
-            options: ['Cạnh huyền - góc nhọn', 'Cạnh huyền - cạnh góc vuông', 'Hai cạnh góc vuông', 'Cạnh - góc - cạnh'],
+            options: ["Hai cạnh góc vuông","Cạnh huyền - cạnh góc vuông","Cạnh huyền - góc nhọn","Cạnh - góc - cạnh"],
             correctAnswer: 'Cạnh huyền - góc nhọn',
             adminHint: 'BC và EF là cạnh huyền, góc B và góc E là góc nhọn tương ứng.',
             stepByStepSolution: 'Bước 1: BC và EF đối diện góc vuông nên là hai cạnh huyền.\nBước 2: ∠B và ∠E là hai góc nhọn kề cạnh huyền.\nBước 3: Do đó bằng nhau theo trường hợp cạnh huyền - góc nhọn.',
@@ -2551,55 +2241,14 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Trường hợp đặc biệt tam giác vuông',
             difficulty: 'Trung bình',
             prompt: 'Trường hợp bằng nhau nào sau đây là trường hợp ĐẶC BIỆT CHỈ CÓ ở tam giác vuông?',
-            options: ['Cạnh huyền - cạnh góc vuông', 'Cạnh - cạnh - cạnh (c.c.c)', 'Cạnh - góc - cạnh (c.g.c)', 'Góc - cạnh - góc (g.c.g)'],
+            options: ["Góc - cạnh - góc (g.c.g)","Cạnh - góc - cạnh (c.g.c)","Cạnh - cạnh - cạnh (c.c.c)","Cạnh huyền - cạnh góc vuông"],
             correctAnswer: 'Cạnh huyền - cạnh góc vuông',
             adminHint: 'Chỉ tam giác vuông mới có yếu tố cạnh huyền và cạnh góc vuông.',
             stepByStepSolution: 'Bước 1: Cạnh huyền và cạnh góc vuông chỉ tồn tại trong tam giác vuông nhờ định lí Pythagore ngầm bảo toàn cạnh còn lại.',
             explanation: 'Trường hợp cạnh huyền - cạnh góc vuông là đặc trưng riêng của tam giác vuông.',
             pointsXP: 25
           }
-        ,
-          {
-            id: 'q15-3',
-            lessonId: 'c4-l15',
-            type: 'multiple_choice',
-            category: 'Cạnh huyền - góc nhọn',
-            difficulty: 'Cơ bản',
-            prompt: 'Cho tam giác vuông ABC (vuông tại A) và tam giác vuông DEF (vuông tại D) có BC = EF và góc B = góc E. Hai tam giác này bằng nhau theo trường hợp:',
-            options: ['Cạnh huyền - góc nhọn', 'Cạnh huyền - cạnh góc vuông', 'Hai cạnh góc vuông', 'Cạnh - góc - cạnh'],
-            correctAnswer: 'Cạnh huyền - góc nhọn',
-            adminHint: 'BC và EF là cạnh huyền, góc B và góc E là góc nhọn tương ứng.',
-            stepByStepSolution: 'Bước 1: BC và EF đối diện góc vuông nên là hai cạnh huyền.\nBước 2: ∠B và ∠E là hai góc nhọn kề cạnh huyền.\nBước 3: Do đó bằng nhau theo trường hợp cạnh huyền - góc nhọn.',
-            explanation: 'Trường hợp cạnh huyền - góc nhọn.',
-            pointsXP: 20
-          },
-          {
-            id: 'q15-4',
-            lessonId: 'c4-l15',
-            type: 'fill_in_blank',
-            category: 'Cạnh tương ứng tam giác vuông',
-            difficulty: 'Cơ bản',
-            prompt: 'Cho ΔABC vuông tại A và ΔDEF vuông tại D có cạnh huyền BC = EF = 10cm, AB = DE = 6cm, AC = 8cm. Độ dài cạnh DF của tam giác DEF là bao nhiêu cm (chỉ điền số):',
-            correctAnswer: '8',
-            adminHint: 'Hai tam giác vuông bằng nhau theo trường hợp cạnh huyền - cạnh góc vuông, nên DF = AC = 8cm.',
-            stepByStepSolution: 'Bước 1: ΔABC = ΔDEF (cạnh huyền - cạnh góc vuông).\nBước 2: DF tương ứng với AC => DF = AC = 8cm.',
-            explanation: 'Độ dài cạnh DF = 8 cm.',
-            pointsXP: 20
-          },
-          {
-            id: 'q15-5',
-            lessonId: 'c4-l15',
-            type: 'multiple_choice',
-            category: 'Trường hợp đặc biệt tam giác vuông',
-            difficulty: 'Trung bình',
-            prompt: 'Trường hợp bằng nhau nào sau đây là trường hợp ĐẶC BIỆT CHỈ CÓ ở tam giác vuông?',
-            options: ['Cạnh huyền - cạnh góc vuông', 'Cạnh - cạnh - cạnh (c.c.c)', 'Cạnh - góc - cạnh (c.g.c)', 'Góc - cạnh - góc (g.c.g)'],
-            correctAnswer: 'Cạnh huyền - cạnh góc vuông',
-            adminHint: 'Chỉ tam giác vuông mới có yếu tố cạnh huyền và cạnh góc vuông.',
-            stepByStepSolution: 'Bước 1: Cạnh huyền và cạnh góc vuông chỉ tồn tại trong tam giác vuông nhờ định lí Pythagore ngầm bảo toàn cạnh còn lại.',
-            explanation: 'Trường hợp cạnh huyền - cạnh góc vuông là đặc trưng riêng của tam giác vuông.',
-            pointsXP: 25
-          }
+        
         ]
       },
       {
@@ -2659,7 +2308,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Tam giác đều',
             difficulty: 'Cơ bản',
             prompt: 'Mỗi góc trong một tam giác đều có số đo bằng bao nhiêu độ?',
-            options: ['60°', '45°', '90°', '120°'],
+            options: ["60°","90°","120°","45°"],
             correctAnswer: '60°',
             adminHint: 'Tam giác đều có 3 góc bằng nhau: 180° / 3 = 60°.',
             stepByStepSolution: 'Bước 1: Tam giác đều có 3 góc bằng nhau.\nBước 2: Tổng 3 góc là 180°, do đó mỗi góc = 180° / 3 = 60°.',
@@ -2673,12 +2322,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Đường trung trực',
             difficulty: 'Trung bình',
             prompt: 'Điểm M nằm trên đường trung trực của đoạn thẳng AB thì:',
-            options: [
-              'MA = MB (M cách đều hai đầu mút A và B)',
-              'MA > MB',
-              'MA + MB = AB',
-              'M trùng với A'
-            ],
+            options: ["MA + MB = AB","MA = MB (M cách đều hai đầu mút A và B)","M trùng với A","MA > MB"],
             correctAnswer: 'MA = MB (M cách đều hai đầu mút A và B)',
             adminHint: 'Tính chất cơ bản: Điểm thuộc trung trực cách đều hai đầu mút đoạn thẳng.',
             stepByStepSolution: 'Bước 1: Theo định lí về tính chất đường trung trực của đoạn thẳng.\nBước 2: Điểm nằm trên đường trung trực của đoạn thẳng AB thì cách đều hai đầu mút: MA = MB.',
@@ -2706,41 +2350,14 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Tính chất đường trung trực',
             difficulty: 'Cơ bản',
             prompt: 'Điểm M nằm trên đường trung trực của đoạn thẳng AB thì có tính chất nào sau đây?',
-            options: ['MA = MB (Cách đều hai đầu mút A và B)', 'MA > MB', 'MA + MB = AB', 'M là trung điểm của AB'],
+            options: ["M là trung điểm của AB","MA + MB = AB","MA = MB (Cách đều hai đầu mút A và B)","MA > MB"],
             correctAnswer: 'MA = MB (Cách đều hai đầu mút A và B)',
             adminHint: 'Định lí: Điểm nằm trên đường trung trực của một đoạn thẳng thì cách đều hai mút của đoạn thẳng đó.',
             stepByStepSolution: 'Bước 1: Nhớ lại định lí về tính chất đường trung trực của đoạn thẳng: M thuộc đường trung trực của AB <=> MA = MB.',
             explanation: 'Điểm trên đường trung trực cách đều hai mút của đoạn thẳng: MA = MB.',
             pointsXP: 20
           }
-        ,
-          {
-            id: 'q16-4',
-            lessonId: 'c4-l16',
-            type: 'fill_in_blank',
-            category: 'Góc ở đáy tam giác cân',
-            difficulty: 'Cơ bản',
-            prompt: 'Một tam giác cân có góc ở đỉnh bằng 40°. Số đo mỗi góc ở đáy là bao nhiêu độ (chỉ điền số):',
-            correctAnswer: '70',
-            adminHint: 'Hai góc ở đáy bằng nhau: (180° - 40°) : 2 = 70°.',
-            stepByStepSolution: 'Bước 1: Tổng 3 góc trong tam giác = 180°.\nBước 2: Tổng 2 góc ở đáy = 180° - 40° = 140°.\nBước 3: Số đo mỗi góc ở đáy = 140° : 2 = 70°.',
-            explanation: 'Mỗi góc ở đáy có số đo là 70°.',
-            pointsXP: 20
-          },
-          {
-            id: 'q16-5',
-            lessonId: 'c4-l16',
-            type: 'multiple_choice',
-            category: 'Tính chất đường trung trực',
-            difficulty: 'Cơ bản',
-            prompt: 'Điểm M nằm trên đường trung trực của đoạn thẳng AB thì có tính chất nào sau đây?',
-            options: ['MA = MB (Cách đều hai đầu mút A và B)', 'MA > MB', 'MA + MB = AB', 'M là trung điểm của AB'],
-            correctAnswer: 'MA = MB (Cách đều hai đầu mút A và B)',
-            adminHint: 'Định lí: Điểm nằm trên đường trung trực của một đoạn thẳng thì cách đều hai mút của đoạn thẳng đó.',
-            stepByStepSolution: 'Bước 1: Nhớ lại định lí về tính chất đường trung trực của đoạn thẳng: M thuộc đường trung trực của AB <=> MA = MB.',
-            explanation: 'Điểm trên đường trung trực cách đều hai mút của đoạn thẳng: MA = MB.',
-            pointsXP: 20
-          }
+        
         ]
       }
     ]
@@ -2798,12 +2415,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Phân loại dữ liệu',
             difficulty: 'Cơ bản',
             prompt: 'Dãy dữ liệu nào sau đây là dữ liệu ĐỊNH LƯỢNG (dữ liệu là số)?',
-            options: [
-              'Chiều cao (cm) của các học sinh trong lớp: 150, 155, 160',
-              'Màu sắc yêu thích: Xanh, Đỏ, Tím, Vàng',
-              'Xếp loại học lực: Xuất sắc, Giỏi, Khá',
-              'Tên các tỉnh thành: Hà Nội, Đà Nẵng, TP.HCM'
-            ],
+            options: ["Xếp loại học lực: Xuất sắc, Giỏi, Khá","Tên các tỉnh thành: Hà Nội, Đà Nẵng, TP.HCM","Màu sắc yêu thích: Xanh, Đỏ, Tím, Vàng","Chiều cao (cm) của các học sinh trong lớp: 150, 155, 160"],
             correctAnswer: 'Chiều cao (cm) của các học sinh trong lớp: 150, 155, 160',
             adminHint: 'Dữ liệu định lượng là dữ liệu biểu thị bằng số đo đếm được.',
             stepByStepSolution: 'Bước 1: Dữ liệu định lượng là dữ liệu dưới dạng số đo lường hoặc đếm được.\nBước 2: Chiều cao 150, 155, 160 cm là số nên là dữ liệu định lượng.',
@@ -2817,12 +2429,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Tính đại diện',
             difficulty: 'Trung bình',
             prompt: 'Để khảo sát môn thể thao yêu thích của học sinh toàn trường THCS, cách thu thập nào sau đây có tính ĐẠI DIỆN CAO NHẤT?',
-            options: [
-              'Chọn ngẫu nhiên 10 học sinh từ mỗi lớp trong trường',
-              'Chỉ hỏi các bạn trong đội tuyển bóng rổ của trường',
-              'Chỉ khảo sát các bạn học sinh lớp 7A1',
-              'Hỏi các bạn nam đang đá bóng ở sân trường'
-            ],
+            options: ["Chọn ngẫu nhiên 10 học sinh từ mỗi lớp trong trường","Hỏi các bạn nam đang đá bóng ở sân trường","Chỉ hỏi các bạn trong đội tuyển bóng rổ của trường","Chỉ khảo sát các bạn học sinh lớp 7A1"],
             correctAnswer: 'Chọn ngẫu nhiên 10 học sinh từ mỗi lớp trong trường',
             adminHint: 'Mẫu ngẫu nhiên từ mọi khối lớp đảm bảo tính khách quan và đại diện cho toàn trường.',
             stepByStepSolution: 'Bước 1: Để có tính đại diện cao, mẫu phải bao gồm ngẫu nhiên cả nam, nữ, từ tất cả các khối lớp.\nBước 2: Cách chọn ngẫu nhiên 10 học sinh từ mỗi lớp đại diện đồng đều cho toàn trường.',
@@ -2837,7 +2444,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Phân loại dữ liệu định lượng',
             difficulty: 'Cơ bản',
             prompt: 'Dãy dữ liệu nào sau đây là dữ liệu định lượng (số liệu đo lường được)?',
-            options: ['Điểm kiểm tra môn Toán của học sinh: 8; 7,5; 9; 10', 'Các môn thể thao yêu thích: Bóng đá, Bơi lội, Cầu lông', 'Tên các quận, huyện của thành phố Hà Nội', 'Mức độ hài lòng: Rất hài lòng, Hài lòng, Chưa hài lòng'],
+            options: ["Tên các quận, huyện của thành phố Hà Nội","Điểm kiểm tra môn Toán của học sinh: 8; 7,5; 9; 10","Các môn thể thao yêu thích: Bóng đá, Bơi lội, Cầu lông","Mức độ hài lòng: Rất hài lòng, Hài lòng, Chưa hài lòng"],
             correctAnswer: 'Điểm kiểm tra môn Toán của học sinh: 8; 7,5; 9; 10',
             adminHint: 'Dữ liệu định lượng là dữ liệu dưới dạng số thực biểu thị số lượng hoặc phép đo.',
             stepByStepSolution: 'Bước 1: Dữ liệu định lượng là các con số cụ thể (điểm số, chiều cao, khối lượng).\nBước 2: Điểm kiểm tra là các con số đo lường được, còn tên môn và mức độ hài lòng là dữ liệu định tính.',
@@ -2851,7 +2458,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Tính đại diện của dữ liệu',
             difficulty: 'Trung bình',
             prompt: 'Để khảo sát thời gian tự học ở nhà của học sinh khối 7 trường THCS Nguyễn Du, cách chọn mẫu nào sau đây có tính đại diện cao nhất?',
-            options: ['Chọn ngẫu nhiên 15 học sinh từ mỗi lớp của khối 7', 'Chỉ chọn các bạn học sinh trong đội tuyển học sinh giỏi', 'Chỉ hỏi các bạn nam đang chơi bóng đá ở sân trường', 'Chỉ hỏi các bạn đi học muộn vào sáng thứ Hai'],
+            options: ["Chỉ hỏi các bạn nam đang chơi bóng đá ở sân trường","Chỉ hỏi các bạn đi học muộn vào sáng thứ Hai","Chọn ngẫu nhiên 15 học sinh từ mỗi lớp của khối 7","Chỉ chọn các bạn học sinh trong đội tuyển học sinh giỏi"],
             correctAnswer: 'Chọn ngẫu nhiên 15 học sinh từ mỗi lớp của khối 7',
             adminHint: 'Mẫu đại diện cần phản ánh ngẫu nhiên, đa dạng mọi thành phần của tổng thể.',
             stepByStepSolution: 'Bước 1: Mẫu khảo sát muốn có tính đại diện phải bao quát ngẫu nhiên học sinh từ các lớp khác nhau (cả học sinh giỏi, khá, trung bình).\nBước 2: Chỉ hỏi một nhóm riêng biệt sẽ gây sai lệch kết quả.',
@@ -2871,48 +2478,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             explanation: 'Tổng số học sinh giỏi là 50 bạn.',
             pointsXP: 20
           }
-        ,
-          {
-            id: 'q17-3',
-            lessonId: 'c5-l17',
-            type: 'multiple_choice',
-            category: 'Phân loại dữ liệu định lượng',
-            difficulty: 'Cơ bản',
-            prompt: 'Dãy dữ liệu nào sau đây là dữ liệu định lượng (số liệu đo lường được)?',
-            options: ['Điểm kiểm tra môn Toán của học sinh: 8; 7,5; 9; 10', 'Các môn thể thao yêu thích: Bóng đá, Bơi lội, Cầu lông', 'Tên các quận, huyện của thành phố Hà Nội', 'Mức độ hài lòng: Rất hài lòng, Hài lòng, Chưa hài lòng'],
-            correctAnswer: 'Điểm kiểm tra môn Toán của học sinh: 8; 7,5; 9; 10',
-            adminHint: 'Dữ liệu định lượng là dữ liệu dưới dạng số thực biểu thị số lượng hoặc phép đo.',
-            stepByStepSolution: 'Bước 1: Dữ liệu định lượng là các con số cụ thể (điểm số, chiều cao, khối lượng).\nBước 2: Điểm kiểm tra là các con số đo lường được, còn tên môn và mức độ hài lòng là dữ liệu định tính.',
-            explanation: 'Điểm kiểm tra 8; 7,5; 9; 10 là dữ liệu định lượng.',
-            pointsXP: 20
-          },
-          {
-            id: 'q17-4',
-            lessonId: 'c5-l17',
-            type: 'multiple_choice',
-            category: 'Tính đại diện của dữ liệu',
-            difficulty: 'Trung bình',
-            prompt: 'Để khảo sát thời gian tự học ở nhà của học sinh khối 7 trường THCS Nguyễn Du, cách chọn mẫu nào sau đây có tính đại diện cao nhất?',
-            options: ['Chọn ngẫu nhiên 15 học sinh từ mỗi lớp của khối 7', 'Chỉ chọn các bạn học sinh trong đội tuyển học sinh giỏi', 'Chỉ hỏi các bạn nam đang chơi bóng đá ở sân trường', 'Chỉ hỏi các bạn đi học muộn vào sáng thứ Hai'],
-            correctAnswer: 'Chọn ngẫu nhiên 15 học sinh từ mỗi lớp của khối 7',
-            adminHint: 'Mẫu đại diện cần phản ánh ngẫu nhiên, đa dạng mọi thành phần của tổng thể.',
-            stepByStepSolution: 'Bước 1: Mẫu khảo sát muốn có tính đại diện phải bao quát ngẫu nhiên học sinh từ các lớp khác nhau (cả học sinh giỏi, khá, trung bình).\nBước 2: Chỉ hỏi một nhóm riêng biệt sẽ gây sai lệch kết quả.',
-            explanation: 'Chọn ngẫu nhiên học sinh từ tất cả các lớp khối 7 đảm bảo tính đại diện khách quan.',
-            pointsXP: 25
-          },
-          {
-            id: 'q17-5',
-            lessonId: 'c5-l17',
-            type: 'fill_in_blank',
-            category: 'Tính tổng từ bảng số liệu',
-            difficulty: 'Cơ bản',
-            prompt: 'Bảng thống kê số học sinh giỏi 4 lớp 7: 7A (12 bạn), 7B (15 bạn), 7C (10 bạn), 7D (13 bạn). Tổng số học sinh giỏi của 4 lớp là bao nhiêu bạn (chỉ điền số):',
-            correctAnswer: '50',
-            adminHint: 'Cộng số học sinh giỏi của 4 lớp lại: 12 + 15 + 10 + 13 = 50.',
-            stepByStepSolution: 'Bước 1: Lấy tổng số học sinh giỏi: 12 + 15 + 10 + 13 = 50 bạn.',
-            explanation: 'Tổng số học sinh giỏi là 50 bạn.',
-            pointsXP: 20
-          }
+        
         ]
       },
       {
@@ -2969,7 +2535,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Tổng phần trăm',
             difficulty: 'Cơ bản',
             prompt: 'Trên một biểu đồ hình quạt tròn, tổng tỉ lệ phần trăm của tất cả các hình quạt hợp lại luôn bằng:',
-            options: ['100%', '360%', '50%', '180%'],
+            options: ["50%","180%","360%","100%"],
             correctAnswer: '100%',
             adminHint: 'Toàn bộ hình tròn đại diện cho 100% dữ liệu khảo sát.',
             stepByStepSolution: 'Bước 1: Hình quạt tròn biểu diễn toàn bộ tổng thể.\nBước 2: Toàn bộ tổng thể luôn tương ứng với 100%.',
@@ -3010,54 +2576,14 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Tính chất biểu đồ quạt tròn',
             difficulty: 'Cơ bản',
             prompt: 'Trong biểu đồ hình quạt tròn, toàn bộ hình tròn biểu thị cho bao nhiêu phần trăm?',
-            options: ['100%', '50%', '360%', '180%'],
+            options: ["100%","180%","360%","50%"],
             correctAnswer: '100%',
             adminHint: 'Biểu đồ hình quạt tròn dùng để so sánh các phần với toàn thể, trong đó toàn bộ hình tròn ứng với 100%.',
             stepByStepSolution: 'Bước 1: Biểu đồ hình quạt tròn chia một tổng thể 100% thành các hình quạt có góc tương ứng.',
             explanation: 'Toàn bộ hình tròn luôn biểu thị 100% của tổng thể.',
             pointsXP: 20
           }
-        ,
-          {
-            id: 'q18-3',
-            lessonId: 'c5-l18',
-            type: 'fill_in_blank',
-            category: 'Tính phần trăm còn lại',
-            difficulty: 'Cơ bản',
-            prompt: 'Một biểu đồ hình quạt tròn biểu diễn tỉ lệ học sinh thích thể thao: Bóng đá 45%, Cầu lông 30%, Bơi lội 15%, còn lại là Bóng bàn. Tỉ lệ học sinh thích Bóng bàn là bao nhiêu % (chỉ điền số):',
-            correctAnswer: '10',
-            adminHint: 'Tổng tất cả các hình quạt bằng 100%. Lấy 100% - (45% + 30% + 15%) = 10%.',
-            stepByStepSolution: 'Bước 1: Tổng phần trăm trong toàn bộ biểu đồ quạt tròn = 100%.\nBước 2: Phần trăm bóng bàn = 100% - (45% + 30% + 15%) = 100% - 90% = 10%.',
-            explanation: 'Tỉ lệ học sinh thích Bóng bàn là 10%.',
-            pointsXP: 20
-          },
-          {
-            id: 'q18-4',
-            lessonId: 'c5-l18',
-            type: 'fill_in_blank',
-            category: 'Tính số lượng thực tế từ %',
-            difficulty: 'Trung bình',
-            prompt: 'Một khối 7 có 200 học sinh. Biểu đồ quạt tròn cho biết có 25% học sinh xếp loại Xuất sắc. Số học sinh đạt loại Xuất sắc là bao nhiêu em (chỉ điền số):',
-            correctAnswer: '50',
-            adminHint: 'Lấy 200 nhân với 25% (tức là 200 · 0,25 = 50).',
-            stepByStepSolution: 'Bước 1: Số học sinh xuất sắc = 200 · 25% = 200 · (25/100) = 50 em.',
-            explanation: 'Số học sinh xếp loại Xuất sắc là 50 em.',
-            pointsXP: 25
-          },
-          {
-            id: 'q18-5',
-            lessonId: 'c5-l18',
-            type: 'multiple_choice',
-            category: 'Tính chất biểu đồ quạt tròn',
-            difficulty: 'Cơ bản',
-            prompt: 'Trong biểu đồ hình quạt tròn, toàn bộ hình tròn biểu thị cho bao nhiêu phần trăm?',
-            options: ['100%', '50%', '360%', '180%'],
-            correctAnswer: '100%',
-            adminHint: 'Biểu đồ hình quạt tròn dùng để so sánh các phần với toàn thể, trong đó toàn bộ hình tròn ứng với 100%.',
-            stepByStepSolution: 'Bước 1: Biểu đồ hình quạt tròn chia một tổng thể 100% thành các hình quạt có góc tương ứng.',
-            explanation: 'Toàn bộ hình tròn luôn biểu thị 100% của tổng thể.',
-            pointsXP: 20
-          }
+        
         ]
       },
       {
@@ -3100,12 +2626,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Ý nghĩa biểu đồ',
             difficulty: 'Cơ bản',
             prompt: 'Biểu đồ đoạn thẳng phù hợp nhất để biểu diễn nội dung nào sau đây?',
-            options: [
-              'Sự thay đổi nhiệt độ trong tuần của Hà Nội theo từng ngày',
-              'Cơ cấu các loại sách trong thư viện',
-              'Số lượng học sinh giỏi của 4 lớp',
-              'Thị phần của 3 hãng điện thoại'
-            ],
+            options: ["Số lượng học sinh giỏi của 4 lớp","Sự thay đổi nhiệt độ trong tuần của Hà Nội theo từng ngày","Thị phần của 3 hãng điện thoại","Cơ cấu các loại sách trong thư viện"],
             correctAnswer: 'Sự thay đổi nhiệt độ trong tuần của Hà Nội theo từng ngày',
             adminHint: 'Biểu đồ đoạn thẳng tối ưu cho dữ liệu biến thiên theo trục thời gian liên tục.',
             stepByStepSolution: 'Bước 1: Biểu đồ đoạn thẳng chuyên dùng để theo dõi xu hướng thay đổi theo thời gian.\nBước 2: Nhiệt độ theo từng ngày trong tuần là chuỗi thời gian liên tục.',
@@ -3146,7 +2667,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Ứng dụng biểu đồ đoạn thẳng',
             difficulty: 'Cơ bản',
             prompt: 'Biểu đồ đoạn thẳng thích hợp nhất khi cần biểu diễn nội dung nào dưới đây?',
-            options: ['Sự biến thiên nhiệt độ hoặc lượng mưa theo thời gian', 'Tỉ lệ phần trăm các thành phần trong không khí', 'Số lượng học sinh giỏi của từng lớp', 'Tên danh sách các cuốn sách trong cặp'],
+            options: ["Tên danh sách các cuốn sách trong cặp","Tỉ lệ phần trăm các thành phần trong không khí","Sự biến thiên nhiệt độ hoặc lượng mưa theo thời gian","Số lượng học sinh giỏi của từng lớp"],
             correctAnswer: 'Sự biến thiên nhiệt độ hoặc lượng mưa theo thời gian',
             adminHint: 'Biểu đồ đoạn thẳng dùng để biểu diễn sự thay đổi của một đại lượng theo thời gian (xu hướng tăng/giảm).',
             stepByStepSolution: 'Bước 1: Đặc trưng của biểu đồ đoạn thẳng là trực quan hóa xu hướng biến đổi liên tục theo các mốc thời gian.',
@@ -3160,55 +2681,14 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Trục tọa độ trong biểu đồ',
             difficulty: 'Trung bình',
             prompt: 'Trên một biểu đồ đoạn thẳng biểu diễn doanh thu một cửa hàng trong các tháng của năm, trục nằm ngang (trục hoành) thường ghi đại lượng nào?',
-            options: ['Thời gian (các tháng trong năm)', 'Số tiền doanh thu (đồng)', 'Tỉ lệ phần trăm (%)', 'Tên nhân viên bán hàng'],
+            options: ["Tỉ lệ phần trăm (%)","Số tiền doanh thu (đồng)","Tên nhân viên bán hàng","Thời gian (các tháng trong năm)"],
             correctAnswer: 'Thời gian (các tháng trong năm)',
             adminHint: 'Trục ngang luôn biểu diễn các mốc thời gian, trục đứng biểu diễn số liệu của đại lượng.',
             stepByStepSolution: 'Bước 1: Theo quy chuẩn biểu đồ đoạn thẳng, trục nằm ngang ghi các mốc thời gian (ngày, tháng, năm), trục thẳng đứng ghi giá trị định lượng.',
             explanation: 'Trục nằm ngang biểu diễn các mốc thời gian.',
             pointsXP: 20
           }
-        ,
-          {
-            id: 'q19-3',
-            lessonId: 'c5-l19',
-            type: 'fill_in_blank',
-            category: 'Đọc độ chênh lệch trên biểu đồ',
-            difficulty: 'Cơ bản',
-            prompt: 'Quan sát biểu đồ đoạn thẳng ghi nhận nhiệt độ lúc 12h trưa từ thứ Hai đến thứ Sáu: T2: 24°C, T3: 26°C, T4: 31°C, T5: 28°C, T6: 25°C. Nhiệt độ cao nhất hơn nhiệt độ thấp nhất bao nhiêu °C (chỉ điền số):',
-            correctAnswer: '7',
-            adminHint: 'Nhiệt độ cao nhất là 31°C (T4), thấp nhất là 24°C (T2). 31 - 24 = 7°C.',
-            stepByStepSolution: 'Bước 1: Giá trị cao nhất: 31°C.\nBước 2: Giá trị thấp nhất: 24°C.\nBước 3: Hiệu = 31 - 24 = 7°C.',
-            explanation: 'Độ chênh lệch nhiệt độ là 7°C.',
-            pointsXP: 20
-          },
-          {
-            id: 'q19-4',
-            lessonId: 'c5-l19',
-            type: 'multiple_choice',
-            category: 'Ứng dụng biểu đồ đoạn thẳng',
-            difficulty: 'Cơ bản',
-            prompt: 'Biểu đồ đoạn thẳng thích hợp nhất khi cần biểu diễn nội dung nào dưới đây?',
-            options: ['Sự biến thiên nhiệt độ hoặc lượng mưa theo thời gian', 'Tỉ lệ phần trăm các thành phần trong không khí', 'Số lượng học sinh giỏi của từng lớp', 'Tên danh sách các cuốn sách trong cặp'],
-            correctAnswer: 'Sự biến thiên nhiệt độ hoặc lượng mưa theo thời gian',
-            adminHint: 'Biểu đồ đoạn thẳng dùng để biểu diễn sự thay đổi của một đại lượng theo thời gian (xu hướng tăng/giảm).',
-            stepByStepSolution: 'Bước 1: Đặc trưng của biểu đồ đoạn thẳng là trực quan hóa xu hướng biến đổi liên tục theo các mốc thời gian.',
-            explanation: 'Biểu đồ đoạn thẳng thích hợp nhất để biểu diễn sự biến thiên theo thời gian.',
-            pointsXP: 20
-          },
-          {
-            id: 'q19-5',
-            lessonId: 'c5-l19',
-            type: 'multiple_choice',
-            category: 'Trục tọa độ trong biểu đồ',
-            difficulty: 'Trung bình',
-            prompt: 'Trên một biểu đồ đoạn thẳng biểu diễn doanh thu một cửa hàng trong các tháng của năm, trục nằm ngang (trục hoành) thường ghi đại lượng nào?',
-            options: ['Thời gian (các tháng trong năm)', 'Số tiền doanh thu (đồng)', 'Tỉ lệ phần trăm (%)', 'Tên nhân viên bán hàng'],
-            correctAnswer: 'Thời gian (các tháng trong năm)',
-            adminHint: 'Trục ngang luôn biểu diễn các mốc thời gian, trục đứng biểu diễn số liệu của đại lượng.',
-            stepByStepSolution: 'Bước 1: Theo quy chuẩn biểu đồ đoạn thẳng, trục nằm ngang ghi các mốc thời gian (ngày, tháng, năm), trục thẳng đứng ghi giá trị định lượng.',
-            explanation: 'Trục nằm ngang biểu diễn các mốc thời gian.',
-            pointsXP: 20
-          }
+        
         ]
       }
     ]
@@ -3280,7 +2760,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Tính chất tỉ lệ thức',
             difficulty: 'Cơ bản',
             prompt: 'Từ đẳng thức 2 · 12 = 3 · 8, ta có thể suy ra tỉ lệ thức nào sau đây?',
-            options: ['2/3 = 8/12', '2/8 = 12/3', '2/12 = 3/8', '3/2 = 8/12'],
+            options: ["2/3 = 8/12","2/12 = 3/8","3/2 = 8/12","2/8 = 12/3"],
             correctAnswer: '2/3 = 8/12',
             adminHint: 'Kiểm tra tích nhân chéo: 2 · 12 = 24 và 3 · 8 = 24.',
             stepByStepSolution: 'Bước 1: Kiểm tra tích ngoại tỉ và trung tỉ.\nBước 2: Với 2/3 = 8/12, tích chéo là 2 · 12 = 3 · 8 = 24 (đúng đẳng thức ban đầu).',
@@ -3321,7 +2801,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Lập tỉ lệ thức từ đẳng thức',
             difficulty: 'Cơ bản',
             prompt: 'Từ đẳng thức tích 2 · 12 = 3 · 8, tỉ lệ thức nào sau đây được viết SAI?',
-            options: ['2/12 = 3/8', '2/3 = 8/12', '2/8 = 3/12', '12/3 = 8/2'],
+            options: ["2/8 = 3/12","2/12 = 3/8","12/3 = 8/2","2/3 = 8/12"],
             correctAnswer: '2/12 = 3/8',
             adminHint: 'Nhân chéo của 2/12 = 3/8 sẽ cho 2 · 8 = 12 · 3 (16 = 36), là sai!',
             stepByStepSolution: 'Bước 1: Kiểm tra tích chéo: ở phương án 2/12 = 3/8 thì tích chéo là 2 · 8 = 16 và 12 · 3 = 36 (khác nhau).\nBước 2: Do đó 2/12 = 3/8 là tỉ lệ thức sai.',
@@ -3398,7 +2878,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Chia phần tỉ lệ',
             difficulty: 'Trung bình',
             prompt: 'Hai lớp 7A và 7B trồng được 60 cây. Biết số cây trồng được tỉ lệ với 2 và 3. Số cây lớp 7A trồng được là:',
-            options: ['24 cây', '36 cây', '30 cây', '20 cây'],
+            options: ["20 cây","30 cây","24 cây","36 cây"],
             correctAnswer: '24 cây',
             adminHint: 'x/2 = y/3 = 60/5 = 12 => x = 2 · 12 = 24 cây.',
             stepByStepSolution: 'Bước 1: Gọi số cây 7A và 7B là x, y: x/2 = y/3 và x + y = 60.\nBước 2: x/2 = y/3 = 60/(2+3) = 12.\nBước 3: Số cây 7A là x = 2 · 12 = 24 cây.',
@@ -3426,7 +2906,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Công thức dãy tỉ số',
             difficulty: 'Cơ bản',
             prompt: 'Cho ba số x, y, z thỏa mãn x/2 = y/4 = z/6. Khẳng định nào sau đây là ĐÚNG?',
-            options: ['x/2 = y/4 = z/6 = (x + y + z) / (2 + 4 + 6)', 'x/2 = y/4 = z/6 = (x + y + z) / (2 · 4 · 6)', 'x/2 = y/4 = z/6 = (x · y · z) / (2 + 4 + 6)', 'x/2 = y/4 = z/6 = (x - y + z) / (2 + 4 + 6)'],
+            options: ["x/2 = y/4 = z/6 = (x · y · z) / (2 + 4 + 6)","x/2 = y/4 = z/6 = (x + y + z) / (2 · 4 · 6)","x/2 = y/4 = z/6 = (x - y + z) / (2 + 4 + 6)","x/2 = y/4 = z/6 = (x + y + z) / (2 + 4 + 6)"],
             correctAnswer: 'x/2 = y/4 = z/6 = (x + y + z) / (2 + 4 + 6)',
             adminHint: 'Tính chất dãy tỉ số bằng nhau: cộng các tử thì cộng các mẫu số tương ứng.',
             stepByStepSolution: 'Bước 1: Tính chất dãy tỉ số bằng nhau: a/m = b/n = c/p = (a+b+c)/(m+n+p).',
@@ -3490,7 +2970,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Toán thực tế',
             difficulty: 'Cơ bản',
             prompt: 'Mua 5 quyển vở cùng loại hết 45 000 đồng. Hỏi mua 8 quyển vở như thế hết bao nhiêu tiền?',
-            options: ['72 000 đồng', '64 000 đồng', '80 000 đồng', '56 000 đồng'],
+            options: ["72 000 đồng","80 000 đồng","64 000 đồng","56 000 đồng"],
             correctAnswer: '72 000 đồng',
             adminHint: 'Giá 1 quyển là 45 000 : 5 = 9 000 đồng. 8 quyển là 8 · 9 000 = 72 000 đồng.',
             stepByStepSolution: 'Bước 1: Giá tiền 1 quyển vở: 45 000 / 5 = 9 000 đồng.\nBước 2: Mua 8 quyển hết: 8 · 9 000 = 72 000 đồng.',
@@ -3531,7 +3011,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Hệ số tỉ lệ ngược chiều',
             difficulty: 'Cơ bản',
             prompt: 'Nếu đại lượng y tỉ lệ thuận với đại lượng x theo hệ số tỉ lệ k (k ≠ 0) thì đại lượng x tỉ lệ thuận với y theo hệ số tỉ lệ:',
-            options: ['1/k', 'k', '-k', 'k^2'],
+            options: ["k","1/k","k^2","-k"],
             correctAnswer: '1/k',
             adminHint: 'Nếu y = k·x thì x = (1/k)·y.',
             stepByStepSolution: 'Bước 1: Từ y = k · x với k ≠ 0, chia cả hai vế cho k ta được x = (1/k) · y.\nBước 2: Vậy x tỉ lệ thuận với y theo hệ số 1/k.',
@@ -3595,7 +3075,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Hệ số tỉ lệ nghịch',
             difficulty: 'Cơ bản',
             prompt: 'Nếu x và y tỉ lệ nghịch với nhau và khi x = 3 thì y = 4. Hệ số tỉ lệ a là:',
-            options: ['12', '7', '4/3', '3/4'],
+            options: ["4/3","7","12","3/4"],
             correctAnswer: '12',
             adminHint: 'Hệ số tỉ lệ a = x · y = 3 · 4 = 12.',
             stepByStepSolution: 'Bước 1: Theo công thức đại lượng tỉ lệ nghịch: a = x · y.\nBước 2: Thay số: a = 3 · 4 = 12.',
@@ -3636,7 +3116,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Nhận dạng tỉ lệ nghịch',
             difficulty: 'Cơ bản',
             prompt: 'Công thức nào sau đây chứng tỏ hai đại lượng x và y tỉ lệ nghịch với nhau?',
-            options: ['y = 12 / x', 'y = 12 · x', 'y = x + 12', 'y = x - 12'],
+            options: ["y = x - 12","y = x + 12","y = 12 · x","y = 12 / x"],
             correctAnswer: 'y = 12 / x',
             adminHint: 'Định nghĩa: y và x tỉ lệ nghịch khi y = a / x (hay x · y = a với a là hằng số khác 0).',
             stepByStepSolution: 'Bước 1: Đại lượng y tỉ lệ nghịch với x theo công thức y = a/x với a là hằng số.',
@@ -3714,7 +3194,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Biểu thức đại số',
             difficulty: 'Cơ bản',
             prompt: 'Biểu thức đại số biểu thị "Chu vi của hình chữ nhật có chiều dài a và chiều rộng b" là:',
-            options: ['2 · (a + b)', 'a · b', 'a + b', '2a + b'],
+            options: ["2 · (a + b)","a + b","a · b","2a + b"],
             correctAnswer: '2 · (a + b)',
             adminHint: 'Chu vi hình chữ nhật bằng (dài + rộng) nhân 2.',
             stepByStepSolution: 'Bước 1: Công thức chu vi hình chữ nhật là (chiều dài + chiều rộng) · 2.\nBước 2: Do đó biểu thức là 2 · (a + b).',
@@ -3755,7 +3235,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Viết biểu thức đại số',
             difficulty: 'Cơ bản',
             prompt: 'Biểu thức đại số biểu thị "Hiệu của hai lần số a và bình phương của số b" là:',
-            options: ['2a - b^2', '(2a - b)^2', '2a^2 - b', '2(a - b^2)'],
+            options: ["2a^2 - b","2a - b^2","(2a - b)^2","2(a - b^2)"],
             correctAnswer: '2a - b^2',
             adminHint: 'Hai lần a là 2a; bình phương của b là b^2; hiệu là phép trừ 2a - b^2.',
             stepByStepSolution: 'Bước 1: "Hai lần số a" là 2a.\nBước 2: "Bình phương của số b" là b^2.\nBước 3: Hiệu là 2a - b^2.',
@@ -3833,12 +3313,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Hệ số cao nhất và tự do',
             difficulty: 'Cơ bản',
             prompt: 'Cho đa thức A(x) = 3x^3 - 7x + 5. Hệ số cao nhất và hệ số tự do lần lượt là:',
-            options: [
-              'Hệ số cao nhất là 3, hệ số tự do là 5',
-              'Hệ số cao nhất là 5, hệ số tự do là 3',
-              'Hệ số cao nhất là 3, hệ số tự do là -7',
-              'Hệ số cao nhất là -7, hệ số tự do là 5'
-            ],
+            options: ["Hệ số cao nhất là 3, hệ số tự do là -7","Hệ số cao nhất là 5, hệ số tự do là 3","Hệ số cao nhất là 3, hệ số tự do là 5","Hệ số cao nhất là -7, hệ số tự do là 5"],
             correctAnswer: 'Hệ số cao nhất là 3, hệ số tự do là 5',
             adminHint: 'Hệ số của x^3 là 3 (cao nhất), hệ số không chứa biến là 5 (tự do).',
             stepByStepSolution: 'Bước 1: Bậc cao nhất là x^3 có hệ số là 3 => Hệ số cao nhất là 3.\nBước 2: Hạng tử không chứa x là 5 => Hệ số tự do là 5.',
@@ -3852,7 +3327,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Kiểm tra nghiệm',
             difficulty: 'Trung bình',
             prompt: 'Trong các số sau, số nào là nghiệm của đa thức H(x) = x^2 - 9?',
-            options: ['x = 3', 'x = 0', 'x = 9', 'x = 1'],
+            options: ["x = 0","x = 1","x = 9","x = 3"],
             correctAnswer: 'x = 3',
             adminHint: 'Thay x = 3 vào H(x): 3^2 - 9 = 9 - 9 = 0 => x = 3 là nghiệm.',
             stepByStepSolution: 'Bước 1: Cho x^2 - 9 = 0 <=> x^2 = 9.\nBước 2: x = 3 hoặc x = -3.\nBước 3: Trong các phương án, x = 3 là nghiệm.',
@@ -3880,7 +3355,7 @@ export const CURRICULUM_DATA: Chapter[] = [
             category: 'Bậc của đa thức sau thu gọn',
             difficulty: 'Trung bình',
             prompt: 'Bậc của đa thức A(x) = 3x^4 - 5x^3 + 2x - 3x^4 + 7x^2 - 1 sau khi thu gọn là:',
-            options: ['3', '4', '2', '1'],
+            options: ["3","2","4","1"],
             correctAnswer: '3',
             adminHint: 'Thu gọn: (3x^4 - 3x^4) = 0. Hạng tử có bậc cao nhất còn lại là -5x^3 (bậc 3).',
             stepByStepSolution: 'Bước 1: Thu gọn đa thức: A(x) = (3x^4 - 3x^4) - 5x^3 + 7x^2 + 2x - 1 = -5x^3 + 7x^2 + 2x - 1.\nBước 2: Số mũ cao nhất của biến x là 3, vậy bậc của đa thức là 3.',

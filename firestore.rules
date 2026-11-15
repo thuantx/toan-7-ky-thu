@@ -140,7 +140,16 @@ service cloud.firestore {
         && isOwner(userId)
         && isValidUser(incoming())
         && incoming().createdAt == request.time
-        && incoming().updatedAt == request.time;
+        && incoming().updatedAt == request.time
+        && (
+          isAdmin() || (
+            incoming().xp <= 500
+            && incoming().coins <= 200
+            && incoming().streakDays <= 7
+            && incoming().hearts <= 5
+            && incoming().maxHearts == 5
+          )
+        );
 
       allow update: if isEmailVerified()
         && isValidId(userId)
@@ -150,6 +159,16 @@ service cloud.firestore {
         && incoming().email == existing().email
         && incoming().createdAt == existing().createdAt
         && incoming().updatedAt == request.time
+        && incoming().maxHearts == existing().maxHearts
+        && incoming().hearts <= incoming().maxHearts
+        && (
+          isAdmin() || (
+            incoming().xp >= existing().xp
+            && (incoming().xp - existing().xp) <= 500
+            && (incoming().coins - existing().coins) <= 200
+            && (incoming().streakDays <= 7 || incoming().streakDays <= existing().streakDays + 1)
+          )
+        )
         && incoming().diff(existing()).affectedKeys().hasOnly([
           'name',
           'grade',
@@ -181,7 +200,10 @@ service cloud.firestore {
         && isValidId(userId)
         && isOwner(userId)
         && isValidLeaderboardEntry(incoming())
-        && incoming().updatedAt == request.time;
+        && incoming().updatedAt == request.time
+        && exists(/databases/$(database)/documents/users/$(userId))
+        && get(/databases/$(database)/documents/users/$(userId)).data.xp == incoming().xp
+        && get(/databases/$(database)/documents/users/$(userId)).data.streakDays == incoming().streakDays;
 
       allow update: if isEmailVerified()
         && isValidId(userId)
@@ -189,6 +211,9 @@ service cloud.firestore {
         && isValidLeaderboardEntry(incoming())
         && incoming().uid == existing().uid
         && incoming().updatedAt == request.time
+        && exists(/databases/$(database)/documents/users/$(userId))
+        && get(/databases/$(database)/documents/users/$(userId)).data.xp == incoming().xp
+        && get(/databases/$(database)/documents/users/$(userId)).data.streakDays == incoming().streakDays
         && incoming().diff(existing()).affectedKeys().hasOnly([
           'name',
           'grade',

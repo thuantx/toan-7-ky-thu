@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ViewMode, UserProfile, Goal } from './types';
+import { ViewMode, UserProfile, Goal, LessonPracticeSession } from './types';
 import { CURRICULUM_DATA, Chapter, Lesson } from './data/curriculumData';
 import { Header } from './components/Header';
 import { DashboardView } from './components/DashboardView';
@@ -15,7 +15,10 @@ import {
   isTeacherEmail,
   mergeWithCurriculum,
   formatLocalDateKey,
-  buildLast7DaysSchedule
+  buildLast7DaysSchedule,
+  getPracticeStorageKey,
+  loadPracticeSessions,
+  savePracticeSessions,
 } from './utils/storage';
 import { onAuthStateChanged, User as FirebaseUser } from 'firebase/auth';
 import {
@@ -48,6 +51,11 @@ export default function App() {
   const [selectedPracticeCategory, setSelectedPracticeCategory] = useState<string | undefined>(undefined);
   const [selectedLessonForTheory, setSelectedLessonForTheory] = useState<string>('c1-l1');
 
+  // Persisted per-lesson practice state (survives tab switches between Theory/Dashboard/Practice & page reloads)
+  const [practiceSessions, setPracticeSessions] = useState<Record<string, LessonPracticeSession>>(() =>
+    loadPracticeSessions('guest')
+  );
+
   const hydrateAuthenticatedUser = async (fbUser: FirebaseUser) => {
     setAuthSyncError(null);
     try {
@@ -59,6 +67,8 @@ export default function App() {
       setChapters(loadedChapters);
       setGoal(loadedGoal);
       saveStudentProgress(loadedUser, loadedChapters, loadedGoal);
+      const userSessions = loadPracticeSessions(getPracticeStorageKey(loadedUser));
+      setPracticeSessions(userSessions);
     } catch (err) {
       console.error('Failed to load Google user profile from Firestore:', err);
       let detail = err instanceof Error ? err.message : String(err);
@@ -132,16 +142,49 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [user, chapters, goal, firebaseUser, isFirebaseHydrated]);
 
+  // Persist practice sessions per account whenever answers or option orders change
+  useEffect(() => {
+    const accountKey = getPracticeStorageKey(user);
+    savePracticeSessions(accountKey, practiceSessions);
+  }, [practiceSessions, user.email, user.isAuthenticated]);
+
+  const handleUpdatePracticeSession = (
+    lessonId: string,
+    updater: (prev: LessonPracticeSession | undefined) => LessonPracticeSession
+  ) => {
+    setPracticeSessions((prev) => ({
+      ...prev,
+      [lessonId]: updater(prev[lessonId]),
+    }));
+  };
+
   // Handle User profile updates (e.g. XP/coins/hearts from PracticeView)
   const handleUpdateUser = (updated: Partial<UserProfile>) => {
-    setUser((prev) => ({ ...prev, ...updated }));
+    const {
+      role: _role,
+      isAuthenticated: _isAuth,
+      authProvider: _authProvider,
+      id: _id,
+      email: _email,
+      ...safeUpdates
+    } = updated;
+    setUser((prev) => ({ ...prev, ...safeUpdates }));
   };
 
   // Handle explicit profile save from AuthModal (immediate local + Firestore persistence)
   const handleSaveProfile = async (updated: Partial<UserProfile>) => {
+    const {
+      role: _role,
+      isAuthenticated: _isAuth,
+      authProvider: _authProvider,
+      id: _id,
+      email: _email,
+      ...safeUpdates
+    } = updated;
+
     const mergedUser: UserProfile = {
       ...user,
-      ...updated,
+      ...safeUpdates,
       lastActiveAt: new Date().toISOString(),
     };
 
@@ -169,6 +212,8 @@ export default function App() {
     setGoal(savedGoal || DEFAULT_GOAL);
     setIsFirebaseHydrated(true);
     saveStudentProgress(loggedUser, savedChapters || chapters, savedGoal || goal);
+    const savedSessions = loadPracticeSessions(getPracticeStorageKey(loggedUser));
+    setPracticeSessions(savedSessions);
   };
 
   // Handle Logout
@@ -184,6 +229,7 @@ export default function App() {
     clearCurrentSession();
     setChapters(mergeWithCurriculum(CURRICULUM_DATA));
     setGoal(DEFAULT_GOAL);
+    setPracticeSessions(loadPracticeSessions('guest'));
     setUser({
       ...DEFAULT_STUDENT,
       id: `guest-${Date.now()}`,
@@ -353,6 +399,13 @@ export default function App() {
             chapters={chapters}
             initialLessonId={selectedLessonForPractice}
             initialCategoryFilter={selectedPracticeCategory}
+            onLessonChange={(lessonId) => {
+              setSelectedLessonForPractice(lessonId);
+              setSelectedPracticeCategory(undefined);
+            }}
+            onCategoryFilterApplied={() => setSelectedPracticeCategory(undefined)}
+            practiceSessions={practiceSessions}
+            onUpdatePracticeSession={handleUpdatePracticeSession}
             user={user}
             onUpdateUser={handleUpdateUser}
             onLessonStatusChange={handleLessonStatusChange}

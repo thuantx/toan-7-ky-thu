@@ -30,7 +30,8 @@ export const Header: React.FC<HeaderProps> = ({
   onToggleRole,
   onOpenAuthModal,
 }) => {
-  const isTeacher = user.role === 'admin' || isTeacherEmail(user.email);
+  const canUseTeacherMode = Boolean(user.isAuthenticated && isTeacherEmail(user.email));
+  const isTeacher = canUseTeacherMode && user.role === 'admin';
 
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-xs">
@@ -125,15 +126,19 @@ export const Header: React.FC<HeaderProps> = ({
               <span>{user.xp} <span className="text-[10px] uppercase font-sans">XP</span></span>
             </div>
 
-            {/* Teacher Role Badge (ONLY shown when logged in with teacher email: baoaivn@gmail.com) */}
-            {isTeacher && (
+            {/* Teacher Role Badge (ONLY shown when authenticated with verified teacher email) */}
+            {canUseTeacherMode && (
               <button
                 onClick={onToggleRole}
-                className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-bold bg-purple-100 text-purple-900 border border-purple-300 ring-1 ring-purple-400/40 shrink-0 hover:bg-purple-200 transition-colors"
-                title="Tài khoản Giáo viên (baoaivn@gmail.com). Nhấn để xem trước đáp án hoặc chuyển chế độ xem của học sinh."
+                className={`flex items-center gap-1 px-2 py-1 rounded-lg text-xs font-bold border shrink-0 transition-colors ${
+                  isTeacher
+                    ? 'bg-purple-100 text-purple-900 border-purple-300 ring-1 ring-purple-400/40 hover:bg-purple-200'
+                    : 'bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200'
+                }`}
+                title="Tài khoản Giáo viên đã xác thực. Nhấn để chuyển đổi giữa chế độ Giáo viên và xem thử chế độ Học sinh."
               >
-                <ShieldCheck className="w-3.5 h-3.5 text-purple-700" />
-                <span className="hidden sm:inline">Giáo viên</span>
+                <ShieldCheck className={`w-3.5 h-3.5 ${isTeacher ? 'text-purple-700' : 'text-slate-500'}`} />
+                <span className="hidden sm:inline">{isTeacher ? 'Giáo viên' : 'Chế độ HS'}</span>
               </button>
             )}
 
