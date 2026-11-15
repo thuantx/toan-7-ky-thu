@@ -321,32 +321,56 @@ export const WeeklyProgress: React.FC<WeeklyProgressProps> = ({
       .attr('tabindex', 0)
       .attr('aria-label', (d) => `${d.fullLabel}: ${d.count} câu đã hoàn thành`);
 
+    let rafId = 0;
+
+    const getTargetBarHeight = (d: DayDatum) =>
+      d.count === 0 ? 4 : Math.max(6, innerHeight - yScale(d.count));
+
     if (prefersReducedMotion) {
       bars.attr('d', (d) => {
         const bx = xScale(d.dateKey) || 0;
         const bw = xScale.bandwidth();
-        const barH = d.count === 0 ? 4 : Math.max(6, innerHeight - yScale(d.count));
+        const barH = getTargetBarHeight(d);
         const by = innerHeight - barH;
         return createBarPath(bx, by, bw, barH, 6);
       });
     } else {
-      bars
-        .attr('d', (d) => {
+      bars.attr('d', (d) => {
+        const bx = xScale(d.dateKey) || 0;
+        const bw = xScale.bandwidth();
+        return createBarPath(bx, innerHeight - 2, bw, 2, 2);
+      });
+
+      const duration = 450;
+      const stagger = 40;
+      const startTime = performance.now();
+
+      const animateBars = (now: number) => {
+        const elapsed = now - startTime;
+        let allDone = true;
+
+        bars.attr('d', (d, i) => {
+          const localElapsed = Math.max(0, elapsed - i * stagger);
+          const rawProgress = Math.min(1, localElapsed / duration);
+          if (rawProgress < 1) {
+            allDone = false;
+          }
+          const eased = d3.easeCubicOut(rawProgress);
           const bx = xScale(d.dateKey) || 0;
           const bw = xScale.bandwidth();
-          return createBarPath(bx, innerHeight - 2, bw, 2, 2);
-        })
-        .transition()
-        .duration(450)
-        .delay((_d, i) => i * 40)
-        .ease(d3.easeCubicOut)
-        .attr('d', (d) => {
-          const bx = xScale(d.dateKey) || 0;
-          const bw = xScale.bandwidth();
-          const barH = d.count === 0 ? 4 : Math.max(6, innerHeight - yScale(d.count));
-          const by = innerHeight - barH;
-          return createBarPath(bx, by, bw, barH, 6);
+          const targetH = getTargetBarHeight(d);
+          const currentH = 2 + (targetH - 2) * eased;
+          const by = innerHeight - currentH;
+          const radius = rawProgress >= 0.35 ? 6 : 2;
+          return createBarPath(bx, by, bw, currentH, radius);
         });
+
+        if (!allDone) {
+          rafId = requestAnimationFrame(animateBars);
+        }
+      };
+
+      rafId = requestAnimationFrame(animateBars);
     }
 
     // Value label above each bar
@@ -354,7 +378,7 @@ export const WeeklyProgress: React.FC<WeeklyProgressProps> = ({
       .append('text')
       .attr('x', (d) => (xScale(d.dateKey) || 0) + xScale.bandwidth() / 2)
       .attr('y', (d) => {
-        const barH = d.count === 0 ? 4 : Math.max(6, innerHeight - yScale(d.count));
+        const barH = getTargetBarHeight(d);
         return innerHeight - barH - 7;
       })
       .attr('text-anchor', 'middle')
@@ -393,6 +417,12 @@ export const WeeklyProgress: React.FC<WeeklyProgressProps> = ({
       .attr('font-family', 'ui-monospace, SFMono-Regular, Menlo, monospace')
       .style('font-variant-numeric', 'tabular-nums')
       .text((d) => d.dateLabel);
+
+    return () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+      }
+    };
   }, [chartData, chartWidth, dailyTarget]);
 
   return (
